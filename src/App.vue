@@ -18,8 +18,8 @@ export default {
 }
 </script>
 
-<style>
+<style type="stylus">
 .main-area{
-
+width: 100vw;
 }
 </style>

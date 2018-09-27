@@ -1,34 +1,25 @@
 <template>
     <div class="article-summary">
-      <div class="article-title font-l">{{article_title}}</div>
+      <div class="article-title font-l">{{article.article_title}}</div>
       <div class="article-label-releasetime font-s flex-row-space-between font-dark">
-        <span>{{article_label}}</span>
-        <span>{{article_releaseTime}}</span>
+        <span>{{article.article_label}}</span>
+        <span>{{article.article_releaseTime}}</span>
       </div>
-      <div class="article-content font-m">{{article_summary}}</div>
+      <div class="article-content font-s">{{article.article_summary}}</div>
+      <div class="division"></div>
     </div>
 </template>
 
 <script>
+import getDateDiff from '../../js/getDateDiff.js'
 export default {
   props: {
-    article_title: {
-      type: String,
-      default: ''
-    },
-    article_label: {
-      type: String,
-      default: ''
-    },
-    article_summary: {
-      type: String,
-      default: ''
-    },
-    article_releaseTime: {
-      type: String,
-      default: ''
+    article: {
+      type: Object
     }
-
+  },
+  created() {
+    this.article.article_releaseTime = getDateDiff.getDateDiff(new Date(this.article.article_releaseTime).getTime())
   }
 }
 </script>
@@ -41,4 +32,10 @@ export default {
   height auto
   padding 5px 0
 }
+
+.article-title
+  margin-top 10px
+
+.article-content
+  margin-bottom 10px
 </style>
