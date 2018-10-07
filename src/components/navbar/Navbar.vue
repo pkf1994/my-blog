@@ -26,8 +26,9 @@ export default {
 <style scoped lang="stylus">
 
 .navbar{
-  position sticky
-  top 0
+  z-index 1
+  position fixed
+  top 0px
   background-image url('../../assets/imaga/texture/asfalt-light.png')
   background-color rgb(0, 79, 140)
   height 65px

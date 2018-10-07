@@ -1,12 +1,14 @@
 <template>
-    <div class="article-summary">
-      <div class="article-title font-l">{{article.article_title}}</div>
-      <div class="article-label-releasetime font-s flex-row-space-between font-dark">
-        <span>{{article.article_label}}</span>
-        <span>{{article.article_releaseTime}}</span>
-      </div>
-      <div class="article-content font-s">{{article.article_summary}}</div>
-      <div class="division"></div>
+    <div class="article-summary flex-column-center common-padding">
+        <div class="article-title font-l">
+          {{article.article_title}}
+        </div>
+        <div class="article-label-releasetime font-s flex-row-space-between font-dark">
+          <span>{{article.article_label}}</span>
+          <span>{{article.article_releaseTime}}</span>
+        </div>
+        <div class="article-content font-s">{{article.article_summary}}</div>
+
     </div>
 </template>
 
@@ -25,6 +27,10 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+.article-summary
+  background white
+  border-bottom 1px solid #F7F7F7
+
 .article-title
 .article-label-releasetime
 .article-content
@@ -38,4 +44,6 @@ export default {
 
 .article-content
   margin-bottom 10px
+  overflow hidden
+  line-height 1.5rem
 </style>
