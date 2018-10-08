@@ -1,7 +1,6 @@
 <template>
-    <div class="home flex-row-center">
-      <div class="home-main-area" ref="scrollWindow">
-          <ul class="content">
+    <div class="home flex-row-center max-width-750">
+          <ul>
             <li v-for="article in articleSummaryList" :key="article.article_id">
               <ArticleSummary :article=article
               ></ArticleSummary>
@@ -16,16 +15,15 @@
               &nbsp;
             </div>
           </ul>
-      </div>
     </div>
 </template>
 
 <script>
 import ArticleSummary from './ArticleSummary.vue'
 import ArticleApi from '../../api/article_api.js'
-import Throttle from '../mixin/Throttle.vue'
+import ScrollRefreshMixin from '../mixin/ScrollRefreshMixin.vue'
 export default {
-  mixins: [Throttle],
+  mixins: [ScrollRefreshMixin],
   data: function() {
     return {
       currentPage: 0,
@@ -51,7 +49,7 @@ export default {
         return
       }
       this.currentPage = this.currentPage + 1
-      ArticleApi.getArticleSummaryByCurrentPageAndPageScale(this.currentPage, this.pageScale).then((res) => {
+      ArticleApi.getArticleSummaryListByCurrentPageAndPageScale(this.currentPage, this.pageScale).then((res) => {
         if (res.status === 200) {
           this.maxPage = res.data.maxPage
           this.articleSummaryList = this.articleSummaryList.concat(res.data.articleList)
@@ -89,10 +87,13 @@ export default {
 
 <style scoped lang="stylus">
 .home {
-  width 100%
   .home-main-area {
     height 100vh
-    max-width 750px
+  }
+}
+@media(max-width: 750px){
+  .home {
+    width 100%
   }
 }
 

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../components/home/Home'
-import Article from '../components/article/Article'
+import ArticlePage from '../components/article/ArticlePage'
 Vue.use(Router)
 
 export default new Router({
@@ -16,9 +16,8 @@ export default new Router({
     {
       path: '/article/:article_id',
       components: {
-        Home: Article
-      },
-      props: true
+        ArticlePage
+      }
     },
     {
       path: '/',

@@ -1,44 +1,35 @@
 <template>
     <div class="article common-padding flex-column-center">
-      <div class="article-title font-llll">{{article.article_title}}</div>
+      <div class="article-title font-lll">{{article.article_title}}</div>
       <div class="article-subtitle font-m font-dark">
-        <span class="article-label">{{article.article_label}}</span>|
-        <span class="article-author">{{article.article_author}}</span>
+        <span class="article-label">{{article.article_label}}</span>&nbsp;|&nbsp;作者：<span class="article-author">{{article.article_author}}</span>
       </div>
-      <div class="article-content font-m">{{article.article_content}}</div>
-      <div class="article-releasetime font-m font-dark">发布于{{article.article_releasetime}}</div>
+      <div class="article-content font-m common-line-height">{{article.article_content}}</div>
+      <div class="article-releasetime font-m font-dark">发布于&nbsp;{{article.article_releaseTime}}</div>
     </div>
 </template>
 
 <script>
-import ArticleApi from '../../api/article_api.js'
 export default {
   props: {
-    article_id: {
+    article: {
+      type: Object,
       required: true
-    }
-  },
-  data: function() {
-    return {
-      article: {}
-    }
-  },
-  created() {
-    this.loadData()
-  },
-  methods: {
-    loadData() {
-      ArticleApi.getArticleById(this.article_id).then((res) => {
-        if (res.status === 200) {
-          console.log(res)
-        }
-      }, (err) => {
-        console.log(err)
-      })
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="stylus">
+.article
+  background white
+
+.article-title
+.article-subtitle
+.article-content
+.article-releasetime
+{
+  height auto
+  padding 5px 0
+}
 </style>

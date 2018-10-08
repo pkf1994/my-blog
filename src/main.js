@@ -7,7 +7,6 @@ import router from './router'
 import './assets/stylus/index.styl'
 import 'font-awesome/css/font-awesome.css'
 
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

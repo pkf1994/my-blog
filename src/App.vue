@@ -2,8 +2,9 @@
   <div id="app">
     <div class="cover"></div>
     <navbar ref="navbar"></navbar>
-    <div class="main-area" ref="mainArea">
+    <div class="main-area flex-row-center" ref="mainArea">
       <router-view name="Home"></router-view>
+      <router-view name="ArticlePage"></router-view>
     </div>
   </div>
 </template>

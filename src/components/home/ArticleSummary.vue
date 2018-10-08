@@ -1,14 +1,13 @@
 <template>
     <div class="article-summary flex-column-center common-padding">
-        <div class="article-title font-l">
+        <div class="article-title font-l cursorp" v-on:click="redirectToTheArticle">
           {{article.article_title}}
         </div>
         <div class="article-label-releasetime font-s flex-row-space-between font-dark">
           <span>{{article.article_label}}</span>
           <span>{{article.article_releaseTime}}</span>
         </div>
-        <div class="article-content font-s">{{article.article_summary}}</div>
-
+        <div class="article-content font-s cursorp common-line-height">{{article.article_summary}}</div>
     </div>
 </template>
 
@@ -21,7 +20,15 @@ export default {
     }
   },
   created() {
-    this.article.article_releaseTime = getDateDiff.getDateDiff(new Date(this.article.article_releaseTime).getTime())
+    this.formatTheDate()
+  },
+  methods: {
+    redirectToTheArticle() {
+      this.$router.push('/article/' + this.article.article_id)
+    },
+    formatTheDate() {
+      this.article.article_releaseTime = getDateDiff.getDateDiff(new Date(this.article.article_releaseTime).getTime())
+    }
   }
 }
 </script>
@@ -44,6 +51,4 @@ export default {
 
 .article-content
   margin-bottom 10px
-  overflow hidden
-  line-height 1.5rem
 </style>
