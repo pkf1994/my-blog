@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store/index.js'
 
 import './assets/stylus/index.styl'
 import 'font-awesome/css/font-awesome.css'
@@ -11,11 +12,15 @@ import 'font-awesome/css/font-awesome.css'
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)
 })
 
 var head = document.head
-var linkTag = document.createElement('link')
-linkTag.setAttribute('rel', 'stylesheet')
-linkTag.setAttribute('href', 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css')
-head.appendChild(linkTag)
+
+var linkTagOfAnimate = document.createElement('link')
+linkTagOfAnimate.setAttribute('rel', 'stylesheet')
+linkTagOfAnimate.setAttribute('href', 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css')
+head.appendChild(linkTagOfAnimate)
+
+

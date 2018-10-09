@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <div class="logo font-llll flex-column-center" ref="logo">
-      Supercell
+      PengBlog
     </div>
     <div class="navbar-center-area font-lll flex-column-center">杂谈</div>
   </div>
@@ -41,6 +41,7 @@ export default {
     padding 0 25px
     color white
     position relative
+    font-family "Dosis", sans-serif
   }
   .navbar-center-area{
     width 900px

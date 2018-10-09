@@ -10,6 +10,11 @@ body
   margin  0
   font-family "Source Sans Pro", SimSun, Arial
 
+.flex-row-column-center
+  display flex
+  justify-content center
+  align-items center
+
 .flex-row-center
   display flex
   justify-content center
@@ -24,9 +29,10 @@ body
   justify-content space-between
 
 .division
-  width 100%
+  margin-left 2.5%
+  width 95%
   height 1px
-  border-bottom 1px solid #E6E6E6
+  border-bottom 1px solid #F7F7F7
 
 ul
   list-style none
@@ -36,12 +42,12 @@ ul
 .cover
   position fixed
   height 100%
-  width 100%
+  width 100vw
   background #F7F7F7
   z-index -1
 
 .common-padding
-  padding 10px 30px
+  padding 15px 30px
 
 .cursorp
   cursor pointer
@@ -51,6 +57,44 @@ ul
 
 .common-line-height
   line-height 1.7rem
+
+input,
+button,
+select,
+textarea{
+  outline:none
+  font-family "Source Sans Pro", SimSun, Arial
+}
+
+button,
+input,
+textarea
+  overflow auto hidden
+  border 1px solid #E6E6E6
+  border-radius 3px
+  background #F7F7F7
+
+@media(max-width: 750px) {
+  textarea{
+    width 100%
+  }
+}
+
+button
+  padding 5px 20px
+  cursor pointer
+
+button:hover
+  background #E6E6E6
+
+input:focus
+  box-shadow 2px 2px 2px #999999 inset
+
+textarea:focus
+  box-shadow 2px 2px 2px #999999 inset
+
+
+
 
 
 

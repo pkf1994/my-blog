@@ -5,14 +5,9 @@
               <ArticleSummary :article=article
               ></ArticleSummary>
             </li>
-            <div class="loading-font flex-row-center" v-show="isLoading">
-              <i class="fa fa-spinner fa-pulse fa-2x"></i>
-            </div>
-            <div class="loading-font flex-row-center" v-show="currentPage==maxPage">
-              没有更多内容
-            </div>
-            <div class="loading-font flex-row-center" v-show="!isLoading">
-              &nbsp;
+            <Loading v-show="isLoading"></Loading>
+            <Nomore v-show="currentPage==maxPage"></Nomore>
+            <div class="blank-for-reload" v-show="!isLoading&&!(currentPage==maxPage)">
             </div>
           </ul>
     </div>
@@ -20,6 +15,9 @@
 
 <script>
 import ArticleSummary from './ArticleSummary.vue'
+import Loading from '../loading/Loading.vue'
+import Nomore from '../loading/Nomore.vue'
+import ClickForMore from '../loading/ClickForMore.vue'
 import ArticleApi from '../../api/article_api.js'
 import ScrollRefreshMixin from '../mixin/ScrollRefreshMixin.vue'
 export default {
@@ -35,7 +33,10 @@ export default {
     }
   },
   components: {
-    ArticleSummary
+    ArticleSummary,
+    Loading,
+    Nomore,
+    ClickForMore
   },
   created() {
     this.loadData()
@@ -97,6 +98,7 @@ export default {
   }
 }
 
-.loading-font
-  padding 25px
+.blank-for-reload
+  height 50px
+
 </style>

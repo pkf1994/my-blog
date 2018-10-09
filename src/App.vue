@@ -3,18 +3,23 @@
     <div class="cover"></div>
     <navbar ref="navbar"></navbar>
     <div class="main-area flex-row-center" ref="mainArea">
-      <router-view name="Home"></router-view>
+      <keep-alive>
+        <router-view name="Home"></router-view>
+      </keep-alive>
       <router-view name="ArticlePage"></router-view>
     </div>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import Navbar from './components/navbar/Navbar.vue'
+import Footer from './components/footer/Footer.vue'
 import Headroom from 'headroom.js'
 export default {
   components: {
-    Navbar
+    Navbar,
+    Footer
   },
   mounted() {
     this.$nextTick(() => {
@@ -29,8 +34,8 @@ export default {
     initHeadroom() {
       var myElement = this.$refs.navbar.$el
       var headroom = new Headroom(myElement, {
-        'tolerance': 10,
-        'offset': 200,
+        'tolerance': 5,
+        'offset': 100,
         'classes': {
           'initial': 'animated',
           'pinned': 'slideInDown',

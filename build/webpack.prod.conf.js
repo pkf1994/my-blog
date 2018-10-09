@@ -50,7 +50,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
       allChunks: true,
     }),
-    // Compress extracted CSS. We are using this plugin so that possible
+    // Compress extracted CSS. We are using this css so that possible
     // duplicated CSS from different components can be deduped.
     new OptimizeCSSPlugin({
       cssProcessorOptions: config.build.productionSourceMap
@@ -120,7 +120,7 @@ const webpackConfig = merge(baseWebpackConfig, {
 })
 
 if (config.build.productionGzip) {
-  const CompressionWebpackPlugin = require('compression-webpack-plugin')
+  const CompressionWebpackPlugin = require('compression-webpack-css')
 
   webpackConfig.plugins.push(
     new CompressionWebpackPlugin({

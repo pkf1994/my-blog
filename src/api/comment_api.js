@@ -11,9 +11,23 @@ export default {
       }
     }
     return new Promise((resolve, reject) => {
-      axios.get(apiInfo.server + 'article/article.do', config).then(function (res) {
+      axios.get(apiInfo.server + 'comment/comment_list.do', config).then(function (res) {
         resolve(res)
       }).catch(function (err) {
+        reject(err)
+      })
+    })
+  },
+  getCommentById(comment_id) {
+    var config = {
+      params: {
+        comment_id: comment_id
+      }
+    }
+    return new Promise((resolve, reject) => {
+      axios.get(apiInfo.server + 'comment/comment.do', config).then((res) => {
+        resolve(res)
+      }).catch((err) => {
         reject(err)
       })
     })

@@ -1,13 +1,13 @@
 <template>
     <div class="article-summary flex-column-center common-padding">
-        <div class="article-title font-l cursorp" v-on:click="redirectToTheArticle">
+        <div class="article-title font-l cursorp font-bold" v-on:click="redirectToTheArticle">
           {{article.article_title}}
         </div>
-        <div class="article-label-releasetime font-s flex-row-space-between font-dark">
+        <div class="article-label-releasetime font-m flex-row-space-between font-dark">
           <span>{{article.article_label}}</span>
           <span>{{article.article_releaseTime}}</span>
         </div>
-        <div class="article-content font-s cursorp common-line-height">{{article.article_summary}}</div>
+        <div class="article-content font-m cursorp common-line-height">{{article.article_summary}}</div>
     </div>
 </template>
 
@@ -51,4 +51,11 @@ export default {
 
 .article-content
   margin-bottom 10px
+  overflow hidden
+
+@media (max-width: 750px){
+  .article-summary{
+    width 100vw
+  }
+}
 </style>
