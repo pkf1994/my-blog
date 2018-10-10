@@ -1,3 +1,4 @@
 export default {
-  IdOfCommentBeingRefering: 0
+  idOfCommentBeingRefering: 0,
+  idOfArticleBeingReading: 0
 }

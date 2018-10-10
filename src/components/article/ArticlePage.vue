@@ -95,6 +95,7 @@ export default {
     },
     scrollToCommentEditor() {
       window.scrollTo(0, this.$refs.commentEditor.$el.offsetTop - 65)
+      this.$refs.commentEditor.focusTheTextArea()
     }
   }
 }

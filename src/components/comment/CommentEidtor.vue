@@ -1,29 +1,29 @@
 <template>
   <div class="comment-editor common-padding">
     <div class="comment-edit-content">
-      <div class="font-m font-bold">编写您的留言:</div>
+      <div class="font-m font-bold">编写您的留言:&nbsp;&nbsp;&nbsp;<span class="format-warn font-s" v-show="commentContentIsWrong&&!textAreaIsFocus">{{commentContentWrongMessage}}</span></div>
       <SubComment v-if="commentBeingRefering.comment_id" :subComment="commentBeingRefering"></SubComment>
-      <textarea name="edit-content" class="the-textarea font-m" rows="5"></textarea>
+      <textarea ref="theTextArea" class="the-textarea font-m" rows="5" v-model="comment_content" @focus="triggerTextAreaFocus" @blur="triggerTextAreaFocus"></textarea>
     </div>
     <div class="comment-edit-regiter">
       <br>
       <div class="font-m font-bold">为您的留言设置昵称</div>
-      <input type="text" class="the-input font-m" placeholder="必填">
+      <input type="text" class="the-input font-m" placeholder="必填" v-model="visitor_name" @focus="triggerNameInputFocus" @blur="triggerNameInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="nameIsWrong&&!nameInputIsFocus">{{nameWrongMessage}}</span>
       <br>
       <br>
       <div class="font-m font-bold">您的邮件地址</div>
-      <input type="text" class="the-input font-m" placeholder="必填">
+      <input type="text" class="the-input font-m" placeholder="必填" v-model="visitor_email" @focus="triggerEmailInputFocus" @blur="triggerEmailInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="emailIsWrong&&!emailInputIsFocus">{{emailWrongMessage}}</span>
       <br>
       <br>
       <div class="font-m font-bold">您的个人网站地址</div>
-      <input type="text" class="the-input font-m" placeholder="如果有，请填写">
+      <input type="text" class="the-input font-m" placeholder="如果有，请填写" v-model="visitor_siteAddress" @focus="triggerSiteAddressInputFocus" @blur="triggerSiteAddressInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="siteAddressIsWrong&&!siteAddressInputIsFocus">网址格式有误</span>
       <br>
       <br>
       <input type="checkbox"/><span class="font-m font-bold">记住以上个人信息？</span>
       <br>
       <br>
     </div>
-    <button class="font-m">发表</button>
+    <button class="font-m" @click="submitComment">发表</button>
   </div>
 </template>
 
@@ -35,11 +35,26 @@ export default {
   data(){
     return {
       isRefering: false,
-      commentBeingRefering: {}
+      commentBeingRefering: {},
+      visitor_name: '',
+      visitor_email: '',
+      visitor_siteAddress: '',
+      comment_content:'',
+      commentContentIsWrong: false,
+      commentContentWrongMessage: '',
+      textAreaIsFocus: false,
+      nameIsWrong: false,
+      nameWrongMessage: '',
+      nameInputIsFocus: false,
+      emailIsWrong: false,
+      emailWrongMessage: '',
+      emailInputIsFocus: false,
+      siteAddressIsWrong: false,
+      siteAddressInputIsFocus: false
     }
   },
   watch:{
-    IdOfCommentBeingRefering(newIdOfCommentBeingRefering, oldIdOfCommentBeingRefering){
+    idOfCommentBeingRefering(newIdOfCommentBeingRefering, oldIdOfCommentBeingRefering){
       CommentApi.getCommentById(newIdOfCommentBeingRefering).then((res) => {
         if(res.status === 200){
           this.commentBeingRefering = res.data
@@ -48,6 +63,18 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+    },
+    comment_content() {
+      this.checkCommentContent()
+    },
+    visitor_email() {
+      this.checkEmail()
+    },
+    visitor_name() {
+      this.checkName()
+    },
+    visitor_siteAddress() {
+      this.checkSiteAddress()
     }
   },
   components: {
@@ -55,8 +82,101 @@ export default {
   },
   computed:{
     ...mapState([
-      'IdOfCommentBeingRefering'
+      'idOfCommentBeingRefering',
+      'idOfArticleBeingReading'
     ])
+  },
+  methods: {
+    checkCommentContent() {
+      if(this.comment_content.trim() == ''){
+        this.commentContentIsWrong = true
+        this.commentContentWrongMessage = '留言内容不能为空'
+        return
+      }
+      this.commentContentIsWrong = false
+    },
+    checkName() {
+      if(this.visitor_name.trim() == ''){
+        this.nameIsWrong = true
+        this.nameWrongMessage = '昵称尚未填写'
+      }
+      if(this.visitor_name.getLength()<4){
+        this.nameIsWrong = true
+        this.nameWrongMessage = '昵称长度过短'
+        return
+      }
+      if(this.visitor_name.match(/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/) == null) {
+        this.nameIsWrong = true
+        this.nameWrongMessage = '昵称应由中文、英文字母、以及下划线组成'
+        return
+      }
+      if(this.visitor_name.getLength()>14){
+        this.nameIsWrong = true
+        this.nameWrongMessage = '昵称长度过长'
+        return
+      }
+      this.nameIsWrong = false
+    },
+    checkEmail() {
+      if (this.visitor_email.trim() == ''){
+        this.emailWrongMessage = '邮件地址尚未填写'
+        this.emailIsWrong = true
+        return
+      }
+      if (this.visitor_email.match(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/) == null) {
+         this.emailWrongMessage = '邮件格式有误'
+         this.emailIsWrong = true
+         return
+      }
+      this.emailIsWrong = false
+    },
+    focusTheTextArea() {
+      this.$refs.theTextArea.focus()
+    },
+    checkSiteAddress() {
+      if(this.visitor_siteAddress.trim() == ''){
+        return
+      }
+      if (this.visitor_siteAddress.match(/^((https|http|ftp|rtsp|mms){0,1}(:\/\/){0,1})(www\.){0,1}(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/) == null) {
+        this.siteAddressIsWrong = true
+        return
+      }
+      this.siteAddressIsWrong = false
+    },
+    triggerTextAreaFocus() {
+      this.textAreaIsFocus = !this.textAreaIsFocus
+    },
+    triggerNameInputFocus() {
+      this.nameInputIsFocus = !this.nameInputIsFocus
+    },
+    triggerEmailInputFocus() {
+      this.emailInputIsFocus = !this.emailInputIsFocus
+    },
+    triggerSiteAddressInputFocus() {
+      this.siteAddressInputIsFocus = !this.siteAddressInputIsFocus
+    },
+    submitComment() {
+      this.checkCommentContent()
+      this.checkName()
+      this.checkEmail()
+      this.checkSiteAddress()
+      if(this.commentContentIsWrong || this.nameIsWrong || this.emailIsWrong || this.siteAddressIsWrong){
+        return
+      }
+      CommentApi.submitComment(this.visitor_name,
+                                this.commentBeingRefering.comment_id,
+                                this.comment_content,
+                                this.idOfArticleBeingReading,
+                                this.visitor_email,
+                                this.visitor_siteAddress
+      ).then((res) => {
+        if(res.status === 200) {
+          console.log(res)
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
   }
 }
 </script>
@@ -85,4 +205,7 @@ export default {
   }
 }
 
+.format-warn
+  color red
+  font-weight normal
 </style>

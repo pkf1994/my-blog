@@ -59,13 +59,6 @@ export default {
         }
       }, (err) => console.log(err))
     },
-    calculateDistanceToBottom() {
-      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-      var clientHeight = document.documentElement.clientHeight || document.body.clientHeight
-      var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-      var distanceToBottom = scrollHeight - scrollTop - clientHeight
-      return distanceToBottom
-    },
     reload() {
       if (!(this.maxPage === this.currentPage)) {
         this.isLoading = true
@@ -77,7 +70,7 @@ export default {
     initPageEndRefresh() {
       window.addEventListener('scroll', () => {
         var distanceToBottom = this.calculateDistanceToBottom()
-        if (distanceToBottom < 10) {
+        if (distanceToBottom < 10 && this.$route.path == '/home') {
           this.throttle(this.reload, 400, 200)
         }
       })

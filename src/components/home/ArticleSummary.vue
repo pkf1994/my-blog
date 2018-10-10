@@ -13,6 +13,7 @@
 
 <script>
 import getDateDiff from '../../js/getDateDiff.js'
+import { mapActions } from 'vuex'
 export default {
   props: {
     article: {
@@ -23,7 +24,11 @@ export default {
     this.formatTheDate()
   },
   methods: {
+    ...mapActions([
+      'appointIdOfArticleBeingReading'
+    ]),
     redirectToTheArticle() {
+      this.appointIdOfArticleBeingReading(this.article.article_id)
       this.$router.push('/article/' + this.article.article_id)
     },
     formatTheDate() {

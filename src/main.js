@@ -23,4 +23,14 @@ linkTagOfAnimate.setAttribute('rel', 'stylesheet')
 linkTagOfAnimate.setAttribute('href', 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css')
 head.appendChild(linkTagOfAnimate)
 
-
+String.prototype.getLength = function() {
+  var len = 0;
+  for (var i=0; i<this.length; i++) {
+    if (this.charCodeAt(i)>127 || this.charCodeAt(i)==94) {
+      len += 2;
+    } else {
+      len ++;
+    }
+  }
+  return len;
+}

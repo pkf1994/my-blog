@@ -31,5 +31,25 @@ export default {
         reject(err)
       })
     })
+  },
+  submitComment(visitor_name, comment_referComment, comment_content, comment_hostId, visitor_email, visitor_siteAddress){
+
+    let commentData = {
+      visitor_name: visitor_name,
+      comment_referComment: comment_referComment,
+      comment_content: comment_content,
+      comment_hostId: comment_hostId,
+      visitor_email: visitor_email,
+      visitor_siteAddress: visitor_siteAddress
+    }
+
+
+    return new Promise((resolve, reject) => {
+      axios.post(apiInfo.server + 'comment/submit_comment.do', commentData).then((res) => {
+        resolve(res)
+      }).then((err) => {
+        reject(err)
+      })
+    })
   }
 }
