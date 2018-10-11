@@ -2,6 +2,9 @@
   <div id="app">
     <div class="cover"></div>
     <Header ref="navbar"></Header>
+    <div class="navbar flex-row-center">
+      <Navbar></Navbar>
+    </div>
     <div class="main-area flex-row-center" ref="mainArea">
       <keep-alive>
         <router-view name="Home"></router-view>
@@ -13,41 +16,19 @@
 </template>
 
 <script>
-import Header from './components/navbar/Header.vue'
+import Header from './components/header/Header.vue'
+import Navbar from './components/header/Navbar.vue'
 import Footer from './components/footer/Footer.vue'
-import Headroom from 'headroom.js'
 export default {
   components: {
     Header,
-    Footer
+    Footer,
+    Navbar
   },
   mounted() {
-    this.$nextTick(() => {
-      this.setMainAreaMarginTop()
-      if (document.body.clientWidth >= 750) {
-        return
-      }
-      this.initHeadroom()
-    })
   },
   methods: {
-    initHeadroom() {
-      var myElement = this.$refs.navbar.$el
-      var headroom = new Headroom(myElement, {
-        'tolerance': 5,
-        'offset': 100,
-        'classes': {
-          'initial': 'animated',
-          'pinned': 'slideInDown',
-          'unpinned': 'slideOutUp'
-        },
-        'scroller': window
-      })
-      headroom.init()
-    },
     setMainAreaMarginTop() {
-      var heightOfNavbar = getComputedStyle(this.$refs.navbar.$el).height
-      this.$refs.mainArea.style.paddingTop = heightOfNavbar
     }
   }
 }
@@ -56,4 +37,8 @@ export default {
 <style scoped lang="stylus">
 .main-area
   width 100vw
+.navbar
+  width 100vw
+  position sticky
+  top 0px
 </style>
