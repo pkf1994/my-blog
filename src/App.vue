@@ -1,24 +1,24 @@
 <template>
   <div id="app">
     <div class="cover"></div>
-    <navbar ref="navbar"></navbar>
+    <Header ref="navbar"></Header>
     <div class="main-area flex-row-center" ref="mainArea">
       <keep-alive>
         <router-view name="Home"></router-view>
       </keep-alive>
-      <router-view name="ArticlePage"></router-view>
+      <router-view :key="$store.state.articlePageRouterStatus" name="ArticlePage"></router-view>
     </div>
     <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Navbar from './components/navbar/Navbar.vue'
+import Header from './components/navbar/Header.vue'
 import Footer from './components/footer/Footer.vue'
 import Headroom from 'headroom.js'
 export default {
   components: {
-    Navbar,
+    Header,
     Footer
   },
   mounted() {

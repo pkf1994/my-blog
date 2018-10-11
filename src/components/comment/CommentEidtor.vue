@@ -1,39 +1,43 @@
 <template>
   <div class="comment-editor common-padding">
     <div class="comment-edit-content">
-      <div class="font-m font-bold">编写您的留言:&nbsp;&nbsp;&nbsp;<span class="format-warn font-s" v-show="commentContentIsWrong&&!textAreaIsFocus">{{commentContentWrongMessage}}</span></div>
+      <div class="font-m font-bold  required">编写您的留言<span class="format-warn font-s" v-show="commentContentIsWrong&&!textAreaIsFocus">&nbsp;&nbsp;&nbsp;{{commentContentWrongMessage}}</span></div>
       <SubComment v-if="commentBeingRefering.comment_id" :subComment="commentBeingRefering"></SubComment>
       <textarea ref="theTextArea" class="the-textarea font-m" rows="5" v-model="comment_content" @focus="triggerTextAreaFocus" @blur="triggerTextAreaFocus"></textarea>
     </div>
     <div class="comment-edit-regiter">
       <br>
-      <div class="font-m font-bold">为您的留言设置昵称</div>
-      <input type="text" class="the-input font-m" placeholder="必填" v-model="visitor_name" @focus="triggerNameInputFocus" @blur="triggerNameInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="nameIsWrong&&!nameInputIsFocus">{{nameWrongMessage}}</span>
+      <div class="font-m font-bold  required">为您的留言设置昵称</div>
+      <input type="text" class="the-input font-m" v-model="visitor_name" @focus="triggerNameInputFocus" @blur="triggerNameInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="nameIsWrong&&!nameInputIsFocus">{{nameWrongMessage}}</span>
       <br>
       <br>
-      <div class="font-m font-bold">您的邮件地址</div>
-      <input type="text" class="the-input font-m" placeholder="必填" v-model="visitor_email" @focus="triggerEmailInputFocus" @blur="triggerEmailInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="emailIsWrong&&!emailInputIsFocus">{{emailWrongMessage}}</span>
+      <div class="font-m font-bold  required">您的邮件地址</div>
+      <input type="text" class="the-input font-m" v-model="visitor_email" @focus="triggerEmailInputFocus" @blur="triggerEmailInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="emailIsWrong&&!emailInputIsFocus">{{emailWrongMessage}}</span>
       <br>
       <br>
       <div class="font-m font-bold">您的个人网站地址</div>
-      <input type="text" class="the-input font-m" placeholder="如果有，请填写" v-model="visitor_siteAddress" @focus="triggerSiteAddressInputFocus" @blur="triggerSiteAddressInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="siteAddressIsWrong&&!siteAddressInputIsFocus">网址格式有误</span>
+      <input type="text" class="the-input font-m" v-model="visitor_siteAddress" @focus="triggerSiteAddressInputFocus" @blur="triggerSiteAddressInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="siteAddressIsWrong&&!siteAddressInputIsFocus">网址格式有误</span>
       <br>
       <br>
       <input type="checkbox"/><span class="font-m font-bold">记住以上个人信息？</span>
       <br>
       <br>
     </div>
-    <button class="font-m" @click="submitComment">发表</button>
+    <button class="font-m" @click="submitComment"><span v-show="!isSubmittingComment">发表</span><i v-show="isSubmittingComment" class="fa fa-spinner fa-pulse"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;<span v-show="submitFinish" ><i class="fa fa-check"></i>留言提交成功</span>
   </div>
 </template>
 
 <script>
 import SubComment from '../comment/SubComment.vue'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import CommentApi from '../../api/comment_api.js'
 export default {
+  inject:[
+    'article_id'
+  ],
   data(){
     return {
+      hostId: this.article_id,
       isRefering: false,
       commentBeingRefering: {},
       visitor_name: '',
@@ -50,19 +54,14 @@ export default {
       emailWrongMessage: '',
       emailInputIsFocus: false,
       siteAddressIsWrong: false,
-      siteAddressInputIsFocus: false
+      siteAddressInputIsFocus: false,
+      isSubmittingComment: false,
+      submitFinish: false
     }
   },
   watch:{
     idOfCommentBeingRefering(newIdOfCommentBeingRefering, oldIdOfCommentBeingRefering){
-      CommentApi.getCommentById(newIdOfCommentBeingRefering).then((res) => {
-        if(res.status === 200){
-          this.commentBeingRefering = res.data
-          this.isRefering = true
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
+     this.loadSubCommentData(newIdOfCommentBeingRefering)
     },
     comment_content() {
       this.checkCommentContent()
@@ -83,10 +82,25 @@ export default {
   computed:{
     ...mapState([
       'idOfCommentBeingRefering',
-      'idOfArticleBeingReading'
+      'idOfArticleBeingReading',
+      'offsetTopOfCommentTitle',
+      'offsetHeightOfNavbar'
     ])
   },
   methods: {
+    ...mapActions([
+      'changeArticlePageRouterStatus'
+    ]),
+    loadSubCommentData(idOfCommentBeingRefering) {
+      CommentApi.getCommentById(idOfCommentBeingRefering).then((res) => {
+        if(res.status === 200){
+          this.commentBeingRefering = res.data
+          this.isRefering = true
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     checkCommentContent() {
       if(this.comment_content.trim() == ''){
         this.commentContentIsWrong = true
@@ -163,20 +177,34 @@ export default {
       if(this.commentContentIsWrong || this.nameIsWrong || this.emailIsWrong || this.siteAddressIsWrong){
         return
       }
+      this.isSubmittingComment = true
       CommentApi.submitComment(this.visitor_name,
                                 this.commentBeingRefering.comment_id,
                                 this.comment_content,
-                                this.idOfArticleBeingReading,
+                                this.hostId,
                                 this.visitor_email,
                                 this.visitor_siteAddress
       ).then((res) => {
         if(res.status === 200) {
-          console.log(res)
+          setTimeout(() => {
+            this.isSubmittingComment = false
+            this.submitFinish = true
+            setTimeout(() => {
+              this.changeArticlePageRouterStatus()
+              window.scrollTo(0,this.offsetTopOfCommentTitle - this.offsetHeightOfNavbar)
+            },500)
+          }, 2000)
         }
       }).catch((err) => {
         console.log(err)
       })
-    }
+    },
+    clearCommentEditor() {
+      this.comment_content = ''
+      this.visitor_name = ''
+      this.visitor_email =''
+      this.visitor_siteAddress = ''
+    },
   }
 }
 </script>
@@ -204,6 +232,10 @@ export default {
     width 100%
   }
 }
+
+.required:after
+  content ' *'
+  color red
 
 .format-warn
   color red

@@ -4,5 +4,14 @@ export default {
   },
   appointIdOfArticleBeingReading(state, article_id){
     state.idOfArticleBeingReading = article_id
+  },
+  changeArticlePageRouterStatus(state){
+    state.articlePageRouterStatus++
+  },
+  appointOffsetTopOfCommentTitle(state, offsetTop){
+    state.offsetTopOfCommentTitle = offsetTop
+  },
+  appointOffsetHeightOfNavbar(state, offsetHeight){
+    state.offsetHeightOfNavbar = offsetHeight
   }
 }

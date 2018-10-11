@@ -1,8 +1,8 @@
 <template>
   <div class="sub-comment common-padding flex-column-center">
     <div class="comment-author font-bold font-m">引用&nbsp;{{subComment.comment_author.visitor_name}}&nbsp;的留言</div>
-    <div class="comment-content font-m">{{subComment.comment_content}}</div>
-    <div class="comment-releasetime-refer font-dark font-m">
+    <div class="comment-content font-m common-line-height">{{subComment.comment_content}}</div>
+    <div class="comment-releasetime-refer font-dark font-s">
       <span>{{subComment.comment_releaseTime}}</span>
     </div>
   </div>
@@ -35,4 +35,7 @@
   .comment-content
   .comment-releasetime-refer
     padding 5px 0px
+
+  .comment-content
+    padding 10px
 </style>

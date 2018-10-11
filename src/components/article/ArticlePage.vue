@@ -1,7 +1,7 @@
 <template>
     <div class="article-page max-width-750">
       <Article :article="article"></Article>
-      <div class="comment-title common-padding font-bold font-ll">
+      <div class="comment-title common-padding font-bold font-ll" ref="commentTitle">
         留言 <span class="font-m font-dark">({{countOfComment}})</span>
       </div>
       <div class="division"></div>
@@ -30,6 +30,7 @@ import ScrollRefreshMixin from '../mixin/ScrollRefreshMixin.vue'
 import ArticleApi from '../../api/article_api.js'
 import CommentApi from '../../api/comment_api.js'
 import dateFormat from '../../js/dateFormatUtil.js'
+import { mapActions, mapState } from 'vuex'
 export default {
   maxins: [ScrollRefreshMixin],
   data: function() {
@@ -44,6 +45,11 @@ export default {
       isLoading: false
     }
   },
+  provide() {
+    return {
+      article_id: parseInt(this.$route.params.article_id),
+    }
+  },
   components: {
     Article,
     Comment,
@@ -53,11 +59,20 @@ export default {
     ClickForMore
   },
   created() {
-    this.article_id = this.$route.params.article_id
+    this.initArticleId()
     this.loadArticleData()
     this.loadCommentListData()
   },
+  mounted() {
+   this.uploadOffsetTopOfCommentTitle()
+  },
   methods: {
+    ...mapActions([
+      'appointOffsetTopOfCommentTitle'
+    ]),
+    initArticleId() {
+      this.article_id = parseInt(this.$route.params.article_id)
+    },
     loadArticleData() {
       ArticleApi.getArticleById(this.article_id).then((res) => {
         if (res.status === 200) {
@@ -94,9 +109,20 @@ export default {
       this.article.article_releaseTime = dateFormat.dateFtt('yyyy-MM-dd', new Date(this.article.article_releaseTime))
     },
     scrollToCommentEditor() {
-      window.scrollTo(0, this.$refs.commentEditor.$el.offsetTop - 65)
+      window.scrollTo(0, this.$refs.commentEditor.$el.offsetTop - this.offsetHeightOfNavbar)
       this.$refs.commentEditor.focusTheTextArea()
+    },
+    uploadOffsetTopOfCommentTitle() {
+      setTimeout(() => {
+        /*console.log(this.$refs.commentTitle.offsetTop)*/
+        this.appointOffsetTopOfCommentTitle(this.$refs.commentTitle.offsetTop)
+      }, 500)
     }
+  },
+  computed: {
+    ...mapState([
+      'offsetHeightOfNavbar'
+    ])
   }
 }
 </script>

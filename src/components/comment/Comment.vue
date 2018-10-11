@@ -1,11 +1,11 @@
 <template>
     <div class="comment common-padding flex-column-center">
-      <div class="comment-author font-bold font-m">{{comment.comment_author.visitor_name}}</div>
+      <div class="comment-author font-bold font-m" v-bind:class="{redirectable: isRedirectable}" @click="redirectToTheirSite">{{comment.comment_author.visitor_name}}</div>
       <div v-if="subComment.comment_id" class="refer-comment">
         <SubComment :subComment="subComment"></SubComment>
       </div>
-      <div class="comment-content font-m">{{comment.comment_content}}</div>
-      <div class="comment-releasetime-refer font-dark font-m">
+      <div class="comment-content font-m common-line-height">{{comment.comment_content}}</div>
+      <div class="comment-releasetime-refer font-dark font-s">
         <span>{{comment.comment_releaseTime}}</span>
         |&nbsp;<span class="cursorp" @click="clickRefer">引用</span>
       </div>
@@ -26,20 +26,13 @@ export default {
   },
   data() {
     return {
-        subComment:{}
+        subComment:{},
+        isRedirectable: this.comment.comment_author.visitor_siteAddress ? true : false
     }
   },
   created() {
-    this.comment.comment_releaseTime = getDateDiff.getDateDiff(new Date(this.comment.comment_releaseTime).getTime())
-    if(this.comment.comment_referComment){
-      CommentApi.getCommentById(this.comment.comment_referComment).then((res) => {
-        if(res.status === 200){
-          this.subComment = res.data
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
-    }
+    this.formatTheReleaseTime()
+    this.loadSubCommentData()
   },
   components: {
     SubComment
@@ -51,6 +44,25 @@ export default {
     clickRefer() {
       this.appointIdOfCommentBeingRefering(this.comment.comment_id)
       this.$emit('scrollToCommentEditor')
+    },
+    redirectToTheirSite() {
+      if(this.comment.comment_author.visitor_siteAddress){
+        window.open('http://' + this.comment.comment_author.visitor_siteAddress);
+      }
+    },
+    formatTheReleaseTime() {
+      this.comment.comment_releaseTime = getDateDiff.getDateDiff(new Date(this.comment.comment_releaseTime).getTime())
+    },
+    loadSubCommentData() {
+      if(this.comment.comment_referComment){
+        CommentApi.getCommentById(this.comment.comment_referComment).then((res) => {
+          if(res.status === 200){
+            this.subComment = res.data
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
     }
   }
 }
@@ -61,4 +73,11 @@ export default {
 .comment-content
 .comment-releasetime-refer
   padding 5px 0px
+
+.comment-content
+  padding 10px
+
+.redirectable
+  cursor pointer
+  color #3354AA
 </style>
