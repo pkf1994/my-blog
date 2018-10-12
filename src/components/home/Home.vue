@@ -70,7 +70,7 @@ export default {
     initPageEndRefresh() {
       window.addEventListener('scroll', () => {
         var distanceToBottom = this.calculateDistanceToBottom()
-        if (distanceToBottom < 10 && this.$route.path == '/home') {
+        if (distanceToBottom < 10 && this.$route.path == '/home.html') {
           this.throttle(this.reload, 400, 200)
         }
       })

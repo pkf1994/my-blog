@@ -27,12 +27,16 @@ import Loading from '../loading/Loading.vue'
 import Nomore from '../loading/Nomore.vue'
 import ClickForMore from '../loading/ClickForMore.vue'
 import ScrollRefreshMixin from '../mixin/ScrollRefreshMixin.vue'
+import CountDistanceToBody from '../mixin/CountDistanceToBody.vue'
 import ArticleApi from '../../api/article_api.js'
 import CommentApi from '../../api/comment_api.js'
 import dateFormat from '../../js/dateFormatUtil.js'
 import { mapActions, mapState } from 'vuex'
 export default {
-  maxins: [ScrollRefreshMixin],
+  mixins: [
+    ScrollRefreshMixin,
+    CountDistanceToBody
+  ],
   data: function() {
     return {
       article_id: 0,
@@ -65,6 +69,11 @@ export default {
   },
   mounted() {
    this.uploadOffsetTopOfCommentTitle()
+  },
+  computed: {
+    ...mapState([
+      'offsetHeightOfNavbar'
+    ])
   },
   methods: {
     ...mapActions([
@@ -109,7 +118,7 @@ export default {
       this.article.article_releaseTime = dateFormat.dateFtt('yyyy-MM-dd', new Date(this.article.article_releaseTime))
     },
     scrollToCommentEditor() {
-      window.scrollTo(0, this.$refs.commentEditor.$el.offsetTop - this.offsetHeightOfNavbar)
+      window.scrollTo(0, this.countDistanceToBody(this.$refs.commentEditor.$el) - this.offsetHeightOfNavbar)
       this.$refs.commentEditor.focusTheTextArea()
     },
     uploadOffsetTopOfCommentTitle() {
@@ -118,11 +127,6 @@ export default {
         this.appointOffsetTopOfCommentTitle(this.$refs.commentTitle.offsetTop)
       }, 500)
     }
-  },
-  computed: {
-    ...mapState([
-      'offsetHeightOfNavbar'
-    ])
   }
 }
 </script>

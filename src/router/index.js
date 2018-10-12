@@ -8,7 +8,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/home',
+      path: '/home.html',
       components: {
         Home: Home
       }
@@ -21,7 +21,7 @@ export default new Router({
     },
     {
       path: '/',
-      redirect: '/home'
+      redirect: '/home.html'
     }
   ],
   scrollBehavior (to, from, savedPosition) {

@@ -19,7 +19,7 @@
       <input type="text" class="the-input font-m" v-model="visitor_siteAddress" @focus="triggerSiteAddressInputFocus" @blur="triggerSiteAddressInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="siteAddressIsWrong&&!siteAddressInputIsFocus">网址格式有误</span>
       <br>
       <br>
-      <input type="checkbox"/><span class="font-m font-bold">记住以上个人信息？</span>
+      <input type="checkbox" v-model="rememberMe"/><span class="font-m font-bold">记住以上个人信息？</span>
       <br>
       <br>
     </div>
@@ -29,10 +29,14 @@
 
 <script>
 import SubComment from '../comment/SubComment.vue'
+import SetCookieMixin from '../mixin/SetCookieMixin.vue'
 import { mapState, mapActions } from 'vuex'
 import CommentApi from '../../api/comment_api.js'
 export default {
-  inject:[
+  mixins: [
+    SetCookieMixin
+  ],
+  inject: [
     'article_id'
   ],
   data(){
@@ -56,7 +60,8 @@ export default {
       siteAddressIsWrong: false,
       siteAddressInputIsFocus: false,
       isSubmittingComment: false,
-      submitFinish: false
+      submitFinish: false,
+      rememberMe: true
     }
   },
   watch:{
@@ -86,6 +91,9 @@ export default {
       'offsetTopOfCommentTitle',
       'offsetHeightOfNavbar'
     ])
+  },
+  created() {
+    this.readCookie()
   },
   methods: {
     ...mapActions([
@@ -178,6 +186,14 @@ export default {
         return
       }
       this.isSubmittingComment = true
+      this.deleteCookie('visitor_name')
+      this.deleteCookie('visitor_email')
+      this.deleteCookie('visitor_siteAddress')
+      if(this.rememberMe){
+        this.setCookie('visitor_name', this.visitor_name, 30)
+        this.setCookie('visitor_email', this.visitor_email, 30)
+        this.setCookie('visitor_siteAddress', this.visitor_siteAddress, 30)
+      }
       CommentApi.submitComment(this.visitor_name,
                                 this.commentBeingRefering.comment_id,
                                 this.comment_content,
@@ -199,12 +215,23 @@ export default {
         console.log(err)
       })
     },
-    clearCommentEditor() {
-      this.comment_content = ''
-      this.visitor_name = ''
-      this.visitor_email =''
-      this.visitor_siteAddress = ''
-    },
+    readCookie() {
+      let arrStr = document.cookie.split("; ");
+      let cookieMap = {}
+      for(var i = 0; i < arrStr.length; i++) {
+        var coupleStr = arrStr[i].split("=");
+        cookieMap[coupleStr[0]] = coupleStr[1]
+      }
+      if(cookieMap.visitor_name){
+        this.visitor_name = cookieMap.visitor_name
+      }
+      if(cookieMap.visitor_email){
+        this.visitor_email = cookieMap.visitor_email
+      }
+      if(cookieMap.visitor_siteAddress){
+        this.visitor_siteAddress = cookieMap.visitor_siteAddress
+      }
+    }
   }
 }
 </script>

@@ -8,20 +8,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 export default {
-  mounted() {
-    this.uploadOffsetHeightOfNavbar()
-  },
   methods: {
-    ...mapActions([
-      'appointOffsetHeightOfNavbar'
-    ]),
-    uploadOffsetHeightOfNavbar() {
-      setTimeout(() => {
-        this.appointOffsetHeightOfNavbar(this.$refs.navbar.offsetHeight)
-      }, 500)
-    },
     refresh() {
       location.reload()
     }
