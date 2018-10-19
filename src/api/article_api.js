@@ -30,5 +30,22 @@ export default {
         reject(err)
       })
     })
+  },
+  uploadArticle: function (article_id, article_title, article_author, article_label, article_content, article_type) {
+    let articleData = {
+      article_id: article_id,
+      article_title: article_title,
+      article_author: article_author,
+      article_label: article_label,
+      article_content: article_content,
+      article_type: article_type
+    }
+    return new Promise((resolve, reject) => {
+      axios.post(apiInfo.server + 'article/upload_article.do', articleData).then((res) => {
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
+    })
   }
 }

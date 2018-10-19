@@ -1,29 +1,41 @@
 <template>
   <div class="comment-editor common-padding">
     <div class="comment-edit-content">
-      <div class="font-m font-bold  required">编写您的留言<span class="format-warn font-s" v-show="commentContentIsWrong&&!textAreaIsFocus">&nbsp;&nbsp;&nbsp;{{commentContentWrongMessage}}</span></div>
+      <div class="font-m font-bold">编写您的留言<span class="format-warn font-s" v-show="commentContentIsWrong&&!textAreaIsFocus">&nbsp;&nbsp;&nbsp;{{commentContentWrongMessage}}</span></div>
       <SubComment v-if="commentBeingRefering.comment_id" :subComment="commentBeingRefering"></SubComment>
-      <textarea ref="theTextArea" class="the-textarea font-m" rows="5" v-model="comment_content" @focus="triggerTextAreaFocus" @blur="triggerTextAreaFocus"></textarea>
+      <textarea ref="theTextArea" class="the-textarea font-m" rows="5"
+                v-model="comment_content"
+                @focus="triggerTextAreaFocus"
+                @blur="triggerTextAreaFocus"></textarea>
     </div>
     <div class="comment-edit-regiter">
       <br>
       <div class="font-m font-bold  required">为您的留言设置昵称</div>
-      <input type="text" class="the-input font-m" v-model="visitor_name" @focus="triggerNameInputFocus" @blur="triggerNameInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="nameIsWrong&&!nameInputIsFocus">{{nameWrongMessage}}</span>
+      <input type="text" class="the-input font-m"
+             v-model="visitor_name"
+             @focus="triggerNameInputFocus"
+             @blur="triggerNameInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="nameIsWrong&&!nameInputIsFocus">{{nameWrongMessage}}</span>
       <br>
       <br>
       <div class="font-m font-bold  required">您的邮件地址</div>
-      <input type="text" class="the-input font-m" v-model="visitor_email" @focus="triggerEmailInputFocus" @blur="triggerEmailInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="emailIsWrong&&!emailInputIsFocus">{{emailWrongMessage}}</span>
+      <input type="text" class="the-input font-m"
+             v-model="visitor_email"
+             @focus="triggerEmailInputFocus"
+             @blur="triggerEmailInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="emailIsWrong&&!emailInputIsFocus">{{emailWrongMessage}}</span>
       <br>
       <br>
       <div class="font-m font-bold">您的个人网站地址</div>
-      <input type="text" class="the-input font-m" v-model="visitor_siteAddress" @focus="triggerSiteAddressInputFocus" @blur="triggerSiteAddressInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="siteAddressIsWrong&&!siteAddressInputIsFocus">网址格式有误</span>
+      <input type="text" class="the-input font-m"
+             v-model="visitor_siteAddress"
+             @focus="triggerSiteAddressInputFocus"
+             @blur="triggerSiteAddressInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="siteAddressIsWrong&&!siteAddressInputIsFocus">网址格式有误</span>
       <br>
       <br>
       <input type="checkbox" v-model="rememberMe"/><span class="font-m font-bold">记住以上个人信息？</span>
       <br>
       <br>
     </div>
-    <button class="font-m" @click="submitComment"><span v-show="!isSubmittingComment">发表</span><i v-show="isSubmittingComment" class="fa fa-spinner fa-pulse"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;<span v-show="submitFinish" ><i class="fa fa-check"></i>留言提交成功</span>
+    <button class="font-m submit-button" @click="submitComment"><span v-show="!isSubmittingComment">发表</span><i v-show="isSubmittingComment" class="fa fa-spinner fa-pulse"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;<span v-show="submitFinish" ><i class="fa fa-check"></i>留言提交成功</span>
   </div>
 </template>
 
@@ -247,12 +259,9 @@ export default {
 .the-textarea
   width 100%
 
-@media(max-width: 750px){
-  button{
-    width 100%
-    padding 10px 20px
-  }
-}
+.submit-button
+  width 8rem
+
 
 @media(max-width: 750px){
   .the-input{
@@ -267,4 +276,7 @@ export default {
 .format-warn
   color red
   font-weight normal
+
+
+
 </style>

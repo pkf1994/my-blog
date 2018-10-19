@@ -1,7 +1,8 @@
 <template>
     <div class="navbar" ref="navbar">
-      <span class="navbar-item cursorp flex-row-column-center font-l" v-bind:class="{active: navbarItemActive==1, 'font-dark': navbarItemActive!=1}" @click="triggerNavbarItemActive(1)">杂谈</span>
-      <span class="navbar-item cursorp flex-row-column-center font-l" v-bind:class="{active: navbarItemActive==2, 'font-dark': navbarItemActive!=2}" @click="triggerNavbarItemActive(2)">关于</span>
+      <router-link to="/home.html" tag="span" class="navbar-item cursorp flex-row-column-center font-l font-dark"  >杂谈</router-link>
+      <span class="navbar-item cursorp flex-row-column-center font-l font-dark" >关于</span>
+      <router-link to="/article_edit.html" tag="span" class="navbar-item cursorp flex-row-column-center font-l font-dark" >创造</router-link>
     </div>
 </template>
 
@@ -36,7 +37,8 @@
     padding 5px 25px
     height 100%
 
-.active
+.router-link-active
   background white
+  color black
 
 </style>

@@ -10,6 +10,7 @@
         <router-view name="Home"></router-view>
       </keep-alive>
       <router-view :key="$store.state.articlePageRouterStatus" name="ArticlePage"></router-view>
+      <router-view name="ArticleEditor"></router-view>
     </div>
     <Footer></Footer>
   </div>
@@ -42,7 +43,7 @@ export default {
   watch: {
     distanceOfNavbarToClientUpperEdge(newDistanceOfNavbarToClientUpperEdge, oldDistanceOfNavbarToClientUpperEdge) {
 
-      let opacity = (150 - newDistanceOfNavbarToClientUpperEdge)/150
+      let opacity = (70 - newDistanceOfNavbarToClientUpperEdge)/100
 
       this.$refs.navbar.style.backgroundColor = 'rgba(204,204,204,' + opacity + ')'
     }
@@ -68,6 +69,6 @@ export default {
 .navbar-wrapper
   width 100vw
   position sticky
-  background rgba(204,204,204,0.91)
+  background rgba(204,204,204,0)
   top 0px
 </style>
