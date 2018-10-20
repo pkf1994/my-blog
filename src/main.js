@@ -16,12 +16,6 @@ new Vue({
   render: h => h(App)
 })
 
-var head = document.head
-
-var linkTagOfAnimate = document.createElement('link')
-linkTagOfAnimate.setAttribute('rel', 'stylesheet')
-linkTagOfAnimate.setAttribute('href', 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css')
-head.appendChild(linkTagOfAnimate)
 
 String.prototype.getLength = function() {
   var len = 0;

@@ -55,11 +55,12 @@
     methods:{
       init() {
         const _this = this;
-        this.$refs.cover.style.height = document.documentElement.clientHeight;
+        let bodyEl = document.documentElement || document.body
+        this.$refs.cover.style.height = bodyEl.clientHeight;
         this.$refs.cover.style.top = document.documentElement.scrollTop + 'px';
         this.$refs.cover.style.background = 'rgba(0,0,0,0.1)';
-        $('html')[0].style.overflowY = 'hidden';
-        $('.container')[0].style.marginRight = scrollbarWidth.scrollbarWidth() + 'px';
+        bodyEl.style.overflowY = 'hidden';
+        bodyEl.style.marginRight = scrollbarWidth.scrollbarWidth() + 'px';
 
         setTimeout(function () {
           _this.showModal = true;
@@ -71,8 +72,8 @@
         this.$refs.cover.style.background = 'rgba(0,0,0,0)';
 
         setTimeout(function () {
-          $('.container')[0].style.marginRight = 0;
-          $('html')[0].style.overflowY='auto';
+          document.body.style.marginRight = 0;
+          document.body.style.overflowY='auto';
         }.bind(this),500)
 
         setTimeout(function () {
@@ -86,8 +87,8 @@
         this.$refs.cover.style.background = 'rgba(0,0,0,0)';
 
         setTimeout(function () {
-          $('.container')[0].style.marginRight = 0;
-          $('html')[0].style.overflowY='auto';
+          document.body.style.marginRight = 0;
+          document.body.style.overflowY='auto';
         }.bind(this),500)
 
         setTimeout(function () {

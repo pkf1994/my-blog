@@ -2,7 +2,7 @@
     <div class="article-editor common-padding">
 
       <div class="label font-m font-bold">文章标题
-        <span class="format-warn" v-show="titleIsWrong&&!titleInputIsFocus">标题不能为空</span>
+        &nbsp;&nbsp;<span class="format-warn font-s" v-show="titleIsWrong&&!titleInputIsFocus">标题不能为空</span>
       </div>
       <input class="_input font-m" type="text"
              v-model="editingTitle"
@@ -10,7 +10,7 @@
              @blur="triggerTitleInputFocus"><br>
 
       <div class="label font-m font-bold">作者
-        <span class="format-warn" v-show="authorIsWrong&&!authorInputIsFocus">作者不能为空</span>
+        &nbsp;&nbsp;<span class="format-warn font-s" v-show="authorIsWrong&&!authorInputIsFocus">作者不能为空</span>
       </div>
       <input class="_input font-m" type="text"
              v-model="editingAuthor"
@@ -18,14 +18,14 @@
              @blur="triggerAuthorInputFocus"><br>
 
       <div class="label font-m font-bold" >标签
-        <span class="format-warn" v-show="labelIsWrong&&!labelInputIsFocus">标签不能为空</span>
+        &nbsp;&nbsp;<span class="format-warn font-s" v-show="labelIsWrong&&!labelInputIsFocus">标签不能为空</span>
       </div>
       <input class="_input font-m" type="text" v-model="editingLabel"
              @focus="triggerLabelInputFocus"
              @blur="triggerLabelInputFocus"><br>
 
       <div class="label font-m font-bold">正文
-        <span class="format-warn" v-show="contentIsWrong&&!contentInputIsFocus">正文不能为空</span>
+        &nbsp;&nbsp;<span class="format-warn" v-show="contentIsWrong&&!contentInputIsFocus">正文不能为空</span>
       </div>
       <div class="editor">
         <quill-editor ref="myTextEditor"
@@ -37,8 +37,8 @@
         </quill-editor>
       </div>
 
-      <button class="submit-button font-m" @click="submiArticle">提交</button>
-      <button class="submit-button font-m" @click="submiDraft">存为草稿</button>
+      <button class="submit-button font-m" @click="submitArticle">提交</button>
+      <button class="submit-button font-m" @click="submitDraft">存为草稿</button>
 
       <standard-modal
         :modalHeaderProp="submitArticleModal.modalHeader"
@@ -47,7 +47,7 @@
         :btnValueOfNoProp="submitArticleModal.btnValueOfNo"
         :isLoading="submitArticleModal.isLoading"
         :onlyNorify="submitArticleModal.onlyNorify"
-        v-if="submitArticleModal.isOpenning"
+        v-if="submitArticleModal.isOpening"
         :error="submitArticleModal.happenError"
         @clickYesEventOfParent='()=>{submitArticleModal.isOpening=false;goToArticlesPage()}'
         @clickNoEventOfParent='()=>{submitArticleModal.isOpening=false;initializeArticleEditPane()}'
@@ -60,7 +60,7 @@
         :btnValueOfYesProp="submitDraftModal.btnValueOfYes"
         :isLoading="submitDraftModal.isLoading"
         :onlyNorify="submitDraftModal.onlyNorify"
-        v-if="submitDraftModal.isOpenning"
+        v-if="submitDraftModal.isOpening"
         :error="submitDraftModal.happenError"
         @clickYesEventOfParent='()=>{submitDraftModal.isOpening=false;goToDraftEditPage()}'
         @clickYesAfterError='()=>{submitDraftModal.isOpening=false}'
@@ -70,6 +70,8 @@
 </template>
 
 <script>
+  import hljs from 'highlight.js'
+  import 'highlight.js/styles/rainbow.css'
   import ApiInfo from '../../api/apiInfo.js'
   import ArticleApi from '../../api/article_api.js'
   import StandardModal from '../modal/StandardModal.vue'
@@ -145,7 +147,7 @@
             ImageExtend: {
               loading: true,  // 可选参数 是否显示上传进度和提示语
               name: 'img',  // 图片参数名
-              size: 3,  // 可选参数 图片大小，单位为M，1M = 1024kb
+              size: 10,  // 可选参数 图片大小，单位为M，1M = 1024kb
               action: ApiInfo.server + "image/image_upload.do?",  // 服务器地址, 如果action为空，则采用base64插入图片
               // response 为一个函数用来获取服务器返回的具体图片地址
               // 例如服务器返回{code: 200; data:{ url: 'baidu.com'}}
@@ -183,7 +185,7 @@
         return this.$refs.myTextEditor.quill
       },
       contentCode() {
-        return hljs.highlightAuto(this.content).value
+        return hljs.highlightAuto(this.editingContent).value
       },
       currentRoutePath(){
         return this.$route.path;
@@ -200,7 +202,18 @@
       this.initContent()
     },
     watch: {
-
+      editingTitle() {
+        this.checkTitle()
+      },
+      editingAuthor() {
+        this.checkAuthor()
+      },
+      editingLabel() {
+        this.checkLabel()
+      },
+      editingContent() {
+        this.checkContent()
+      }
     },
     methods:{
       initContent() {
@@ -220,7 +233,7 @@
           return
         }
 
-        this.submitArticleModal.isOpenning = true;
+        this.submitArticleModal.isOpening = true;
         this.submitArticleModal.isLoading = true;
 
 
@@ -255,7 +268,17 @@
         })
       },
       submitDraft() {
-        this.submitDraftModal.isOpenning = true;
+
+        this.checkTitle()
+        this.checkAuthor()
+        this.checkLabel()
+        this.checkContent()
+
+        if(this.titleIsWrong || this.authorIsWrong || this.labelIsWrong || this.contentIsWrong) {
+          return
+        }
+
+        this.submitDraftModal.isOpening = true;
         this.submitDraftModal.isLoading = true;
 
 
@@ -323,6 +346,12 @@
         if(this.editingContent.trim() === '') {
           this.contentIsWrong = true
         }
+      },
+      goToArticlesPage() {
+        this.$router.push('/home.html')
+      },
+      initializeArticleEditPane() {
+        location.reload(true)
       }
     }
   }
