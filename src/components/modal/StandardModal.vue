@@ -51,16 +51,20 @@
     mounted(){
       this.init()
     },
+    computed: {
+      bodyEl() {
+        return document.documentElement || document.body
+      }
+    },
 
     methods:{
       init() {
         const _this = this;
-        let bodyEl = document.documentElement || document.body
-        this.$refs.cover.style.height = bodyEl.clientHeight;
+        this.$refs.cover.style.height = this.bodyEl.clientHeight;
         this.$refs.cover.style.top = document.documentElement.scrollTop + 'px';
         this.$refs.cover.style.background = 'rgba(0,0,0,0.1)';
-        bodyEl.style.overflowY = 'hidden';
-        bodyEl.style.marginRight = scrollbarWidth.scrollbarWidth() + 'px';
+        this.bodyEl.style.overflowY = 'hidden';
+        this.bodyEl.style.marginRight = scrollbarWidth.scrollbarWidth() + 'px';
 
         setTimeout(function () {
           _this.showModal = true;
@@ -72,8 +76,8 @@
         this.$refs.cover.style.background = 'rgba(0,0,0,0)';
 
         setTimeout(function () {
-          document.body.style.marginRight = 0;
-          document.body.style.overflowY='auto';
+          this.bodyEl.style.marginRight = 0;
+          this.bodyEl.style.overflowY='auto';
         }.bind(this),500)
 
         setTimeout(function () {
@@ -87,8 +91,8 @@
         this.$refs.cover.style.background = 'rgba(0,0,0,0)';
 
         setTimeout(function () {
-          document.body.style.marginRight = 0;
-          document.body.style.overflowY='auto';
+          this.bodyEl.style.marginRight = 0;
+          this.bodyEl.style.overflowY='auto';
         }.bind(this),500)
 
         setTimeout(function () {

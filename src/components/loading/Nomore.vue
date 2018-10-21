@@ -6,6 +6,12 @@
 
 <script>
   export default {
+    props: {
+      msg: {
+        type: String,
+        default: '没有更多内容'
+      }
+    }
   }
 </script>
 

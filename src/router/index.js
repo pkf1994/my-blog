@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../components/home/Home'
-import ArticleEditor from '../components/articleEditor/ArticleEditor.vue'
+import ArticleEditorPage from '../components/articleEditor/ArticleEditorPage.vue'
 import ArticlePage from '../components/article/ArticlePage'
 Vue.use(Router)
 
@@ -25,9 +25,12 @@ export default new Router({
       redirect: '/home.html'
     },
     {
-      path: '/article_edit.html',
+      path: '/article_edit/:idOfEditingArticle',
       components: {
-        ArticleEditor
+        ArticleEditorPage: ArticleEditorPage
+      },
+      props: {
+        ArticleEditorPage: true
       }
     }
   ],

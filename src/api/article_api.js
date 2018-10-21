@@ -17,6 +17,21 @@ export default {
       })
     })
   },
+  getDraftListByCurrentPageAndPageScale: function (currentPage, pageScale) {
+    var config = {
+      params: {
+        currentPage: currentPage,
+        pageScale: pageScale
+      }
+    }
+    return new Promise((resolve, reject) => {
+      axios.get(apiInfo.server + 'article/draft_list.do', config).then(function (res) {
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
+    })
+  },
   getArticleById: function (article_id) {
     var config = {
       params: {

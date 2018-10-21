@@ -17,7 +17,6 @@
 import ArticleSummary from './ArticleSummary.vue'
 import Loading from '../loading/Loading.vue'
 import Nomore from '../loading/Nomore.vue'
-import ClickForMore from '../loading/ClickForMore.vue'
 import ArticleApi from '../../api/article_api.js'
 import ScrollRefreshMixin from '../mixin/ScrollRefreshMixin.vue'
 export default {
@@ -35,11 +34,10 @@ export default {
   components: {
     ArticleSummary,
     Loading,
-    Nomore,
-    ClickForMore
+    Nomore
   },
   created() {
-    this.loadData()
+    this.loadData(ArticleApi.getArticleSummaryListByCurrentPageAndPageScale, this.articleSummaryList, 'articleList')
     this.initPageEndRefresh()
   },
   mounted() {

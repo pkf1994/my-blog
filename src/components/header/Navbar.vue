@@ -2,7 +2,7 @@
     <div class="navbar" ref="navbar">
       <router-link to="/home.html" tag="span" class="navbar-item cursorp flex-row-column-center font-l font-dark"  >杂谈</router-link>
       <span class="navbar-item cursorp flex-row-column-center font-l font-dark" >关于</span>
-      <router-link to="/article_edit.html" tag="span" class="navbar-item cursorp flex-row-column-center font-l font-dark" >创造</router-link>
+      <router-link to="/article_edit/0" tag="span" class="navbar-item cursorp flex-row-column-center font-l font-dark" >创造</router-link>
     </div>
 </template>
 

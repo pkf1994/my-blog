@@ -10,7 +10,7 @@
         <router-view name="Home"></router-view>
       </keep-alive>
       <router-view :key="$store.state.articlePageRouterStatus" name="ArticlePage"></router-view>
-      <router-view name="ArticleEditor"></router-view>
+      <router-view name="ArticleEditorPage"></router-view>
     </div>
     <Footer></Footer>
   </div>

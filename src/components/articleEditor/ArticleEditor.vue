@@ -88,8 +88,7 @@
   Quill.register('modules/ImageResize', ImageResize)
   export default {
     props:{
-      currentEditArticleId:{
-        type:Number
+      idOfEditingArticle: {
       }
     },
     data: function () {
@@ -110,7 +109,7 @@
         labelInputIsFocus: false,
         contentInputIsFocus: false,
 
-        articleType: 'Draft',
+
         targetEditIdAfterCloseSubmitDraftModal:0,
         isLoading: true,
 
@@ -196,7 +195,7 @@
       StandardModal
     },
     created(){
-
+      this.redirectToInitialEditor()
     },
     mounted(){
       this.initContent()
@@ -213,12 +212,14 @@
       },
       editingContent() {
         this.checkContent()
+      },
+      idOfEditingArticle() {
+        this.loadDraftData()
       }
     },
     methods:{
       initContent() {
         setTimeout(() => {
-          console.log(document.getElementsByClassName('ql-container')[0].style.height)
           document.getElementsByClassName('ql-container')[0].style.height = '300px'
         }, 100)
       },
@@ -270,11 +271,9 @@
       submitDraft() {
 
         this.checkTitle()
-        this.checkAuthor()
-        this.checkLabel()
         this.checkContent()
 
-        if(this.titleIsWrong || this.authorIsWrong || this.labelIsWrong || this.contentIsWrong) {
+        if(this.titleIsWrong || this.contentIsWrong) {
           return
         }
 
@@ -352,17 +351,31 @@
       },
       initializeArticleEditPane() {
         location.reload(true)
+      },
+      redirectToInitialEditor() {
+        if( this.idOfEditingArticle != 0) {
+          this.$router.push('/article_edit/0')
+        }
+      },
+      loadDraftData() {
+        if(this.idOfEditingArticle != 0){
+          ArticleApi.getArticleById(this.idOfEditingArticle).then((res) => {
+            if(res.status === 200){
+              this.editingTitle = res.data.article_title
+              this.editingAuthor = res.data.article_author
+              this.editingLabel = res.data.article_label
+              this.editingContent = res.data.article_content
+            }
+          }).catch((err) => {
+            console.log(err)
+          })
+        }
       }
     }
   }
 </script>
 
 <style scoped lang="stylus">
-.article-editor
-  width 750px
-  background white
-
-
 ._input
   width 100%
   margin-top 5px
