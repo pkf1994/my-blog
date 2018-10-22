@@ -62,7 +62,7 @@
         :onlyNorify="submitDraftModal.onlyNorify"
         v-if="submitDraftModal.isOpening"
         :error="submitDraftModal.happenError"
-        @clickYesEventOfParent='()=>{submitDraftModal.isOpening=false;goToDraftEditPage()}'
+        @clickYesEventOfParent='()=>{submitDraftModal.isOpening=false}'
         @clickYesAfterError='()=>{submitDraftModal.isOpening=false}'
       />
 
@@ -110,7 +110,7 @@
         contentInputIsFocus: false,
 
 
-        targetEditIdAfterCloseSubmitDraftModal:0,
+        idOfSubmitedArticle:0,
         isLoading: true,
 
         /*提交文章模态框*/
@@ -238,7 +238,7 @@
         this.submitArticleModal.isLoading = true;
 
 
-        ArticleApi.uploadArticle(this.currentEditArticleId,
+        ArticleApi.uploadArticle(this.idOfEditingArticle,
                                   this.editingTitle,
                                   this.editingAuthor,
                                   this.editingLabel,
@@ -280,8 +280,7 @@
         this.submitDraftModal.isOpening = true;
         this.submitDraftModal.isLoading = true;
 
-
-        ArticleApi.uploadArticle(this.currentEditArticleId,
+        ArticleApi.uploadArticle(this.idOfSubmitedArticle == 0 ? this.idOfEditingArticle : this.idOfSubmitedArticle,
                                   this.editingTitle,
                                   this.editingAuthor,
                                   this.editingLabel,
@@ -289,22 +288,23 @@
                                   'draft').then((res) => {
           if(res.status === 200) {
 
-            console.log(res.data)
+            this.idOfSubmitedArticle = res.data
 
             this.submitDraftModal.modalHeader = '提示'
-            this.submitDraftModal.modalBody = '草稿保持成功！'
+            this.submitDraftModal.modalBody = '草稿保存成功'
             this.submitDraftModal.btnValueOfYes = '确定'
             this.submitDraftModal.happenError = false;
 
             setTimeout(() => {
               this.submitDraftModal.isLoading = false;
+              this.$emit('refreshDrafts')
             },1500)
 
           }
         }).catch((err) => {
 
           this.submitDraftModal.modalHeader = '警告';
-          this.submitDraftModal.modalBody = '草稿失败! 发生错误: ' + err.message;
+          this.submitDraftModal.modalBody = '草稿保存失败! 发生错误: ' + err.message;
           this.submitDraftModal.happenError = true;
           this.submitDraftModal.isLoading = false;
 
@@ -348,6 +348,9 @@
       },
       goToArticlesPage() {
         this.$router.push('/home.html')
+      },
+      goToDraftEditPage() {
+        this.$router.push('/article_edit/' + this.idOfSubmitedArticle)
       },
       initializeArticleEditPane() {
         location.reload(true)

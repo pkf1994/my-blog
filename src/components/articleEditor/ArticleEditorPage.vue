@@ -1,7 +1,7 @@
 <template>
     <div class="article-editor-page">
-      <ArticleEditor :idOfEditingArticle="idOfEditingArticle"></ArticleEditor>
-      <Drafts></Drafts>
+      <ArticleEditor :idOfEditingArticle="idOfEditingArticle" @refreshDrafts="refreshDrafts"></ArticleEditor>
+      <Drafts ref="drafts"></Drafts>
     </div>
 </template>
 
@@ -17,7 +17,12 @@
         components: {
           ArticleEditor,
           Drafts
+        },
+      methods: {
+        refreshDrafts() {
+          this.$refs.drafts.refreshDraftListAfterSubmit()
         }
+      }
     }
 </script>
 

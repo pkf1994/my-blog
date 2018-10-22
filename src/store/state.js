@@ -4,5 +4,6 @@ export default {
   articlePageRouterStatus: 0,
   offsetTopOfCommentTitle: 0,
   offsetHeightOfNavbar: 50,
-  breadcrumbData: []
+  breadcrumbData: [],
+  refreshDraftList: false
 }

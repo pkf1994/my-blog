@@ -62,5 +62,19 @@ export default {
         reject(err)
       })
     })
+  },
+  deleteArticle: function(article_id) {
+    let config = {
+      params: {
+        article_id: article_id
+      }
+    }
+    return new Promise((resolve, reject) => {
+      axios.get(apiInfo.server + 'article/delete_article.do', config).then((res) => {
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
+    })
   }
 }

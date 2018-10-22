@@ -3,10 +3,14 @@
       <div class="font-m font-bold headline">草稿</div>
       <div class="division"></div>
       <ul>
+        <transition-group name="list-complete" tag="div">
         <DraftItem class="draft-item" ref="draftitems"
                    v-for="draft in drafts"
                    :draft="draft"
-                   :key="draft.article_id" @triggerEditingSlogan="initEditingSloganOfAllDraftItem()"></DraftItem>
+                   :key="draft.article_id"
+                   @triggerEditingSlogan="initEditingSloganOfAllDraftItem()"
+                   @refreshDraftList="refreshDraftListAfterDelete"></DraftItem>
+        </transition-group>
       </ul>
       <Loading v-show="isLoading"></Loading>
       <Nomore v-show="currentPage==maxPage" msg="没有更多草稿"></Nomore>
@@ -76,6 +80,21 @@
         for(let i = 0; i < this.$refs.draftitems.length; i++) {
           this.$refs.draftitems[i].isEditing = false
         }
+      },
+      refreshDraftListAfterDelete(draftItemToBeDelete) {
+        this.drafts.forEach((item, index) => {
+          if(item.article_id === draftItemToBeDelete) {
+            this.drafts.splice(index,1)
+          }
+        })
+      },
+      refreshDraftListAfterSubmit(){
+        this.drafts = []
+        this.currentPage = 0
+        this.loadData()
+        setTimeout(() => {
+          this.$refs.draftitems[0].isEditing = true
+        }, 2000)
       }
     }
   }
@@ -87,4 +106,17 @@
 
 .draft-item
   margin-top 15px
+
+.list-complete-item {
+  transition: all 0.5s;
+  display: inline-block;
+}
+.list-complete-enter, .list-complete-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.list-complete-leave-active {
+  position: absolute;
+}
+
 </style>
