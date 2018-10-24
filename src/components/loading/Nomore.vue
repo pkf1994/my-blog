@@ -1,6 +1,6 @@
 <template>
   <div class="nomore flex-row-column-center">
-    <span>没有更多内容</span>
+    <span>{{msg}}</span>
   </div>
 </template>
 

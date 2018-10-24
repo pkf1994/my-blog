@@ -5,5 +5,6 @@ export default {
   offsetTopOfCommentTitle: 0,
   offsetHeightOfNavbar: 50,
   breadcrumbData: [],
-  refreshDraftList: false
+  refreshDraftList: false,
+  flagRefreshHome: false
 }

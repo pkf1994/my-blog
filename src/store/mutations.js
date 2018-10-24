@@ -13,5 +13,8 @@ export default {
   },
   appointOffsetHeightOfNavbar(state, offsetHeight){
     state.offsetHeightOfNavbar = offsetHeight
+  },
+  triggerFlagRefreshHome(state) {
+    state.flagRefreshHome = !state.flagRefreshHome
   }
 }

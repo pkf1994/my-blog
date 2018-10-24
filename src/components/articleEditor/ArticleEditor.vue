@@ -75,6 +75,7 @@
   import ApiInfo from '../../api/apiInfo.js'
   import ArticleApi from '../../api/article_api.js'
   import StandardModal from '../modal/StandardModal.vue'
+  import { mapActions } from 'vuex'
   import 'quill/dist/quill.core.css';
   import 'quill/dist/quill.snow.css';
   import 'quill/dist/quill.bubble.css';
@@ -218,6 +219,9 @@
       }
     },
     methods:{
+      ...mapActions([
+        'triggerFlagRefreshHome'
+      ]),
       initContent() {
         setTimeout(() => {
           document.getElementsByClassName('ql-container')[0].style.height = '300px'
@@ -347,7 +351,8 @@
         }
       },
       goToArticlesPage() {
-        this.$router.push('/home.html')
+        this.$router.push({path: '/home.html'})
+        this.triggerFlagRefreshHome()
       },
       goToDraftEditPage() {
         this.$router.push('/article_edit/' + this.idOfSubmitedArticle)

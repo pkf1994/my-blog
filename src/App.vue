@@ -11,6 +11,7 @@
       </keep-alive>
       <router-view :key="$store.state.articlePageRouterStatus" name="ArticlePage"></router-view>
       <router-view name="ArticleEditorPage"></router-view>
+      <router-view name="ArticleManage"></router-view>
     </div>
     <Footer></Footer>
   </div>
@@ -71,4 +72,5 @@ export default {
   position sticky
   background rgba(204,204,204,0)
   top 0px
+  z-index 1
 </style>

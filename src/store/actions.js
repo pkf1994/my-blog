@@ -13,5 +13,8 @@ export default {
   },
   appointOffsetHeightOfNavbar(context, offsetHeight) {
     context.commit('appointOffsetHeightOfNavbar', offsetHeight)
+  },
+  triggerFlagRefreshHome(context) {
+    context.commit('triggerFlagRefreshHome')
   }
 }

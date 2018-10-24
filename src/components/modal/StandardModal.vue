@@ -62,7 +62,7 @@
         const _this = this;
         this.$refs.cover.style.height = this.bodyEl.clientHeight;
         this.$refs.cover.style.top = document.documentElement.scrollTop + 'px';
-        this.$refs.cover.style.background = 'rgba(0,0,0,0.1)';
+        this.$refs.cover.style.background = 'rgba(0,0,0,0.2)';
         this.bodyEl.style.overflowY = 'hidden';
         this.bodyEl.style.marginRight = scrollbarWidth.scrollbarWidth() + 'px';
 
@@ -126,7 +126,7 @@
   left 0px
   width 100%
   height 100%
-  /*  background: rgba(0,0,0,0.1);*/
+  background: rgba(0,0,0,0);
   z-index 999
   transition background 0.5s ease
   .modal

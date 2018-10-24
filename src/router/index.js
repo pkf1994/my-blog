@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../components/home/Home'
 import ArticleEditorPage from '../components/articleEditor/ArticleEditorPage.vue'
-import ArticlePage from '../components/article/ArticlePage'
+import ArticlePage from '../components/article/ArticlePage.vue'
+import ArticleManage from '../components/manage/ArticleManage.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -31,6 +32,12 @@ export default new Router({
       },
       props: {
         ArticleEditorPage: true
+      }
+    },
+    {
+      path: '/article_manage',
+      components: {
+        ArticleManage: ArticleManage
       }
     }
   ],

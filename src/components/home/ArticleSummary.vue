@@ -7,7 +7,16 @@
           <span>{{article.article_label}}</span>
           <span>{{article.article_releaseTime}}</span>
         </div>
-        <div class="article-content font-m cursorp common-line-height">{{article.article_summary}}</div>
+        <div class="article-content font-m cursorp common-line-height flex-row-center">
+          <div class="article-content-summary" ref="summary" v-on:click="redirectToTheArticle">{{article.article_summary}}
+            <span class="readAll">
+              <span class="summary-cover"></span>
+              <span class="font-m" style="background: white" v-on:click="redirectToTheArticle">阅读全文</span>
+            </span></div>
+          <div ref="imgInner" class="img-inner" v-if="article.article_previewImageUrl != undefined">
+            <img ref="img" :src="article.article_previewImageUrl" alt="previewImage" class="preview-image">
+          </div>
+        </div>
     </div>
 </template>
 
@@ -23,6 +32,12 @@ export default {
   created() {
     this.formatTheDate()
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.handlePreviewImageSize()
+      this.handleArticleContentSummarySize()
+    })
+  },
   methods: {
     ...mapActions([
       'appointIdOfArticleBeingReading'
@@ -33,6 +48,31 @@ export default {
     },
     formatTheDate() {
       this.article.article_releaseTime = getDateDiff.getDateDiff(new Date(this.article.article_releaseTime).getTime())
+    },
+    handlePreviewImageSize() {
+      let bodyEl = document.body || document.documentElement
+      let offsetWidthOfBodyEl = bodyEl.offsetWidth
+      if(offsetWidthOfBodyEl > 750) {
+        return
+      }
+      if(this.article.article_previewImageUrl != undefined){
+        let imgHeight = parseInt(getComputedStyle(this.$refs.img).height)
+        let imgInnerHeight = parseInt(getComputedStyle(this.$refs.imgInner).height)
+        let imgMarginTop = (imgInnerHeight - imgHeight) * 0.5
+        this.$refs.img.style.marginTop = imgMarginTop + 'px'
+      }
+    },
+    handleArticleContentSummarySize() {
+      let bodyEl = document.body || document.documentElement
+      let offsetWidthOfBodyEl = bodyEl.offsetWidth
+      if(offsetWidthOfBodyEl > 750) {
+        let lineHeight = parseInt(getComputedStyle(this.$refs.summary).lineHeight)
+        this.$refs.summary.style.height = lineHeight * 5 + 'px'
+      }
+      if(offsetWidthOfBodyEl <= 750) {
+        let lineHeight = parseInt(getComputedStyle(this.$refs.summary).lineHeight)
+        this.$refs.summary.style.height = lineHeight * 3 + 'px'
+      }
     }
   }
 }
@@ -49,6 +89,7 @@ export default {
 {
   height auto
   padding 5px 0
+  word-wrap break-word
 }
 
 .article-title
@@ -58,9 +99,63 @@ export default {
   margin-bottom 10px
   overflow hidden
 
+
+.preview-image
+  width: auto
+  height 150px
+  border-radius 2px
+
+@media (min-width: 750px){
+  .preview-image{
+    margin-left 10px
+  }
+}
+
 @media (max-width: 750px){
   .article-summary{
     width 100vw
   }
+  .article-content{
+    display flex
+    flex-direction column
+  }
+  .article-content-summary{
+    height 5rem
+    order 2
+  }
+  .img-inner{
+    width 100%
+    height 150px
+    overflow hidden
+    margin-top  5px
+    margin-bottom 10px
+
+  }
+  .preview-image{
+    width 100%
+    height auto
+    order 1
+  }
 }
+.article-content-summary
+  height 10rem
+  overflow hidden
+  position relative
+
+.readAll
+  z-index 0
+  display flex
+  position absolute
+  bottom 0
+  right 0
+  float right
+  color rgb(23, 81, 153)
+
+.readAll:hover
+  color black
+
+.summary-cover
+  height 2rem
+  width 8rem
+  background linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1))
 </style>

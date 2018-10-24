@@ -19,6 +19,7 @@ import Loading from '../loading/Loading.vue'
 import Nomore from '../loading/Nomore.vue'
 import ArticleApi from '../../api/article_api.js'
 import ScrollRefreshMixin from '../mixin/ScrollRefreshMixin.vue'
+import { mapState } from 'vuex'
 export default {
   mixins: [ScrollRefreshMixin],
   data: function() {
@@ -41,6 +42,18 @@ export default {
     this.initPageEndRefresh()
   },
   mounted() {
+  },
+  computed: {
+    ...mapState([
+      'flagRefreshHome'
+    ])
+  },
+  watch: {
+    flagRefreshHome() {
+      this.currentPage = 0
+      this.articleSummaryList = []
+      this.loadData(ArticleApi.getArticleSummaryListByCurrentPageAndPageScale, this.articleSummaryList, 'articleList')
+    }
   },
   methods: {
     loadData() {
@@ -68,7 +81,8 @@ export default {
     initPageEndRefresh() {
       window.addEventListener('scroll', () => {
         var distanceToBottom = this.calculateDistanceToBottom()
-        if (distanceToBottom < 10 && this.$route.path == '/home.html') {
+        console.log(distanceToBottom)
+        if (distanceToBottom < 30 && this.$route.path == '/home.html') {
           this.throttle(this.reload, 400, 200)
         }
       })
