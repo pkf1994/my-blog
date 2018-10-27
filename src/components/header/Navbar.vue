@@ -38,8 +38,10 @@
     padding 5px 25px
     height 100%
 
+.navbar-item:hover
+  color black
+
 .router-link-active
-  background white
   color black
 
 </style>

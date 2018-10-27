@@ -1,5 +1,5 @@
 <template>
-    <div class="article-summary flex-column-center common-padding">
+    <div class="article-summary common-padding">
         <div class="article-title font-l cursorp font-bold" v-on:click="redirectToTheArticle">
           {{article.article_title}}
         </div>
@@ -68,6 +68,9 @@ export default {
       if(offsetWidthOfBodyEl > 750) {
         let lineHeight = parseInt(getComputedStyle(this.$refs.summary).lineHeight)
         this.$refs.summary.style.height = lineHeight * 5 + 'px'
+        if(this.article.article_previewImageUrl != undefined){
+          this.$refs.img.style.height = lineHeight * 5 + 'px'
+        }
       }
       if(offsetWidthOfBodyEl <= 750) {
         let lineHeight = parseInt(getComputedStyle(this.$refs.summary).lineHeight)
@@ -132,8 +135,7 @@ export default {
 
   }
   .preview-image{
-    width 100%
-    height auto
+    width auto
     order 1
   }
 }

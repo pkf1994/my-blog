@@ -196,7 +196,7 @@
       StandardModal
     },
     created(){
-      this.redirectToInitialEditor()
+      this.loadDraftData()
     },
     mounted(){
       this.initContent()
@@ -249,8 +249,6 @@
                                   this.editingContent,
                                   'article').then((res) => {
           if(res.status === 200) {
-
-            console.log(res.data)
 
             this.submitArticleModal.modalHeader = '提示'
             this.submitArticleModal.modalBody = '文章提交成功！请选择后续操作'
@@ -361,7 +359,7 @@
         location.reload(true)
       },
       redirectToInitialEditor() {
-        if( this.idOfEditingArticle != 0) {
+        if(this.idOfEditingArticle != 0) {
           this.$router.push('/article_edit/0')
         }
       },

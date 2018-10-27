@@ -51,5 +51,19 @@ export default {
         reject(err)
       })
     })
+  },
+  getCommentLast(listScale) {
+    let config = {
+      params: {
+        listScale: listScale
+      }
+    }
+    return new Promise((resolve, reject) => {
+      axios.get(apiInfo.server + 'comment/comment_last.do', config).then((res) => {
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
+    })
   }
 }

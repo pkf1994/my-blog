@@ -1,6 +1,6 @@
 <template>
   <div class="header common-padding flex-row-center" ref="navbar">
-      <div class="logo font-llll flex-column-center common-padding" ref="logo">
+      <div class="logo font-llll common-padding" ref="logo">
         <span class="cursorp" @click="refresh">远方有鱼</span>
         <div class="font-m font-normal"> It's a Wonderful Life ...</div>
       </div>

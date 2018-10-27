@@ -1,5 +1,5 @@
 <template>
-    <div class="article common-padding flex-column-center">
+    <div class="article common-padding">
       <div class="article-title font-lll font-bold">{{article.article_title}}</div>
       <div class="article-subtitle font-m font-dark">
         <span class="article-label">{{article.article_label}}</span>&nbsp;|&nbsp;作者：<span class="article-author">{{article.article_author}}</span>

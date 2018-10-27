@@ -76,5 +76,46 @@ export default {
         reject(err)
       })
     })
+  },
+  getArticleFilingData(flashBackIndex) {
+    let config = {
+      params: {
+        flashBackIndex: flashBackIndex
+      }
+    }
+    return new Promise((resolve, reject) => {
+      axios.get(apiInfo.server + 'article/article_filing.do', config).then((res) => {
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
+    })
+  },
+  getArticleLabelData() {
+    return new Promise((resolve, reject) => {
+      axios.get(apiInfo.server + 'article/article_label.do').then((res) => {
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
+    })
+  },
+  getArticleItemListBySearchWords(currentPage, pageScale, searchString) {
+    let config = {
+      params: {
+        currentPage: currentPage,
+        pageScale: pageScale,
+        searchString: searchString
+      }
+    }
+
+    return new Promise((resolve, reject) => {
+      axios.get(apiInfo.server + 'article/article_search.do',config).then((res) => {
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
+    })
+
   }
 }

@@ -1,5 +1,6 @@
 <template>
     <div class="article-page max-width-750">
+      <LoadingPage v-if="!articleLoaded"></LoadingPage>
       <Article :article="article"></Article>
       <div class="comment-title common-padding font-bold font-ll" ref="commentTitle">
         留言 <span class="font-m font-dark">({{countOfComment}})</span>
@@ -21,6 +22,7 @@
 
 <script>
 import Article from './Article.vue'
+import LoadingPage from '../loading/LoadingPage.vue'
 import Comment from '../comment/Comment.vue'
 import CommentEditor from '../comment/CommentEidtor.vue'
 import Loading from '../loading/Loading.vue'
@@ -46,7 +48,8 @@ export default {
       pageScale: 5,
       currentPage: 0,
       countOfComment: 0,
-      isLoading: false
+      isLoading: false,
+      articleLoaded: false
     }
   },
   provide() {
@@ -60,6 +63,7 @@ export default {
     CommentEditor,
     Loading,
     Nomore,
+    LoadingPage,
     ClickForMore
   },
   created() {
@@ -87,6 +91,7 @@ export default {
         if (res.status === 200) {
           this.article = res.data
           this.formatTheDate()
+          this.articleLoaded = true
         }
       }, (err) => {
         console.log(err)

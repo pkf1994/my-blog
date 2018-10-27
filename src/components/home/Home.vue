@@ -1,12 +1,13 @@
 <template>
     <div class="home flex-row-center max-width-750">
+          <LoadingPage v-if="!articleSummaryListLoaded"></LoadingPage>
           <ul>
             <li v-for="article in articleSummaryList" :key="article.article_id">
               <ArticleSummary :article=article
               ></ArticleSummary>
             </li>
             <Loading v-show="isLoading"></Loading>
-            <Nomore v-show="currentPage==maxPage"></Nomore>
+            <Nomore v-show="currentPage==maxPage && articleSummaryListLoaded"></Nomore>
             <div class="blank-for-reload" v-show="!isLoading&&!(currentPage==maxPage)">
             </div>
           </ul>
@@ -15,6 +16,7 @@
 
 <script>
 import ArticleSummary from './ArticleSummary.vue'
+import LoadingPage from '../loading/LoadingPage.vue'
 import Loading from '../loading/Loading.vue'
 import Nomore from '../loading/Nomore.vue'
 import ArticleApi from '../../api/article_api.js'
@@ -29,13 +31,15 @@ export default {
       maxPage: 1,
       articleSummaryList: [],
       isLoading: false,
-      isAllLoaded: false
+      isAllLoaded: false,
+      articleSummaryListLoaded: false
     }
   },
   components: {
     ArticleSummary,
     Loading,
-    Nomore
+    Nomore,
+    LoadingPage
   },
   created() {
     this.loadData(ArticleApi.getArticleSummaryListByCurrentPageAndPageScale, this.articleSummaryList, 'articleList')
@@ -65,6 +69,7 @@ export default {
         if (res.status === 200) {
           this.maxPage = res.data.maxPage
           this.articleSummaryList = this.articleSummaryList.concat(res.data.articleList)
+          this.articleSummaryListLoaded = true
           this.isLoading = false
           console.log('reloading!!!!')
         }
@@ -81,7 +86,6 @@ export default {
     initPageEndRefresh() {
       window.addEventListener('scroll', () => {
         var distanceToBottom = this.calculateDistanceToBottom()
-        console.log(distanceToBottom)
         if (distanceToBottom < 30 && this.$route.path == '/home.html') {
           this.throttle(this.reload, 400, 200)
         }

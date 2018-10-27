@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="cover"></div>
-    <Header ref="navbar"></Header>
+    <Header ref="header"></Header>
     <div class="navbar-wrapper flex-row-center" ref="navbar">
       <Navbar></Navbar>
     </div>
@@ -11,7 +11,9 @@
       </keep-alive>
       <router-view :key="$store.state.articlePageRouterStatus" name="ArticlePage"></router-view>
       <router-view name="ArticleEditorPage"></router-view>
-      <router-view name="ArticleManage"></router-view>
+      <keep-alive>
+       <router-view name="ArticleManage"></router-view>
+      </keep-alive>
     </div>
     <Footer></Footer>
   </div>
@@ -44,9 +46,10 @@ export default {
   watch: {
     distanceOfNavbarToClientUpperEdge(newDistanceOfNavbarToClientUpperEdge, oldDistanceOfNavbarToClientUpperEdge) {
 
-      let opacity = (70 - newDistanceOfNavbarToClientUpperEdge)/100
+      let opacity = (70 - newDistanceOfNavbarToClientUpperEdge)/70
 
       this.$refs.navbar.style.backgroundColor = 'rgba(204,204,204,' + opacity + ')'
+      this.$refs.header.$el.style.backgroundColor = 'rgba(204,204,204,' + opacity + ')'
     }
   },
   methods: {

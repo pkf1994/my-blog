@@ -3,6 +3,7 @@ export default {
   idOfArticleBeingReading: 0,
   articlePageRouterStatus: 0,
   offsetTopOfCommentTitle: 0,
+  offsetHeightOfHeader: 150,
   offsetHeightOfNavbar: 50,
   breadcrumbData: [],
   refreshDraftList: false,
