@@ -1,6 +1,6 @@
 <template>
     <div>
-      <input class="search-bar-input" type="text" v-model="searchString" placeholder="标题、分类、作者"><button class="search-bar-button" @click="submitSearchWord">Search</button>
+      <input class="search-bar-input" type="text" v-model="searchString" @keydown="checkKeyNumber" placeholder="标题、分类、作者"><button class="search-bar-button" @click="submitSearchWord" >Search</button>
     </div>
 </template>
 
@@ -13,10 +13,12 @@
     },
     methods: {
       submitSearchWord() {
-        if(this.searchString.trim() == ''){
-          return
+        this.$emit('submitSearchWords', this.searchString.trim())
+      },
+      checkKeyNumber(e) {
+        if(e.keyCode == 108 || e.keyCode == 13 ) {
+          this.submitSearchWord()
         }
-        this.$emit('submitSearchWords', this.searchString)
       }
     }
   }

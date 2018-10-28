@@ -2,7 +2,7 @@
     <div class="article-manage common-padding">
         <LoadingPage v-if="!articleItemsLoaded"></LoadingPage>
 
-        <div class="article-manage-list" ref="articleManageList">
+        <div class="article-manage-list" ref="articleManageList" v-show="articleItemsLoaded">
           <div class="article-manage-list-inner" ref="inner">
             <div class="article-manage-headline font-l font-bold">{{headline}}</div>
             <div class="article-manage-head  font-dark" v-if="!isMobile">
@@ -25,7 +25,6 @@
             </ArticleItemMobile>
           </div>
             <Pagination :max-page="maxPage"
-                        v-if="maxPage > 1"
                         @changeCurrentPage="changeCurrentPage"
                         class="article-manage-pagination"
                         ref="pagination"
@@ -35,16 +34,10 @@
 
 
 
-        <div class="article-manage-sidebar" v-if="!isMobile">
-          <SearchBar @submitSearchWords="(searchString) => {
-            searchStringFromSearchBar = searchString;
-            paginationPoint = 'search';
-            currentPage = 1;
-            $refs.pagination.currentPage = 1;
-           loadArticleItemListBySearchWords(searchString)
-          }"></SearchBar>
-          <ArticleFiling class="article-filing" @submitArticleFilingDate="loadArticleItemListByFilingDate"></ArticleFiling>
-          <ArticleClassification class="article-classification"></ArticleClassification>
+        <div class="article-manage-sidebar" v-if="!isMobile && articleItemsLoaded">
+          <SearchBar @submitSearchWords="receiveSearchWords" ref="searchBar"></SearchBar>
+          <ArticleFiling class="article-filing" @submitArticleFilingDate="receiveArticleFilingDate" ref="articleFiling"></ArticleFiling>
+          <ArticleClassification class="article-classification" @submitArticleLabel="receiveArticleLabel" ref="articleClassification"></ArticleClassification>
           <CommentLast class="comment-last"></CommentLast>
         </div>
 
@@ -97,7 +90,6 @@
       this.judgeIfMobile()
     },
     mounted() {
-      this.initPageHeight()
     },
     watch: {
       currentPage() {
@@ -140,6 +132,22 @@
           this.isMobile = true
         }
       },
+      receiveSearchWords(searchString) {
+        this.initSideBar('searchBar')
+        if(searchString != ''){
+          this.searchStringFromSearchBar = searchString
+          this.paginationPoint = 'search'
+          this.currentPage = 1
+          this.$refs.pagination.currentPage = 1
+          this.loadArticleItemListBySearchWords(searchString)
+        }else{
+          this.paginationPoint = 'common'
+          this.currentPage = 1
+          this.$refs.pagination.currentPage = 1
+          this.headline = '所有文章'
+          this.loadData()
+        }
+      },
       loadArticleItemListBySearchWords(searchString) {
         ArticleApi.getArticleItemListBySearchWords(this.currentPage, this.pageScale, searchString).then((res) => {
           if(res.status === 200) {
@@ -147,32 +155,63 @@
             this.maxPage = res.data.maxPage
             this.articleItemsLoaded = true
             this.handleArticleList()
-            this.headline = '搜索结果(' + this.articleList.length + ')'
+            this.headline = '搜索结果(' + res.data.countOfAllArticleBySearchWords + ')'
           }
         }).catch((err) => {
           console.log(err)
         })
       },
-      loadArticleItemListByFilingDate() {
-        ArticleApi.getArticleItemListByFilingDate(this.currentPage, this.pageScale, searchString).then((res) => {
+      receiveArticleFilingDate(selectedYear, selectedMonth){
+        this.initSideBar('articleFiling')
+        this.paginationPoint = 'articleFiling'
+        this.currentPage = 1
+        this.$refs.pagination.currentPage = 1
+        this.loadArticleItemListByFilingDate(selectedYear, selectedMonth)
+      },
+      loadArticleItemListByFilingDate(selectedYear, selectedMonth) {
+        ArticleApi.getArticleItemListByFilingDate(this.currentPage, this.pageScale, selectedYear, selectedMonth).then((res) => {
           if(res.status === 200) {
             this.articleList = res.data.articleList
             this.maxPage = res.data.maxPage
             this.articleItemsLoaded = true
             this.handleArticleList()
-            this.headline = '搜索结果(' + this.articleList.length + ')'
+            this.headline = '归档于' + selectedYear + '年' + selectedMonth + '月的所有文章(' + res.data.countOfAllArticleByFilingDate + ')';
           }
         }).catch((err) => {
           console.log(err)
         })
       },
-      initPageHeight() {
-        window.addEventListener('load', () => {
-          let bodyEl = document.documentElement || document.body
-          let clientHeight = bodyEl.clientHeight
-          let pageHeight = clientHeight - this.offsetHeightOfHeader - this.offsetHeightOfNavbar
-          this.$refs.inner.style.minHeight = pageHeight + 'px'
+      receiveArticleLabel(label) {
+        this.initSideBar('articleClassification')
+        this.paginationPoint = 'articleLabel'
+        this.currentPage = 1
+        this.$refs.pagination.currentPage = 1
+        this.loadArticleItemListByLabel(label)
+      },
+      loadArticleItemListByLabel(label) {
+        ArticleApi.getArticleItemListByLabel(this.currentPage, this.pageScale, label).then((res) => {
+          if(res.status === 200) {
+            this.articleList = res.data.articleList
+            this.maxPage = res.data.maxPage
+            this.articleItemsLoaded = true
+            this.handleArticleList()
+            this.headline = '分类为 [' + label + '] 的所有文章(' + res.data.countOfAllArticleByLabel + ')';
+          }
+        }).catch((err) => {
+          console.log(err)
         })
+      },
+      initSideBar(currentIndex) {
+        if(currentIndex != 'searchBar') {
+          this.$refs.searchBar.searchString = ''
+        }
+        if(currentIndex != 'articleFiling') {
+          this.$refs.articleFiling.selectedYear = ''
+          this.$refs.articleFiling.selectedMonth = ''
+        }
+        if(currentIndex != 'articleClassification') {
+          this.$refs.articleClassification.currentLabel = ''
+        }
       }
     }
   }
@@ -190,6 +229,8 @@
   .article-manage-list
     width 70%
 
+  .article-manage-list-inner
+    min-height 500px
 
   .article-manage-sidebar
     width 30%

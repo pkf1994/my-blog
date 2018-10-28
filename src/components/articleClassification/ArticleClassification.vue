@@ -3,7 +3,11 @@
       <div class="article-classification-headline font-bold">文章分类
       </div>
       <div class="article-classification-labellist">
-        <div v-for="label in labelList" class="article-classification-item flex-row-column-center cursorp font-dark">{{label.article_label}}({{label.number}})</div>
+        <div v-for="label in labelList" class="article-classification-item flex-row-column-center cursorp font-dark"
+             :class="{active: currentLabel == label.article_label}"
+             @click="() => {
+            submitArticleLabel(label.article_label);
+        }">{{label.article_label}}({{label.number}})</div>
       </div>
     </div>
 </template>
@@ -13,6 +17,7 @@
   export default {
     data() {
       return {
+        currentLabel:'',
         labelList: ['杂谈', '技术', '随笔', '旅行', '生活']
       }
     },
@@ -28,6 +33,11 @@
         }).catch((err) => {
           console.log(err)
         })
+      },
+      submitArticleLabel(label) {
+        this.currentLabel = label
+        console.log(label)
+        this.$emit('submitArticleLabel',label)
       }
     }
 
@@ -56,4 +66,6 @@
     background rgb(222, 226, 230)
     transition 0.5s ease all
 
+  .active
+    background rgb(222, 226, 230)
 </style>

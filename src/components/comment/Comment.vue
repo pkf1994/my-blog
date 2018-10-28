@@ -1,5 +1,5 @@
 <template>
-    <div class="comment common-padding">
+    <div :id="'comment_' + comment.comment_id" class="comment common-padding">
       <div class="comment-author font-bold font-m" v-bind:class="{redirectable: isRedirectable}" @click="redirectToTheirSite">{{comment.comment_author.visitor_name}}</div>
       <div v-if="subComment.comment_id" class="refer-comment">
         <SubComment :subComment="subComment"></SubComment>

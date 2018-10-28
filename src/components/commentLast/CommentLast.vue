@@ -3,8 +3,12 @@
         <div class="comment-last-headline font-bold">最近评论</div>
         <div class="comment-last-list">
           <div v-for="comment in commentList" class="comment-last-list-item">
-            <span>{{comment.comment_author.visitor_name}}</span>&nbsp;:&nbsp;
-            <span class="overRowHandle">{{comment.comment_content}}</span>
+            <span class="cursorp" @click="() => {
+              goToTheArticlePage(comment.comment_hostId, comment.comment_id);
+            }">{{comment.comment_author.visitor_name}}</span>&nbsp;:&nbsp;
+            <span class="overRowHandle cursorp" @click="() => {
+              goToTheArticlePage(comment.comment_hostId, comment.comment_id);
+            }">{{comment.comment_content}}</span>
           </div>
         </div>
     </div>
@@ -30,6 +34,13 @@
         }).catch((err) => {
           console.log(err)
         })
+      },
+      goToTheArticlePage(comment_hostId, comment_id) {
+        this.$router.push({path: '/article/' + comment_hostId, query: {idOfCommentScrollTo: comment_id}})
+        window.addEventListener('road', () => {
+          let theCommentEl = document.getElementById('comment_' + this.$route.query.idOfCommentScrollTo)
+          window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(theCommentEl) - 50)
+        })
       }
     }
   }
@@ -44,4 +55,8 @@
   .comment-last-list-item
     margin-bottom 5px
     margin-left 5px
+    color rgb(23, 81, 153)
+
+  .comment-last-list-item:hover
+    color black
 </style>

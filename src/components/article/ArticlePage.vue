@@ -2,7 +2,7 @@
     <div class="article-page max-width-750">
       <LoadingPage v-if="!articleLoaded"></LoadingPage>
       <Article :article="article"></Article>
-      <div class="comment-title common-padding font-bold font-ll" ref="commentTitle">
+      <div id="massage-title" class="comment-title common-padding font-bold font-ll" ref="commentTitle">
         留言 <span class="font-m font-dark">({{countOfComment}})</span>
       </div>
       <div class="division"></div>
@@ -34,6 +34,7 @@ import ArticleApi from '../../api/article_api.js'
 import CommentApi from '../../api/comment_api.js'
 import dateFormat from '../../js/dateFormatUtil.js'
 import { mapActions, mapState } from 'vuex'
+import CountDistanceToDocumentUpperEdge from '../../js/countDistanceToDocumentUpperEdge.js'
 export default {
   mixins: [
     ScrollRefreshMixin,
@@ -72,7 +73,7 @@ export default {
     this.loadCommentListData()
   },
   mounted() {
-   this.uploadOffsetTopOfCommentTitle()
+    this.uploadOffsetTopOfCommentTitle()
   },
   computed: {
     ...mapState([
@@ -107,6 +108,9 @@ export default {
           this.commentList = this.commentList.concat(res.data.commentList)
           this.maxPage = res.data.maxPage
           this.countOfComment = res.data.countOfComment
+          this.$nextTick(() => {
+            this.scrollToTheComment()
+          })
         }
       }).catch((err) => {
         console.log(err)
@@ -131,6 +135,10 @@ export default {
         /*console.log(this.$refs.commentTitle.offsetTop)*/
         this.appointOffsetTopOfCommentTitle(this.$refs.commentTitle.offsetTop)
       }, 500)
+    },
+    scrollToTheComment() {
+      let theCommentEl = document.getElementById('comment_' + this.$route.query.idOfCommentScrollTo)
+      window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(theCommentEl) - 50)
     }
   }
 }

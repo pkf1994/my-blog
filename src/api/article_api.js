@@ -110,12 +110,44 @@ export default {
     }
 
     return new Promise((resolve, reject) => {
-      axios.get(apiInfo.server + 'article/article_search.do',config).then((res) => {
+      axios.get(apiInfo.server + 'article/article_bysearch.do',config).then((res) => {
         resolve(res)
       }).catch((err) => {
         reject(err)
       })
     })
-
+  },
+  getArticleItemListByFilingDate(currentPage, pageScale, selectedYear, selectedMonth) {
+    let config = {
+      params: {
+        currentPage: currentPage,
+        pageScale: pageScale,
+        selectedYear: selectedYear,
+        selectedMonth: selectedMonth
+      }
+    }
+    return new Promise((resolve, reject) => {
+      axios.get(apiInfo.server + 'article/article_byfiling.do',config).then((res) => {
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
+    })
+  },
+  getArticleItemListByLabel(currentPage, pageScale, label) {
+    let config = {
+      params: {
+        currentPage: currentPage,
+        pageScale: pageScale,
+        article_label: label
+      }
+    }
+    return new Promise((resolve, reject) => {
+      axios.get(apiInfo.server + 'article/article_bylabel.do',config).then((res) => {
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
+    })
   }
 }
