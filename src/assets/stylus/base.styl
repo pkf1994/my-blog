@@ -19,6 +19,11 @@ body
   display flex
   justify-content center
 
+.flex-row-end
+  display flex
+  align-items flex-end
+  justify-content flex-end
+
 .flex-column-center
   display flex
   flex-direction column
@@ -46,6 +51,12 @@ ul
 
 .common-padding
   padding 15px 30px
+
+@media (max-width: 750px) {
+  .common-padding{
+    padding 15px 15px
+  }
+}
 
 .cursorp
   cursor pointer
@@ -105,6 +116,7 @@ textarea:focus
   .submit-button{
     width 100%
     padding 10px 20px
+    margin-top 15px
   }
 }
 

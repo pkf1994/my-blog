@@ -26,6 +26,10 @@ export default new Router({
       redirect: '/home.html'
     },
     {
+      path: '/article_edit',
+      redirect: '/article_edit/0'
+    },
+    {
       path: '/article_edit/:idOfEditingArticle',
       components: {
         ArticleEditorPage: ArticleEditorPage

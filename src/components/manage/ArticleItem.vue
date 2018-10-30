@@ -1,10 +1,10 @@
 <template>
     <div class="article-item" :class="{colorful: article.colorful}">
-      <span class="article-item-title cursorp overRowHandle"
+      <span class="article-item-title cursorp"
             :class="{deleted: deleted}"
             @click="goToTheArticlePage">{{article.article_title}}</span>
-      <span class="article-item-author overRowHandle">{{article.article_author}}</span>
-      <span class="article-item-label flex-row-center cursorp">{{article.article_label}}</span>
+      <span class="article-item-author">{{article.article_author}}</span>
+      <span class="article-item-label flex-row-center cursor">{{article.article_label}}</span>
       <span class="article-item-releasetime flex-row-center">{{article.article_releaseTime}}</span>
       <span class="edit flex-row-center">
         <i class="fa fa-edit cursorp font-dark operation-font" @click="goToTheEditPage"></i>
@@ -111,6 +111,7 @@
 
 <style scoped lang="stylus">
 .article-item
+  width 100%
   display flex
   padding-top 15px
   padding-bottom 15px
@@ -122,29 +123,39 @@
 .article-item-title
   width 50%
   color rgb(23, 81, 153)
-
+  padding-right 10px
 
 .article-item-title:hover
   color black
 
 .article-item-author
   width 15%
+  display flex
+  align-items center
 
 .article-item-label
   width 10%
   color rgb(23, 81, 153)
+  display flex
+  align-items center
 
 .article-item-label:hover
   color black
 
 .article-item-releasetime
   width 15%
+  display flex
+  align-items center
 
 .edit
   width 5%
+  display flex
+  align-items center
 
 .delete
   width 5%
+  display flex
+  align-items center
 
 .colorful
   background linear-gradient(to right, rgba(255,255,255,1), rgba(0,0,0,0.05), rgba(255,255,255,1))

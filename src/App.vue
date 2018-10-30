@@ -11,9 +11,7 @@
       </keep-alive>
       <router-view :key="$store.state.articlePageRouterStatus" name="ArticlePage"></router-view>
       <router-view name="ArticleEditorPage"></router-view>
-      <keep-alive>
-       <router-view name="ArticleManage"></router-view>
-      </keep-alive>
+      <router-view name="ArticleManage"></router-view>
     </div>
     <Footer></Footer>
   </div>
@@ -24,6 +22,7 @@ import Header from './components/header/Header.vue'
 import Navbar from './components/header/Navbar.vue'
 import Footer from './components/footer/Footer.vue'
 import CountDistanceToBodyMixin from './components/mixin/CountDistanceToBody.vue'
+import CountDistanceToUpperEdge from './js/countDistanceToUpperEdge.js'
 export default {
   mixins: [
     CountDistanceToBodyMixin
@@ -39,9 +38,11 @@ export default {
     Navbar
   },
   created() {
-    this.init()
+
   },
   mounted() {
+    this.bindScrollEvent()
+    this.initDistanceOfNavbarToClientUpperEdge()
   },
   watch: {
     distanceOfNavbarToClientUpperEdge(newDistanceOfNavbarToClientUpperEdge, oldDistanceOfNavbarToClientUpperEdge) {
@@ -53,15 +54,13 @@ export default {
     }
   },
   methods: {
-    countDistanceToClientUpperEdge(el) {
-      let bodyScrollTop = document.documentElement.scrollTop || document.body.scrollTop
-      let distanceToBody = this.countDistanceToBody(el)
-      return distanceToBody - bodyScrollTop
-    },
-    init() {
+    bindScrollEvent() {
       window.addEventListener('scroll', () => {
-        this.distanceOfNavbarToClientUpperEdge = this.countDistanceToClientUpperEdge(this.$refs.navbar)
+        this.distanceOfNavbarToClientUpperEdge = CountDistanceToUpperEdge.countDistanceToClientUpperEdge(this.$refs.navbar)
       })
+    },
+    initDistanceOfNavbarToClientUpperEdge() {
+      this.distanceOfNavbarToClientUpperEdge = CountDistanceToUpperEdge.countDistanceToClientUpperEdge(this.$refs.navbar)
     }
   }
 }

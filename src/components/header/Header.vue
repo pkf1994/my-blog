@@ -8,26 +8,34 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   methods: {
+    ...mapActions([
+      'triggerFlagRefreshHome'
+      ]),
     refresh() {
-      location.reload()
+      this.$router.push('/home.html')
+      setTimeout(() => {
+        this.triggerFlagRefreshHome()
+      },200)
     }
   }
 }
 </script>
 
 <style scoped lang="stylus">
-
 .header{
   z-index 1
   background #F7F7F7
   height 150px
   width 100vw
+  position relative
   .logo{
     height 100px
     width 750px
   }
+
 }
 
 </style>

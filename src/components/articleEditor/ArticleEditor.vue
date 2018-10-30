@@ -1,5 +1,5 @@
 <template>
-    <div class="article-editor common-padding">
+    <div class="article-editor">
 
       <div class="label font-m font-bold">文章标题
         &nbsp;&nbsp;<span class="format-warn font-s" v-show="titleIsWrong&&!titleInputIsFocus">标题不能为空</span>
@@ -223,9 +223,7 @@
         'triggerFlagRefreshHome'
       ]),
       initContent() {
-        setTimeout(() => {
           document.getElementsByClassName('ql-container')[0].style.height = '300px'
-        }, 100)
       },
       submitArticle() {
 
@@ -271,7 +269,8 @@
         })
       },
       submitDraft() {
-
+        this.authorIsWrong = false
+        this.labelIsWrong = false
         this.checkTitle()
         this.checkContent()
 

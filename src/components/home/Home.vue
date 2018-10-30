@@ -1,7 +1,8 @@
 <template>
-    <div class="home flex-row-center max-width-750">
+    <div class="home flex-row-center max-width-750 common-padding">
           <LoadingPage v-if="!articleSummaryListLoaded"></LoadingPage>
-          <ul>
+          <ul style="width: 100%">
+            <SearchBar inputLengthRatio="80%" is-mobile="yes" submit-slogan="Go!" class="search-bar" @submitSearchWords="receiveSearchWords"></SearchBar>
             <li v-for="article in articleSummaryList" :key="article.article_id">
               <ArticleSummary :article=article
               ></ArticleSummary>
@@ -21,6 +22,7 @@ import Loading from '../loading/Loading.vue'
 import Nomore from '../loading/Nomore.vue'
 import ArticleApi from '../../api/article_api.js'
 import ScrollRefreshMixin from '../mixin/ScrollRefreshMixin.vue'
+import SearchBar from '../searchBar/SearchBar.vue'
 import { mapState } from 'vuex'
 export default {
   mixins: [ScrollRefreshMixin],
@@ -32,14 +34,15 @@ export default {
       articleSummaryList: [],
       isLoading: false,
       isAllLoaded: false,
-      articleSummaryListLoaded: false
+      articleSummaryListLoaded: false,
     }
   },
   components: {
     ArticleSummary,
     Loading,
     Nomore,
-    LoadingPage
+    LoadingPage,
+    SearchBar
   },
   created() {
     this.loadData(ArticleApi.getArticleSummaryListByCurrentPageAndPageScale, this.articleSummaryList, 'articleList')
@@ -85,11 +88,16 @@ export default {
     },
     initPageEndRefresh() {
       window.addEventListener('scroll', () => {
-        var distanceToBottom = this.calculateDistanceToBottom()
-        if (distanceToBottom < 30 && this.$route.path == '/home.html') {
-          this.throttle(this.reload, 400, 200)
-        }
+          var distanceToBottom = this.calculateDistanceToBottom()
+          if (distanceToBottom < 30 && this.$route.path == '/home.html') {
+            this.throttle(this.reload, 400, 200)
+          }
       })
+    },
+    receiveSearchWords(searchString) {
+      if(searchString != ''){
+        this.$router.push({path:'/article_manage',query:{search_string: searchString}})
+      }
     }
   }
 }
@@ -97,6 +105,8 @@ export default {
 
 <style scoped lang="stylus">
 .home {
+  width 750px
+  background white
   .home-main-area {
     height 100vh
   }
@@ -109,5 +119,9 @@ export default {
 
 .blank-for-reload
   height 50px
+
+.search-bar
+  padding-bottom 15px
+  border-bottom 1px solid rgb(222, 226, 230)
 
 </style>

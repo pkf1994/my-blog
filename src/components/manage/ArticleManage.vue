@@ -4,6 +4,9 @@
 
         <div class="article-manage-list" ref="articleManageList" v-show="articleItemsLoaded">
           <div class="article-manage-list-inner" ref="inner">
+            <div class="search-bar-mobile" v-if="isMobile">
+              <SearchBar inputLengthRatio="80%" submit-slogan="Go!" is-mobile="yes" @submitSearchWords="receiveSearchWords" ref="searchBarMobile"></SearchBar>
+            </div>
             <div class="article-manage-headline font-l font-bold">{{headline}}</div>
             <div class="article-manage-head  font-dark" v-if="!isMobile">
               <span class="article-manage-title">文章标题</span>
@@ -12,17 +15,19 @@
               <span class="article-manage-releasetime flex-row-center">发布时间</span>
               <span class="article-manage-operation flex-row-center">操作</span>
             </div>
-            <div v-if="isMobile" class="article-manage-head-mobile font-bold">文章列表</div>
             <ArticleItem v-for="article in articleList"
                          :article="article"
                          :key="article.article_id"
                          v-if="!isMobile">
             </ArticleItem>
+
+
             <ArticleItemMobile v-for="article in articleList"
                                :article="article"
                                :key="article.article_id"
                                v-if="isMobile">
             </ArticleItemMobile>
+
           </div>
             <Pagination :max-page="maxPage"
                         @changeCurrentPage="changeCurrentPage"
@@ -35,7 +40,7 @@
 
 
         <div class="article-manage-sidebar" v-if="!isMobile && articleItemsLoaded">
-          <SearchBar @submitSearchWords="receiveSearchWords" ref="searchBar"></SearchBar>
+          <SearchBar @submitSearchWords="receiveSearchWords" ref="searchBar" is-mobile="no"></SearchBar>
           <ArticleFiling class="article-filing" @submitArticleFilingDate="receiveArticleFilingDate" ref="articleFiling"></ArticleFiling>
           <ArticleClassification class="article-classification" @submitArticleLabel="receiveArticleLabel" ref="articleClassification"></ArticleClassification>
           <CommentLast class="comment-last"></CommentLast>
@@ -73,7 +78,10 @@
       ...mapState([
         'offsetHeightOfHeader',
         'offsetHeightOfNavbar'
-      ])
+      ]),
+      querySearchString() {
+        return this.$route.query.search_string
+      }
     },
     components: {
       ArticleItem,
@@ -90,6 +98,10 @@
       this.judgeIfMobile()
     },
     mounted() {
+      this.handleQuerySearchString()
+    },
+    updated() {
+      /*this.handleQuerySearchString() console.log("===")*/
     },
     watch: {
       currentPage() {
@@ -99,6 +111,9 @@
         if(this.paginationPoint == 'common'){
           this.loadData()
         }
+      },
+      querySearchString() {
+        this.handleQuerySearchString()
       }
     },
     methods: {
@@ -205,13 +220,26 @@
         if(currentIndex != 'searchBar') {
           this.$refs.searchBar.searchString = ''
         }
-        if(currentIndex != 'articleFiling') {
-          this.$refs.articleFiling.selectedYear = ''
-          this.$refs.articleFiling.selectedMonth = ''
+        if(this.isMobile == true) {
+          return
         }
-        if(currentIndex != 'articleClassification') {
+        if(currentIndex != 'articleFiling') {
+          if(this.$refs.articleFiling != undefined) {
+            this.$refs.articleFiling.selectedYear = ''
+          }
+          if(this.$refs.articleFiling != undefined) {
+            this.$refs.articleFiling.selectedMonth = ''
+          }
+        }
+        if(currentIndex != 'articleClassification' && this.$refs.articleClassification != undefined) {
           this.$refs.articleClassification.currentLabel = ''
         }
+      },
+      handleQuerySearchString() {
+        if(this.$route.query.search_string === undefined) {
+          return
+        }
+          this.receiveSearchWords(this.querySearchString)
       }
     }
   }
@@ -219,7 +247,7 @@
 
 <style scoped lang="stylus">
   .article-manage
-    width 1100px
+    width 1000px
     background white
     display flex
 
@@ -230,13 +258,13 @@
     width 70%
 
   .article-manage-list-inner
-    min-height 500px
+    min-height 600px
 
   .article-manage-sidebar
     width 30%
     height 100%
-    margin-left 10px
-    padding-left 10px
+    margin-left 15px
+    padding-left 15px
     border-left 1px solid rgb(222, 226, 230)
 
   @media(max-width: 750px){
@@ -280,5 +308,10 @@
   .article-classification
   .comment-last
     margin-top 15px
+
+  .search-bar-mobile
+    padding-bottom 15px
+    margin-bottom 15px
+    border-bottom 1px solid #dee2e6
 
 </style>

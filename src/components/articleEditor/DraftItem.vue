@@ -1,14 +1,14 @@
 <template>
     <div class="draft-item">
       <div class="draft-title font-s font-bold flex-row-space-between">
-        <span class="cursorp" @click="redirectToEditPage">{{draft.article_title}}</span>
+        <span class="cursorp overRowHandle" @click="redirectToEditPage">{{draft.article_title}}</span>
         <span class="operation font-normal font-dark">
-          <span class="cursorp" @click="redirectToEditPage" v-if="!isEditing">编辑</span><span class="status" v-if="isEditing">编辑中</span>&nbsp;|
-          <span class="cursorp" @click="deleteThisDraft">删除</span>
+          <span class="cursorp" @click="redirectToEditPage" v-if="!isEditing"><i class="fa fa-edit"></i></span><span class="status" v-if="isEditing">编辑中</span>&nbsp;|
+          <span class="cursorp" @click="deleteThisDraft"><i class="fa fa-close"></i></span>
         </span>
       </div>
       <div>
-        <span class="savetime font-s font-dark">最后一次提交：{{draft.article_releaseTime}}</span>
+        <span class="savetime font-ss font-dark">最后一次提交：{{draft.article_releaseTime}}</span>
       </div>
     </div>
 </template>
@@ -53,6 +53,17 @@
 </script>
 
 <style scoped lang="stylus">
+.draft-item
+  padding 10px 15px
+  border 1px solid rgb(222, 226, 230)
+  border-radius 4px
+
 .status
   color red
+
+.fa-edit:hover
+  color black
+
+.fa-close:hover
+  color black
 </style>

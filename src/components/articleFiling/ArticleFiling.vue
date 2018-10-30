@@ -11,7 +11,7 @@
           <option v-for="articleFilingMonthItem in articleFilingObject[selectedYear]" :value="articleFilingMonthItem">{{articleFilingMonthItem}}</option>
         </select>
         <span>月</span>
-        <button class="article-filing-button" @click="submitArticleFilingDate">
+        <button class="article-filing-button" @click="throttleSubmitArticleFilingData">
           Go!
         </button>
       </div>
@@ -22,7 +22,9 @@
 
 <script>
   import ArticleApi from '../../api/article_api.js'
+  import ThrottleMixin from '../mixin/ThrottleMixin.vue'
   export default {
+    mixins:[ThrottleMixin],
     data() {
       return {
         articleFilingObject: {},
@@ -52,7 +54,10 @@
           console.log(err)
         })
       },
-      submitArticleFilingDate() {
+      throttleSubmitArticleFilingData() {
+        this.throttle(this.submitArticleFilingData, 500, 0)
+      },
+      submitArticleFilingData() {
         if(this.selectedYear == '' || this.selectedMonth == ''){
           return
         }

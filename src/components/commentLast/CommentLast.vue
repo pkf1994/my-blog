@@ -7,8 +7,12 @@
               goToTheArticlePage(comment.comment_hostId, comment.comment_id);
             }">{{comment.comment_author.visitor_name}}</span>&nbsp;:&nbsp;
             <span class="overRowHandle cursorp" @click="() => {
-              goToTheArticlePage(comment.comment_hostId, comment.comment_id);
+              goToTheArticlePage(comment.comment_hostArticle.article_id, comment.comment_id);
             }">{{comment.comment_content}}</span>
+            <div class="comment-last-host-article"><div class="cursorp overRowHandle" @click="() => {
+              goToTheArticlePage(comment.comment_hostArticle.article_id, comment.comment_id);
+            }">[{{comment.comment_hostArticle.article_label}}]&nbsp;{{comment.comment_hostArticle.article_title}}</div>
+            </div>
           </div>
         </div>
     </div>
@@ -27,7 +31,7 @@
     },
     methods: {
       loadCommentListData() {
-        CommentApi.getCommentLast(5).then((res) => {
+        CommentApi.getCommentLast(4).then((res) => {
           if(res.status === 200) {
             this.commentList = res .data
           }
@@ -36,7 +40,7 @@
         })
       },
       goToTheArticlePage(comment_hostId, comment_id) {
-        this.$router.push({path: '/article/' + comment_hostId, query: {idOfCommentScrollTo: comment_id}})
+        this.$router.push({path: '/article/' + comment_hostId, query: {id_of_comment_scroll_to: comment_id}})
         window.addEventListener('road', () => {
           let theCommentEl = document.getElementById('comment_' + this.$route.query.idOfCommentScrollTo)
           window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(theCommentEl) - 50)
@@ -53,10 +57,32 @@
     padding-top 15px
 
   .comment-last-list-item
-    margin-bottom 5px
+    margin-bottom 10px
     margin-left 5px
     color rgb(23, 81, 153)
+    border 1px solid rgb(222, 226, 230)
+    border-radius 5px
+    padding 5px 5px
 
   .comment-last-list-item:hover
     color black
+
+  .comment-last-host-article
+    position relative
+    background rgb(222, 226, 230)
+    line-height 2rem
+    border-radius 5px
+    padding-left 5px
+    margin-top 10px
+  .comment-last-host-article:before
+      content ''
+      width 0
+      height 0
+      border 7px solid transparent
+      border-bottom-color rgb(222, 226, 230)
+      position absolute
+      left 15px
+      top -14px
+      margin-top -20p
+
 </style>

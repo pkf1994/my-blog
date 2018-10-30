@@ -1,5 +1,5 @@
 <template>
-    <div class="article-summary common-padding">
+    <div class="article-summary">
         <div class="article-title font-l cursorp font-bold" v-on:click="redirectToTheArticle">
           {{article.article_title}}
         </div>
@@ -13,9 +13,11 @@
               <span class="summary-cover"></span>
               <span class="font-m" style="background: white" v-on:click="redirectToTheArticle">阅读全文</span>
             </span></div>
-          <div ref="imgInner" class="img-inner" v-if="article.article_previewImageUrl != undefined">
-            <img ref="img" :src="article.article_previewImageUrl" alt="previewImage" class="preview-image">
-          </div>
+
+            <div ref="imgInner" class="img-inner" v-if="article.article_previewImageUrl != undefined" v-on:click="redirectToTheArticle">
+              <img ref="img" :src="article.article_previewImageUrl" alt="previewImage" class="preview-image">
+            </div>
+
         </div>
     </div>
 </template>
@@ -33,10 +35,8 @@ export default {
     this.formatTheDate()
   },
   mounted() {
-    this.$nextTick(() => {
       this.handlePreviewImageSize()
       this.handleArticleContentSummarySize()
-    })
   },
   methods: {
     ...mapActions([
@@ -56,10 +56,12 @@ export default {
         return
       }
       if(this.article.article_previewImageUrl != undefined){
-        let imgHeight = parseInt(getComputedStyle(this.$refs.img).height)
-        let imgInnerHeight = parseInt(getComputedStyle(this.$refs.imgInner).height)
-        let imgMarginTop = (imgInnerHeight - imgHeight) * 0.5
-        this.$refs.img.style.marginTop = imgMarginTop + 'px'
+        setTimeout(() => {
+          let imgHeight = parseInt(getComputedStyle(this.$refs.img).height)
+          let imgInnerHeight = parseInt(getComputedStyle(this.$refs.imgInner).height)
+          let imgMarginTop = (imgInnerHeight - imgHeight) * 0.5
+          this.$refs.img.style.top = imgMarginTop + 'px'
+        },1000)
       }
     },
     handleArticleContentSummarySize() {
@@ -67,9 +69,9 @@ export default {
       let offsetWidthOfBodyEl = bodyEl.offsetWidth
       if(offsetWidthOfBodyEl > 750) {
         let lineHeight = parseInt(getComputedStyle(this.$refs.summary).lineHeight)
-        this.$refs.summary.style.height = lineHeight * 5 + 'px'
+        this.$refs.summary.style.height = lineHeight * 4 + 'px'
         if(this.article.article_previewImageUrl != undefined){
-          this.$refs.img.style.height = lineHeight * 5 + 'px'
+          this.$refs.img.style.height = lineHeight * 4 + 'px'
         }
       }
       if(offsetWidthOfBodyEl <= 750) {
@@ -83,6 +85,7 @@ export default {
 
 <style scoped lang="stylus">
 .article-summary
+  width 100%
   background white
   border-bottom 1px solid #F7F7F7
 
@@ -91,7 +94,6 @@ export default {
 .article-content
 {
   height auto
-  padding 5px 0
   word-wrap break-word
 }
 
@@ -106,17 +108,17 @@ export default {
 .preview-image
   width: auto
   height 150px
-  border-radius 2px
+  border-radius 4px
 
 @media (min-width: 750px){
   .preview-image{
-    margin-left 10px
+    margin-left 20px
   }
 }
 
 @media (max-width: 750px){
   .article-summary{
-    width 100vw
+    width 100%
   }
   .article-content{
     display flex
@@ -127,15 +129,19 @@ export default {
     order 2
   }
   .img-inner{
+    position relative
     width 100%
     height 150px
     overflow hidden
     margin-top  5px
     margin-bottom 10px
+    border-radius 4px
 
   }
   .preview-image{
-    width auto
+    position absolute
+    width 100%
+    height auto
     order 1
   }
 }

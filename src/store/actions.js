@@ -16,5 +16,8 @@ export default {
   },
   triggerFlagRefreshHome(context) {
     context.commit('triggerFlagRefreshHome')
+  },
+  appointNavbarSearchString(context,searchString) {
+    context.commit('appointNavbarSearchString', searchString)
   }
 }

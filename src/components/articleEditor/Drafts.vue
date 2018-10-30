@@ -1,7 +1,6 @@
 <template>
-    <div class="draft common-padding">
+    <div class="draft">
       <div class="font-m font-bold headline">草稿</div>
-      <div class="division"></div>
       <ul>
         <transition-group name="list-complete" tag="div">
         <DraftItem class="draft-item" ref="draftitems"
@@ -12,10 +11,10 @@
                    @refreshDraftList="refreshDraftListAfterDelete"></DraftItem>
         </transition-group>
       </ul>
+      <div class="division"></div>
       <Loading v-show="isLoading"></Loading>
-      <Nomore v-show="currentPage==maxPage" msg="没有更多草稿"></Nomore>
-      <div class="blank-for-reload" v-show="!isLoading&&!(currentPage==maxPage)">
-      </div>
+      <ClickForMore v-show="!(maxPage==currentPage)&&!isLoading" @click="reload"></ClickForMore>
+      <Nomore v-show="maxPage==currentPage">没有更多内容</Nomore>
     </div>
 </template>
 
@@ -24,14 +23,13 @@
   import ArticleApi from '../../api/article_api.js'
   import Loading from '../loading/Loading.vue'
   import Nomore from '../loading/Nomore.vue'
-  import ScrollRefreshMixin from '../mixin/ScrollRefreshMixin.vue'
+  import ClickForMore from '../loading/ClickForMore.vue'
   export default {
-    mixins: [ScrollRefreshMixin],
     data() {
       return {
         drafts: [],
         currentPage: 0,
-        pageScale: 3,
+        pageScale: 10,
         maxPage: 1,
         isLoading: false,
         isAllLoaded: false
@@ -40,11 +38,11 @@
     components: {
       DraftItem,
       Loading,
-      Nomore
+      Nomore,
+      ClickForMore
     },
     created() {
       this.loadData()
-      this.initPageEndRefresh()
     },
     methods: {
       loadData() {
@@ -52,7 +50,7 @@
           return
         }
         this.currentPage = this.currentPage + 1
-        ArticleApi.getDraftListByCurrentPageAndPageScale(this.currentPage, this.pageScale).then((res) => {
+        return ArticleApi.getDraftListByCurrentPageAndPageScale(this.currentPage, this.pageScale).then((res) => {
           if (res.status === 200) {
             this.maxPage = res.data.maxPage
             this.drafts = this.drafts.concat(res.data.articleList)
@@ -69,12 +67,6 @@
         }, 2000)
       },
       initPageEndRefresh() {
-        window.addEventListener('scroll', () => {
-          var distanceToBottom = this.calculateDistanceToBottom()
-          if (distanceToBottom < 10 && this.$route.path.match(/^\/article_edit\/\d+$/) != null) {
-            this.throttle(this.reload, 400, 200)
-          }
-        })
       },
       initEditingSloganOfAllDraftItem() {
         for(let i = 0; i < this.$refs.draftitems.length; i++) {
@@ -91,21 +83,31 @@
       refreshDraftListAfterSubmit(){
         this.drafts = []
         this.currentPage = 0
-        this.loadData()
-        setTimeout(() => {
+        this.loadData().then(() => {
           this.$refs.draftitems[0].isEditing = true
-        }, 2000)
+        })
       }
     }
   }
 </script>
 
 <style scoped lang="stylus">
+.draft
+  overflow-x hidden
+  overflow-y scroll
+  -ms-overflow-style none
+
+.draft::-webkit-scrollbar
+  width 0px;
+  height 0px;
+
+
 .headline
-  margin 10px 0px
+  margin-bottom 5px
+  padding-bottom 5px
 
 .draft-item
-  margin-top 15px
+  margin-bottom 15px
 
 .list-complete-item {
   transition: all 0.5s;

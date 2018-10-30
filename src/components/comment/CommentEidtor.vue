@@ -9,33 +9,28 @@
                 @blur="triggerTextAreaFocus"></textarea>
     </div>
     <div class="comment-edit-regiter">
-      <br>
-      <div class="font-m font-bold  required">为您的留言设置昵称</div>
+      <div class="font-m font-bold"><span class="required">为您的留言设置昵称</span><span class="format-warn" v-show="nameIsWrong&&!nameInputIsFocus">&nbsp;&nbsp;&nbsp;&nbsp;{{nameWrongMessage}}</span></div>
       <input type="text" class="the-input font-m"
              v-model="visitor_name"
              @focus="triggerNameInputFocus"
-             @blur="triggerNameInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="nameIsWrong&&!nameInputIsFocus">{{nameWrongMessage}}</span>
-      <br>
-      <br>
-      <div class="font-m font-bold  required">您的邮件地址</div>
+             @blur="triggerNameInputFocus">
+
+      <div class="font-m font-bold"><span class="required">您的邮件地址</span><span class="format-warn" v-show="emailIsWrong&&!emailInputIsFocus">&nbsp;&nbsp;&nbsp;&nbsp;{{emailWrongMessage}}</span></div>
       <input type="text" class="the-input font-m"
              v-model="visitor_email"
              @focus="triggerEmailInputFocus"
-             @blur="triggerEmailInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="emailIsWrong&&!emailInputIsFocus">{{emailWrongMessage}}</span>
-      <br>
-      <br>
-      <div class="font-m font-bold">您的个人网站地址</div>
+             @blur="triggerEmailInputFocus">
+
+      <div class="font-m font-bold">您的个人网站地址<span class="format-warn" v-show="siteAddressIsWrong&&!siteAddressInputIsFocus">&nbsp;&nbsp;&nbsp;&nbsp;网址格式有误</span></div>
       <input type="text" class="the-input font-m"
              v-model="visitor_siteAddress"
              @focus="triggerSiteAddressInputFocus"
-             @blur="triggerSiteAddressInputFocus">&nbsp;&nbsp;&nbsp;&nbsp;<span class="format-warn" v-show="siteAddressIsWrong&&!siteAddressInputIsFocus">网址格式有误</span>
-      <br>
-      <br>
+             @blur="triggerSiteAddressInputFocus">
+
       <input type="checkbox" v-model="rememberMe"/><span class="font-m font-bold">记住以上个人信息？</span>
-      <br>
-      <br>
+
     </div>
-    <button class="font-m submit-button" @click="submitComment"><span v-show="!isSubmittingComment">发表</span><i v-show="isSubmittingComment" class="fa fa-spinner fa-pulse"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;<span v-show="submitFinish" ><i class="fa fa-check"></i>留言提交成功</span>
+    <button class="font-m submit-button" @click="throttleSubmitComment"><span v-show="!isSubmittingComment">发表</span><i v-show="isSubmittingComment" class="fa fa-spinner fa-pulse"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;<span v-show="submitFinish" ><i class="fa fa-check"></i>留言提交成功</span>
   </div>
 </template>
 
@@ -44,9 +39,11 @@ import SubComment from '../comment/SubComment.vue'
 import SetCookieMixin from '../mixin/SetCookieMixin.vue'
 import { mapState, mapActions } from 'vuex'
 import CommentApi from '../../api/comment_api.js'
+import ThrottleMixin from '../mixin/ThrottleMixin.vue'
 export default {
   mixins: [
-    SetCookieMixin
+    SetCookieMixin,
+    ThrottleMixin
   ],
   inject: [
     'article_id'
@@ -189,6 +186,9 @@ export default {
     triggerSiteAddressInputFocus() {
       this.siteAddressInputIsFocus = !this.siteAddressInputIsFocus
     },
+    throttleSubmitComment() {
+      this.throttle(this.submitComment, 500, 0)
+    },
     submitComment() {
       this.checkCommentContent()
       this.checkName()
@@ -266,6 +266,7 @@ export default {
 @media(max-width: 750px){
   .the-input{
     width 100%
+    margin-bottom 25px
   }
 }
 

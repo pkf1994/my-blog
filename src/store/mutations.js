@@ -16,5 +16,8 @@ export default {
   },
   triggerFlagRefreshHome(state) {
     state.flagRefreshHome = !state.flagRefreshHome
+  },
+  appointNavbarSearchString(state, searchString) {
+    state.navbarSearchString = searchString
   }
 }

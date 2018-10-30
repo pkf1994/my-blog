@@ -12,8 +12,8 @@
         </div>
       </div>
       <div class="operation-mobile flex-column-center">
-        <div><i class="fa fa-edit cursorp" @click="goToTheEditPage"></i></div>
-        <div><i class="fa fa-close cursorp" @click="confirmDeleteTheArticle"></i></div>
+        <div><i class="fa fa-edit cursorp font-dark" @click="goToTheEditPage"></i></div>
+        <div><i class="fa fa-close cursorp font-dark" @click="confirmDeleteTheArticle"></i></div>
       </div>
 
       <ModalWithConfirm
@@ -139,4 +139,10 @@
 
 .deleted:before
   content "(已删除)"
+
+.fa-edit:hover
+  color black
+
+.fa-close:hover
+  color black
 </style>

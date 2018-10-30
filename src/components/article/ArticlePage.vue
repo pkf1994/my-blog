@@ -1,22 +1,24 @@
 <template>
-    <div class="article-page max-width-750">
-      <LoadingPage v-if="!articleLoaded"></LoadingPage>
-      <Article :article="article"></Article>
-      <div id="massage-title" class="comment-title common-padding font-bold font-ll" ref="commentTitle">
-        留言 <span class="font-m font-dark">({{countOfComment}})</span>
-      </div>
-      <div class="division"></div>
-      <ul>
-        <li v-for="comment in commentList"
-            v-bind:key="comment.comment_id">
-          <Comment  :comment="comment" @scrollToCommentEditor="scrollToCommentEditor"></Comment>
-        </li>
+    <div class="article-page">
+      <LoadingPage v-if="!articleLoaded || !commentListLoaded"></LoadingPage>
+      <div v-show="articleLoaded && commentListLoaded" >
+        <Article :article="article"></Article>
+        <div id="massage-title" class="comment-title common-padding font-bold font-ll" ref="commentTitle">
+          留言 <span class="font-m font-dark">({{countOfComment}})</span>
+        </div>
         <div class="division"></div>
-        <Loading v-show="isLoading"></Loading>
-        <ClickForMore v-show="!(maxPage==currentPage)&&!isLoading" @click="reLoadCommentListData"></ClickForMore>
-        <Nomore v-show="maxPage==currentPage">没有更多内容</Nomore>
-      </ul>
-      <CommentEditor ref="commentEditor"></CommentEditor>
+        <ul>
+          <li v-for="comment in commentList"
+              v-bind:key="comment.comment_id">
+            <Comment  :comment="comment" @scrollToCommentEditor="scrollToCommentEditor"></Comment>
+          </li>
+          <div class="division"></div>
+          <Loading v-show="isLoading"></Loading>
+          <ClickForMore v-show="!(maxPage==currentPage)&&!isLoading" @click="reLoadCommentListData"></ClickForMore>
+          <Nomore v-show="maxPage==currentPage">没有更多内容</Nomore>
+        </ul>
+        <CommentEditor ref="commentEditor"></CommentEditor>
+      </div>
     </div>
 </template>
 
@@ -34,7 +36,7 @@ import ArticleApi from '../../api/article_api.js'
 import CommentApi from '../../api/comment_api.js'
 import dateFormat from '../../js/dateFormatUtil.js'
 import { mapActions, mapState } from 'vuex'
-import CountDistanceToDocumentUpperEdge from '../../js/countDistanceToDocumentUpperEdge.js'
+import CountDistanceToDocumentUpperEdge from '../../js/countDistanceToUpperEdge.js'
 export default {
   mixins: [
     ScrollRefreshMixin,
@@ -50,7 +52,9 @@ export default {
       currentPage: 0,
       countOfComment: 0,
       isLoading: false,
-      articleLoaded: false
+      articleLoaded: false,
+      commentListLoaded: false
+
     }
   },
   provide() {
@@ -108,6 +112,7 @@ export default {
           this.commentList = this.commentList.concat(res.data.commentList)
           this.maxPage = res.data.maxPage
           this.countOfComment = res.data.countOfComment
+          this.commentListLoaded = true
           this.$nextTick(() => {
             this.scrollToTheComment()
           })
@@ -137,6 +142,9 @@ export default {
       }, 500)
     },
     scrollToTheComment() {
+      if(this.$route.query.id_Of_comment_scroll_to == undefined) {
+        return
+      }
       let theCommentEl = document.getElementById('comment_' + this.$route.query.idOfCommentScrollTo)
       window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(theCommentEl) - 50)
     }
@@ -147,6 +155,7 @@ export default {
 <style scoped lang="stylus">
 .article-page
   background white
+  width 750px
 @media(max-width: 750px){
   .article-page {
     width 100%

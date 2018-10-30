@@ -7,5 +7,6 @@ export default {
   offsetHeightOfNavbar: 50,
   breadcrumbData: [],
   refreshDraftList: false,
-  flagRefreshHome: false
+  flagRefreshHome: false,
+  navbarSearchString: ''
 }
