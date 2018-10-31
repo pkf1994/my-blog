@@ -8,10 +8,14 @@
         </div>
         <div class="division"></div>
         <ul>
-          <li v-for="comment in commentList"
-              v-bind:key="comment.comment_id">
-            <Comment  :comment="comment" @scrollToCommentEditor="scrollToCommentEditor"></Comment>
-          </li>
+          <transition-group name="list-complete" tag="div">
+              <Comment class="list-complete-item"
+                        v-for="comment in commentList"
+                       v-bind:key="comment.comment_id"
+                       :comment="comment"
+                       @scrollToCommentEditor="scrollToCommentEditor"
+                       @deleted="afterDeleteComment"></Comment>
+          </transition-group>
           <div class="division"></div>
           <Loading v-show="isLoading"></Loading>
           <ClickForMore v-show="!(maxPage==currentPage)&&!isLoading" @click="reLoadCommentListData"></ClickForMore>
@@ -114,7 +118,7 @@ export default {
           this.countOfComment = res.data.countOfComment
           this.commentListLoaded = true
           this.$nextTick(() => {
-            this.scrollToTheComment()
+            this.handleRouterQuery()
           })
         }
       }).catch((err) => {
@@ -141,12 +145,27 @@ export default {
         this.appointOffsetTopOfCommentTitle(this.$refs.commentTitle.offsetTop)
       }, 500)
     },
-    scrollToTheComment() {
-      if(this.$route.query.id_Of_comment_scroll_to == undefined) {
-        return
+    handleRouterQuery() {
+      if(this.$route.query.id_of_comment_scroll_to != undefined) {
+        let theCommentEl = document.getElementById('comment_' + this.$route.query.id_of_comment_scroll_to)
+        window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(theCommentEl) - this.offsetHeightOfNavbar)
       }
-      let theCommentEl = document.getElementById('comment_' + this.$route.query.idOfCommentScrollTo)
-      window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(theCommentEl) - 50)
+      if(this.$route.query.gotocl == 1) {
+        let messageTitleEl = document.getElementById('massage-title')
+        window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(messageTitleEl) - this.offsetHeightOfNavbar)
+      }
+      if(this.$route.query.gotoce == 1) {
+        let commentEditorEl = this.$refs.commentEditor.$el
+        window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(commentEditorEl) - this.offsetHeightOfNavbar)
+      }
+    },
+    afterDeleteComment(comment_id) {
+      this.commentList.forEach((item, index) => {
+        if(item.comment_id == comment_id){
+          this.commentList.splice(index,1)
+          this.countOfComment --
+        }
+      })
     }
   }
 }
@@ -161,4 +180,17 @@ export default {
     width 100%
   }
 }
+
+.list-complete-item
+  transition all 0.5s
+  display inline-block
+
+.list-complete-enter
+.list-complete-leave-to
+  opacity 0
+  transform translateX(30px)
+
+.list-complete-leave-active
+  position absolute
+
 </style>

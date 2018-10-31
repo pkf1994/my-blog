@@ -15,19 +15,25 @@
               <span class="article-manage-releasetime flex-row-center">发布时间</span>
               <span class="article-manage-operation flex-row-center">操作</span>
             </div>
-            <ArticleItem v-for="article in articleList"
-                         :article="article"
-                         :key="article.article_id"
-                         v-if="!isMobile">
-            </ArticleItem>
 
+            <transition-group name="list-complete" tag="div">
+              <ArticleItem class="list-complete-item"
+                           v-for="article in articleList"
+                           :article="article"
+                           :key="article.article_id"
+                           v-if="!isMobile"
+                            @submitArticleLabel="receiveArticleLabel">
+              </ArticleItem>
+            </transition-group>
 
-            <ArticleItemMobile v-for="article in articleList"
-                               :article="article"
-                               :key="article.article_id"
-                               v-if="isMobile">
-            </ArticleItemMobile>
-
+            <transition-group name="list-complete" tag="div">
+              <ArticleItemMobile class="list-complete-item"
+                                 v-for="article in articleList"
+                                 :article="article"
+                                 :key="article.article_id" @deleted="afterDeleteArticle"
+                                 v-if="isMobile">
+              </ArticleItemMobile>
+            </transition-group>
           </div>
             <Pagination :max-page="maxPage"
                         @changeCurrentPage="changeCurrentPage"
@@ -71,7 +77,8 @@
         articleItemsLoaded: false,
         headline: '所有文章',
         paginationPoint: 'common',
-        searchStringFromSearchBar: ''
+        searchStringFromSearchBar: '',
+        countOfArticle: 0
       }
     },
     computed: {
@@ -81,6 +88,9 @@
       ]),
       querySearchString() {
         return this.$route.query.search_string
+      },
+      queryArticleLabel() {
+        return this.$route.query.article_label
       }
     },
     components: {
@@ -98,7 +108,7 @@
       this.judgeIfMobile()
     },
     mounted() {
-      this.handleQuerySearchString()
+      this.handleRouterQuery()
     },
     updated() {
       /*this.handleQuerySearchString() console.log("===")*/
@@ -113,7 +123,10 @@
         }
       },
       querySearchString() {
-        this.handleQuerySearchString()
+        this.handleRouterQuery()
+      },
+      queryArticleLabel() {
+        this.handleRouterQuery()
       }
     },
     methods: {
@@ -170,7 +183,8 @@
             this.maxPage = res.data.maxPage
             this.articleItemsLoaded = true
             this.handleArticleList()
-            this.headline = '搜索结果(' + res.data.countOfAllArticleBySearchWords + ')'
+            this.countOfArticle = res.data.countOfAllArticleBySearchWords
+            this.headline = '搜索结果'
           }
         }).catch((err) => {
           console.log(err)
@@ -190,7 +204,8 @@
             this.maxPage = res.data.maxPage
             this.articleItemsLoaded = true
             this.handleArticleList()
-            this.headline = '归档于' + selectedYear + '年' + selectedMonth + '月的所有文章(' + res.data.countOfAllArticleByFilingDate + ')';
+            this.countOfArticle = res.data.countOfAllArticleByFilingDate
+            this.headline = '归档于' + selectedYear + '年' + selectedMonth + '月的所有文章';
           }
         }).catch((err) => {
           console.log(err)
@@ -210,14 +225,15 @@
             this.maxPage = res.data.maxPage
             this.articleItemsLoaded = true
             this.handleArticleList()
-            this.headline = '分类为 [' + label + '] 的所有文章(' + res.data.countOfAllArticleByLabel + ')';
+            this.countOfArticle = res.data.countOfAllArticleByLabel
+            this.headline = '分类为 [' + label + '] 的所有文章'
           }
         }).catch((err) => {
           console.log(err)
         })
       },
       initSideBar(currentIndex) {
-        if(currentIndex != 'searchBar') {
+        if(currentIndex != 'searchBar' && this.$refs.searchBar != undefined) {
           this.$refs.searchBar.searchString = ''
         }
         if(this.isMobile == true) {
@@ -235,11 +251,24 @@
           this.$refs.articleClassification.currentLabel = ''
         }
       },
-      handleQuerySearchString() {
-        if(this.$route.query.search_string === undefined) {
-          return
-        }
+      handleRouterQuery() {
+        if(this.$route.query.search_string != undefined) {
           this.receiveSearchWords(this.querySearchString)
+        }
+        if(this.$route.query.article_label != undefined) {
+          this.receiveArticleLabel(this.queryArticleLabel)
+        }
+      },
+      afterDeleteArticle(article_id){
+        this.articleList.forEach((item, index) => {
+          if(item.article_id == article_id){
+            setTimeout(() => {
+              this.articleList.splice(index,1)
+              this.countOfArticle --
+            },1000)
+
+          }
+        })
       }
     }
   }
@@ -258,7 +287,7 @@
     width 70%
 
   .article-manage-list-inner
-    min-height 600px
+    min-height 650px
 
   .article-manage-sidebar
     width 30%
@@ -313,5 +342,18 @@
     padding-bottom 15px
     margin-bottom 15px
     border-bottom 1px solid #dee2e6
+
+  .list-complete-item
+    width 100%
+    transition all 0.5s
+    display inline-block
+
+  .list-complete-enter
+  .list-complete-leave-to
+    opacity 0
+    transform translateX(30px)
+
+  .list-complete-leave-active
+    position absolute
 
 </style>

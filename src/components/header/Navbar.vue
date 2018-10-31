@@ -28,7 +28,7 @@
         distanceToClientUpperEdge: 10,
         isMobile: false,
         showMenuBackgroundFlag: false,
-        showMenuFlag: true,
+        showMenuFlag: false,
         heightOfMenu: 0
       }
     },
@@ -50,10 +50,11 @@
     },
     methods: {
       getHeightOfMenu() {
-        window.addEventListener('load', () => {
-          this.heightOfMenu = parseInt(getComputedStyle(this.$refs.menu).height)
-          this.showMenuFlag = false
-        })
+          this.showMenuFlag = true
+          window.addEventListener('load',() => {
+            this.heightOfMenu = parseInt(getComputedStyle(this.$refs.menu).height)
+            this.showMenuFlag = false
+          })
       },
       judgeIfMobile() {
         let bodyOffsetWidth = document.documentElement.offsetWidth || document.body.offsetWidth

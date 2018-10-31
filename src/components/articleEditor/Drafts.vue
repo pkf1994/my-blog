@@ -29,7 +29,7 @@
       return {
         drafts: [],
         currentPage: 0,
-        pageScale: 10,
+        pageScale: 7,
         maxPage: 1,
         isLoading: false,
         isAllLoaded: false
@@ -94,13 +94,21 @@
 <style scoped lang="stylus">
 .draft
   overflow-x hidden
-  overflow-y scroll
-  -ms-overflow-style none
+  overflow-y auto
 
 .draft::-webkit-scrollbar
-  width 0px;
-  height 0px;
+  width 10px
+  height 1px
 
+.draft::-webkit-scrollbar-thumb
+  border-radius 10px
+  -webkit-box-shadow inset 0 0 5px rgba(0,0,0,0.2)
+  background rgb(128, 128, 128);
+
+.draft::-webkit-scrollbar-track
+  box-shadow inset 0 0 5px rgba(0,0,0,0.2);
+  border-radius 10px;
+  background #EDEDED;
 
 .headline
   margin-bottom 5px
@@ -108,6 +116,7 @@
 
 .draft-item
   margin-bottom 15px
+  margin-right 10px
 
 .list-complete-item {
   transition: all 0.5s;

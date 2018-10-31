@@ -53,13 +53,14 @@
         modalHeader:'正在处理...',
       }
     },
-    mounted(){
-
-    },
     computed: {
       bodyEl() {
         return document.documentElement || document.body
       }
+    },
+    created() {
+    },
+    mounted(){
     },
     watch: {
       show(newShowModal, oldShowModal) {
@@ -106,19 +107,8 @@
       clickYesAfterError(){
         this.$emit('clickYesAfterError')
       }
-    },
+    }
 
-    /*    watch:{
-          isLoading(){
-            if(this.isLoading == false){
-              console.log(' this.$refs.modalBody:'+ this.$refs.modalBody);
-              this.$refs.modalBody.innerHTML = this.modalBodyProp;
-              this.modalHeader = this.modalHeaderProp;
-
-              console.log('standardModal: isLoading: ' + this.isLoading)
-            }
-          }
-        }*/
   }
 </script>
 

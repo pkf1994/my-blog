@@ -1,6 +1,9 @@
 <template>
     <div :id="'comment_' + comment.comment_id" class="comment common-padding">
-      <div class="comment-author font-bold font-m" v-bind:class="{redirectable: isRedirectable}" @click="redirectToTheirSite">{{comment.comment_author.visitor_name}}</div>
+      <div class="comment-author font-bold font-m flex-row-space-between" >
+        <span v-bind:class="{redirectable: isRedirectable}" @click="redirectToTheirSite">{{comment.comment_author.visitor_name}}</span>
+        <span><i class="fa fa-close font-dark cursorp" @click="deleteThisComment"></i></span>
+      </div>
       <div v-if="subComment.comment_id" class="refer-comment">
         <SubComment :subComment="subComment"></SubComment>
       </div>
@@ -63,6 +66,16 @@ export default {
           console.log(err)
         })
       }
+    },
+    deleteThisComment(){
+      CommentApi.deleteCommentById(this.comment.comment_id).then((res) => {
+        if(res.status === 200) {
+          console.log('delete comment successful')
+          this.$emit('deleted', this.comment.comment_id)
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 }
@@ -80,4 +93,7 @@ export default {
 .redirectable
   cursor pointer
   color #3354AA
+
+.fa-close:hover
+  color black
 </style>

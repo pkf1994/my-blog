@@ -1,23 +1,32 @@
 <template>
-    <div class="article-summary">
-        <div class="article-title font-l cursorp font-bold" v-on:click="redirectToTheArticle">
+    <div class="article-summary" >
+        <div class="article-summary-title font-m cursorp font-bold" v-on:click="redirectToTheArticle">
           {{article.article_title}}
         </div>
-        <div class="article-label-releasetime font-m flex-row-space-between font-dark">
-          <span>{{article.article_label}}</span>
-          <span>{{article.article_releaseTime}}</span>
-        </div>
-        <div class="article-content font-m cursorp common-line-height flex-row-center">
-          <div class="article-content-summary" ref="summary" v-on:click="redirectToTheArticle">{{article.article_summary}}
-            <span class="readAll">
-              <span class="summary-cover"></span>
-              <span class="font-m" style="background: white" v-on:click="redirectToTheArticle">阅读全文</span>
-            </span></div>
-
-            <div ref="imgInner" class="img-inner" v-if="article.article_previewImageUrl != undefined" v-on:click="redirectToTheArticle">
-              <img ref="img" :src="article.article_previewImageUrl" alt="previewImage" class="preview-image">
+        <div class="article-summary-info-content-previewimg flex-row-center" >
+          <div class="article-summary-info-content" ref="articleSummaryInfoContent">
+            <div class="article-summary-info font-s flex-row-space-between font-dark">
+            <span class="article-summary-info-left">
+              <span class="article-summary-label cursorp" @click="submitArticleLabel">[{{article.article_label}}]</span>&nbsp;&nbsp;|&nbsp;
+              作者: {{article.article_author}}&nbsp;&nbsp;|&nbsp;
+              <span class="cursorp" @click="goToTheCommentEditor">评论</span><span class="article-summary-comment cursorp" @click="goToTheCommentList" v-if="countOfComment!=0">:&nbsp;{{countOfComment}}&nbsp;&nbsp;</span>
+            </span>
+            <span class="article-summary-info-right">发布于:{{article.article_releaseTime}}</span>
             </div>
-
+            <div ref="imgInnerMobile" class="article-summary-previewimg-inner-mobile" v-if="article.article_previewImageUrl != undefined && isMobile" v-on:click="redirectToTheArticle">
+              <img ref="imgMobile" :id="'img_' + article.article_id" :src="article.article_previewImageUrl" alt="previewImage" class="article-summary-previewimage-mobile">
+            </div>
+            <div class="article-summary-content font-s cursorp" ref="summary" v-on:click="redirectToTheArticle">
+              {{article.article_summary}}
+              <span class="readAll">
+              <span class="summary-cover"></span>
+              <span class="font-s cursorp" style="background: white" v-on:click="redirectToTheArticle">阅读全文</span>
+              </span>
+            </div>
+          </div>
+          <div ref="imgInner" class="article-summary-previewimg-inner" v-if="article.article_previewImageUrl != undefined && !isMobile" v-on:click="redirectToTheArticle">
+            <img ref="img"  :src="article.article_previewImageUrl" alt="previewImage" class="article-summary-previewimage">
+          </div>
         </div>
     </div>
 </template>
@@ -25,17 +34,33 @@
 <script>
 import getDateDiff from '../../js/getDateDiff.js'
 import { mapActions } from 'vuex'
+import CommentApi from '../../api/comment_api.js'
 export default {
   props: {
     article: {
       type: Object
     }
   },
+  data() {
+    return {
+      countOfComment: 0
+    }
+  },
+  computed: {
+    isMobile() {
+      if(window.innerWidth <= 750){
+        return true
+      }else{
+        return false
+      }
+    }
+  },
   created() {
     this.formatTheDate()
+    this.getCountOfComment()
   },
   mounted() {
-      this.handlePreviewImageSize()
+      this.handlePreviewImageMobileSize()
       this.handleArticleContentSummarySize()
   },
   methods: {
@@ -49,19 +74,19 @@ export default {
     formatTheDate() {
       this.article.article_releaseTime = getDateDiff.getDateDiff(new Date(this.article.article_releaseTime).getTime())
     },
-    handlePreviewImageSize() {
+    handlePreviewImageMobileSize() {
       let bodyEl = document.body || document.documentElement
       let offsetWidthOfBodyEl = bodyEl.offsetWidth
       if(offsetWidthOfBodyEl > 750) {
         return
       }
       if(this.article.article_previewImageUrl != undefined){
-        setTimeout(() => {
-          let imgHeight = parseInt(getComputedStyle(this.$refs.img).height)
-          let imgInnerHeight = parseInt(getComputedStyle(this.$refs.imgInner).height)
+        document.getElementById('img_' + this.article.article_id).addEventListener('load', () => {
+          let imgHeight = parseInt(getComputedStyle(this.$refs.imgMobile).height)
+          let imgInnerHeight = parseInt(getComputedStyle(this.$refs.imgInnerMobile).height)
           let imgMarginTop = (imgInnerHeight - imgHeight) * 0.5
-          this.$refs.img.style.top = imgMarginTop + 'px'
-        },1000)
+          this.$refs.imgMobile.style.top = imgMarginTop + 'px'
+        })
       }
     },
     handleArticleContentSummarySize() {
@@ -69,15 +94,34 @@ export default {
       let offsetWidthOfBodyEl = bodyEl.offsetWidth
       if(offsetWidthOfBodyEl > 750) {
         let lineHeight = parseInt(getComputedStyle(this.$refs.summary).lineHeight)
-        this.$refs.summary.style.height = lineHeight * 4 + 'px'
+        this.$refs.summary.style.height = lineHeight * 3 + 'px'
         if(this.article.article_previewImageUrl != undefined){
           this.$refs.img.style.height = lineHeight * 4 + 'px'
+          this.$refs.imgInner.style.height = lineHeight * 4 + 'px'
         }
       }
       if(offsetWidthOfBodyEl <= 750) {
         let lineHeight = parseInt(getComputedStyle(this.$refs.summary).lineHeight)
         this.$refs.summary.style.height = lineHeight * 3 + 'px'
       }
+    },
+    submitArticleLabel(){
+      this.$router.push({path:'/article_manage', query: {article_label: this.article.article_label}})
+    },
+    getCountOfComment() {
+      CommentApi.getCountOfCommentByArticleId(this.article.article_id).then((res) => {
+        if(res.status === 200) {
+          this.countOfComment = res.data
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    goToTheCommentEditor() {
+      this.$router.push({path:'/article/' + this.article.article_id, query: {gotoce: 1}})
+    },
+    goToTheCommentList() {
+      this.$router.push({path:'/article/' + this.article.article_id, query: {gotocl: 1}})
     }
   }
 }
@@ -87,31 +131,47 @@ export default {
 .article-summary
   width 100%
   background white
-  border-bottom 1px solid #F7F7F7
+  border-bottom 1px solid rgb(222, 226, 230)
 
-.article-title
-.article-label-releasetime
-.article-content
+.article-summary-info-content
+  width 100%
+
+.article-summary-info
+  margin 5px 0px
+
+.article-summary-title
+.article-summary-info
+.article-summary-content
 {
   height auto
   word-wrap break-word
 }
 
-.article-title
-  margin-top 10px
+.article-summary-label
+.article-summary-comment
+  color rgb(23, 81, 153)
 
-.article-content
-  margin-bottom 10px
+.article-summary-label:hover
+.article-summary-comment:hover
+  color #A2A2A2
+
+.article-summary-title
+  margin-top 20px
+  margin-bottom 5px
+
+.article-summary-content
+  line-height 2rem
+  margin-bottom 20px
   overflow hidden
 
 
-.preview-image
+.article-summary-previewimage
   width: auto
-  height 150px
+  height 120px
   border-radius 4px
 
 @media (min-width: 750px){
-  .preview-image{
+  .article-summary-previewimage{
     margin-left 20px
   }
 }
@@ -120,32 +180,30 @@ export default {
   .article-summary{
     width 100%
   }
-  .article-content{
+  .article-summary-info{
+    flex-wrap wrap
+  }
+  .article-summary-content{
     display flex
     flex-direction column
   }
-  .article-content-summary{
-    height 5rem
-    order 2
-  }
-  .img-inner{
+  .article-summary-previewimg-inner-mobile{
     position relative
     width 100%
     height 150px
     overflow hidden
-    margin-top  5px
-    margin-bottom 10px
+    margin 10px 0px
     border-radius 4px
 
   }
-  .preview-image{
+  .article-summary-previewimage-mobile{
     position absolute
     width 100%
     height auto
-    order 1
   }
 }
-.article-content-summary
+.article-summary-content
+  position relative
   height 10rem
   overflow hidden
   position relative
@@ -156,14 +214,13 @@ export default {
   position absolute
   bottom 0
   right 0
-  float right
   color rgb(23, 81, 153)
+
 
 .readAll:hover
   color black
 
 .summary-cover
-  height 2rem
   width 8rem
   background linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1))
 </style>

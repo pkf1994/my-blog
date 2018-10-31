@@ -36,7 +36,6 @@
       },
       submitArticleLabel(label) {
         this.currentLabel = label
-        console.log(label)
         this.$emit('submitArticleLabel',label)
       }
     }
@@ -45,14 +44,32 @@
 </script>
 
 <style scoped lang="stylus">
+
+
   .article-classification-headline
     line-height 2rem
     border-top 1px solid  rgb(222, 226, 230)
     padding-top 15px
 
   .article-classification-labellist
+    height 7rem
+    overflow auto
     display flex
     flex-wrap wrap
+
+  .article-classification-labellist::-webkit-scrollbar
+    width 10px
+    height 1px
+
+  .article-classification-labellist::-webkit-scrollbar-thumb
+    border-radius 10px
+    -webkit-box-shadow inset 0 0 5px rgba(0,0,0,0.2)
+    background rgb(128, 128, 128);
+
+  .article-classification-labellist::-webkit-scrollbar-track
+    box-shadow inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius 10px;
+    background #EDEDED;
 
   .article-classification-item
     height 2rem

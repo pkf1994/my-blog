@@ -1,34 +1,37 @@
 <template>
-    <div class="article-item-mobile flex-row-center">
-      <div class="article-msg">
-        <div class="article-title-label overRowHandle">
-          <span class="article-item-label-mobile cursorp">[{{article.article_label}}]</span>
-          <span class="article-item-title-mobile cursorp"
-                :class="{deleted: deleted}"
-                @click="goToTheArticlePage">{{article.article_title}}</span></div>
-        <div>
-          <span>by: {{article.article_author}}</span>&nbsp;|
-          <span>{{article.article_releaseTime}}</span>
+    <div>
+      <div class="article-item-mobile flex-row-center">
+        <div class="article-msg">
+          <div class="article-title-label overRowHandle">
+            <span class="article-item-label-mobile cursorp">[{{article.article_label}}]</span>
+            <span class="article-item-title-mobile cursorp"
+                  :class="{deleted: deleted}"
+                  @click="goToTheArticlePage">{{article.article_title}}</span></div>
+          <div>
+            <span>by: {{article.article_author}}</span>&nbsp;|
+            <span>{{article.article_releaseTime}}</span>
+          </div>
         </div>
-      </div>
-      <div class="operation-mobile flex-column-center">
-        <div><i class="fa fa-edit cursorp font-dark" @click="goToTheEditPage"></i></div>
-        <div><i class="fa fa-close cursorp font-dark" @click="confirmDeleteTheArticle"></i></div>
+        <div class="operation-mobile flex-column-center">
+          <div><i class="fa fa-edit cursorp font-dark" @click="goToTheEditPage"></i></div>
+          <div><i class="fa fa-close cursorp font-dark" @click="confirmDeleteTheArticle"></i></div>
+        </div>
+
+        <ModalWithConfirm
+          :modalHeaderProp="deleteArticleModal.modalHeader"
+          :modalBodyProp="deleteArticleModal.modalBody"
+          :btnValueOfYesProp="deleteArticleModal.btnValueOfYes"
+          :btnValueOfNoProp="deleteArticleModal.btnValueOfNo"
+          :isLoading="deleteArticleModal.isLoading"
+          :onlyNorify="deleteArticleModal.onlyNorify"
+          :show="deleteArticleModal.show"
+          :error="deleteArticleModal.happenError"
+          @clickYesEventOfParent='deleteTheArticle'
+          @clickNoEventOfParent='()=>{deleteArticleModal.show=false}'
+          @clickYesAfterError='()=>{deleteArticleModal.show=false}'
+        />
       </div>
 
-      <ModalWithConfirm
-        :modalHeaderProp="deleteArticleModal.modalHeader"
-        :modalBodyProp="deleteArticleModal.modalBody"
-        :btnValueOfYesProp="deleteArticleModal.btnValueOfYes"
-        :btnValueOfNoProp="deleteArticleModal.btnValueOfNo"
-        :isLoading="deleteArticleModal.isLoading"
-        :onlyNorify="deleteArticleModal.onlyNorify"
-        :show="deleteArticleModal.show"
-        :error="deleteArticleModal.happenError"
-        @clickYesEventOfParent='deleteTheArticle'
-        @clickNoEventOfParent='()=>{deleteArticleModal.show=false}'
-        @clickYesAfterError='()=>{deleteArticleModal.show=false}'
-      />
     </div>
 </template>
 
@@ -101,6 +104,7 @@
             setTimeout(() => {
               this.deleteArticleModal.show = false
               this.deleted = true
+              this.$emit('deleted', this.article.article_id)
             },1500)
           }
         }).catch((err) => {
@@ -115,6 +119,7 @@
 
 <style scoped lang="stylus">
 .article-item-mobile
+  width 100%
   padding-top 15px
   padding-bottom 15px
   border-bottom 1px solid rgb(222, 226, 230)

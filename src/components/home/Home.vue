@@ -1,7 +1,7 @@
 <template>
     <div class="home flex-row-center max-width-750 common-padding">
           <LoadingPage v-if="!articleSummaryListLoaded"></LoadingPage>
-          <ul style="width: 100%">
+          <ul style="width: 100%" v-show="articleSummaryListLoaded">
             <SearchBar inputLengthRatio="80%" is-mobile="yes" submit-slogan="Go!" class="search-bar" @submitSearchWords="receiveSearchWords"></SearchBar>
             <li v-for="article in articleSummaryList" :key="article.article_id">
               <ArticleSummary :article=article
@@ -84,7 +84,7 @@ export default {
       }
       setTimeout(() => {
         this.loadData()
-      }, 2000)
+      }, 500)
     },
     initPageEndRefresh() {
       window.addEventListener('scroll', () => {
@@ -111,6 +111,13 @@ export default {
     height 100vh
   }
 }
+
+@media(min-width: 750px){
+  .home{
+    padding-top 0px
+  }
+}
+
 @media(max-width: 750px){
   .home {
     width 100%

@@ -4,7 +4,7 @@
             :class="{deleted: deleted}"
             @click="goToTheArticlePage">{{article.article_title}}</span>
       <span class="article-item-author">{{article.article_author}}</span>
-      <span class="article-item-label flex-row-center cursor">{{article.article_label}}</span>
+      <span class="article-item-label flex-row-center cursorp" @click="submitArticleLabel">{{article.article_label}}</span>
       <span class="article-item-releasetime flex-row-center">{{article.article_releaseTime}}</span>
       <span class="edit flex-row-center">
         <i class="fa fa-edit cursorp font-dark operation-font" @click="goToTheEditPage"></i>
@@ -102,8 +102,12 @@
         }).catch((err) => {
           this.deleteArticleModal.happenError = true
           this.deleteArticleModal.modalBody = '删除失败：' + err
+          this.deleteArticleModal.isLoading = false
           console.log(err)
         })
+      },
+      submitArticleLabel() {
+        this.$emit('submitArticleLabel',this.article.article_label)
       }
     }
   }

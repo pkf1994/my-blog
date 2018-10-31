@@ -40,27 +40,27 @@
       <button class="submit-button font-m" @click="submitArticle">提交</button>
       <button class="submit-button font-m" @click="submitDraft">存为草稿</button>
 
-      <standard-modal
+      <modalWithConfirm
         :modalHeaderProp="submitArticleModal.modalHeader"
         :modalBodyProp="submitArticleModal.modalBody"
         :btnValueOfYesProp="submitArticleModal.btnValueOfYes"
         :btnValueOfNoProp="submitArticleModal.btnValueOfNo"
         :isLoading="submitArticleModal.isLoading"
         :onlyNorify="submitArticleModal.onlyNorify"
-        v-if="submitArticleModal.isOpening"
+        :show="submitArticleModal.isOpening"
         :error="submitArticleModal.happenError"
         @clickYesEventOfParent='()=>{submitArticleModal.isOpening=false;goToArticlesPage()}'
         @clickNoEventOfParent='()=>{submitArticleModal.isOpening=false;initializeArticleEditPane()}'
         @clickYesAfterError='()=>{submitArticleModal.isOpening=false}'
       />
 
-      <standard-modal
+      <modalWithConfirm
         :modalHeaderProp="submitDraftModal.modalHeader"
         :modalBodyProp="submitDraftModal.modalBody"
         :btnValueOfYesProp="submitDraftModal.btnValueOfYes"
         :isLoading="submitDraftModal.isLoading"
         :onlyNorify="submitDraftModal.onlyNorify"
-        v-if="submitDraftModal.isOpening"
+        :show="submitDraftModal.isOpening"
         :error="submitDraftModal.happenError"
         @clickYesEventOfParent='()=>{submitDraftModal.isOpening=false}'
         @clickYesAfterError='()=>{submitDraftModal.isOpening=false}'
@@ -75,6 +75,7 @@
   import ApiInfo from '../../api/apiInfo.js'
   import ArticleApi from '../../api/article_api.js'
   import StandardModal from '../modal/StandardModal.vue'
+  import ModalWithConfirm from '../modal/ModalWithConfirm.vue'
   import { mapActions } from 'vuex'
   import 'quill/dist/quill.core.css';
   import 'quill/dist/quill.snow.css';
@@ -121,7 +122,7 @@
           btnValueOfYes:'',
           btnValueOfNo:'',
           happenError:false,
-          isLoading:true,
+          isLoading:false,
           isOpening:false,
           onlyNorify:false
         },
@@ -132,7 +133,7 @@
           modalBody:'',
           btnValueOfYes:'',
           happenError:false,
-          isLoading:true,
+          isLoading:false,
           isOpening:false,
           onlyNorify:true
         },
@@ -193,7 +194,8 @@
     },
     components:{
       quillEditor,
-      StandardModal
+      StandardModal,
+      ModalWithConfirm
     },
     created(){
       this.loadDraftData()

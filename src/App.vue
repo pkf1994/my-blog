@@ -11,7 +11,9 @@
       </keep-alive>
       <router-view :key="$store.state.articlePageRouterStatus" name="ArticlePage"></router-view>
       <router-view name="ArticleEditorPage"></router-view>
-      <router-view name="ArticleManage"></router-view>
+      <keep-alive>
+        <router-view name="ArticleManage"></router-view>
+      </keep-alive>
     </div>
     <Footer></Footer>
   </div>

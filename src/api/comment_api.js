@@ -52,14 +52,43 @@ export default {
       })
     })
   },
-  getCommentLast(listScale) {
+  getCommentLastListByCurrentPageAndPageScale(currentPage, pageScale) {
     let config = {
       params: {
-        listScale: listScale
+        currentPage: currentPage,
+        pageScale: pageScale
       }
     }
     return new Promise((resolve, reject) => {
       axios.get(apiInfo.server + 'comment/comment_last.do', config).then((res) => {
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
+    })
+  },
+  getCountOfCommentByArticleId(article_id){
+    let config = {
+      params: {
+        article_id: article_id
+      }
+    }
+    return new Promise((resolve, reject) => {
+      axios.get(apiInfo.server + 'comment/comment_count.do', config).then((res) => {
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
+    })
+  },
+  deleteCommentById(comment_id){
+    let config = {
+      params: {
+        comment_id: comment_id
+      }
+    }
+    return new Promise((resolve, reject) => {
+      axios.get(apiInfo.server + 'comment/comment_delete.do', config).then((res) => {
         resolve(res)
       }).catch((err) => {
         reject(err)

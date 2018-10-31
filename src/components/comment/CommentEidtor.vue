@@ -27,7 +27,6 @@
              @focus="triggerSiteAddressInputFocus"
              @blur="triggerSiteAddressInputFocus">
 
-      <input type="checkbox" v-model="rememberMe"/><span class="font-m font-bold">记住以上个人信息？</span>
 
     </div>
     <button class="font-m submit-button" @click="throttleSubmitComment"><span v-show="!isSubmittingComment">发表</span><i v-show="isSubmittingComment" class="fa fa-spinner fa-pulse"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;<span v-show="submitFinish" ><i class="fa fa-check"></i>留言提交成功</span>
@@ -259,10 +258,6 @@ export default {
 .the-textarea
   width 100%
 
-.submit-button
-  width 8rem
-
-
 @media(max-width: 750px){
   .the-input{
     width 100%
@@ -270,6 +265,11 @@ export default {
   }
 }
 
+@media(min-width: 750px){
+  .the-input{
+    margin-bottom 25px
+  }
+}
 .required:after
   content ' *'
   color red
