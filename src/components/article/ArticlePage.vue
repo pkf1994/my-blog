@@ -23,6 +23,8 @@
         </ul>
         <CommentEditor ref="commentEditor"></CommentEditor>
       </div>
+
+      <BackToUp class="backtoup" ref="backtoup"></BackToUp>
     </div>
 </template>
 
@@ -36,6 +38,7 @@ import Nomore from '../loading/Nomore.vue'
 import ClickForMore from '../loading/ClickForMore.vue'
 import ScrollRefreshMixin from '../mixin/ScrollRefreshMixin.vue'
 import CountDistanceToBody from '../mixin/CountDistanceToBody.vue'
+import BackToUp from '../backToUp/BackToUp.vue'
 import ArticleApi from '../../api/article_api.js'
 import CommentApi from '../../api/comment_api.js'
 import dateFormat from '../../js/dateFormatUtil.js'
@@ -73,7 +76,8 @@ export default {
     Loading,
     Nomore,
     LoadingPage,
-    ClickForMore
+    ClickForMore,
+    BackToUp
   },
   created() {
     this.initArticleId()
@@ -82,6 +86,7 @@ export default {
   },
   mounted() {
     this.uploadOffsetTopOfCommentTitle()
+    this.initLocationOfBackToUp()
   },
   computed: {
     ...mapState([
@@ -166,6 +171,14 @@ export default {
           this.countOfComment --
         }
       })
+    },
+    initLocationOfBackToUp(){
+      let windowInnerWidth = window.innerWidth
+      let leftOfBackToUp
+      if(windowInnerWidth > 850) {
+        leftOfBackToUp = (windowInnerWidth - 750) * 0.5 - 50
+      }
+      this.$refs.backtoup.$el.style.left = leftOfBackToUp + 'px'
     }
   }
 }
@@ -181,9 +194,12 @@ export default {
   }
 }
 
+.backtoup
+  position fixed
+  bottom  70px
+
 .list-complete-item
   transition all 0.5s
-  display inline-block
 
 .list-complete-enter
 .list-complete-leave-to
@@ -192,5 +208,6 @@ export default {
 
 .list-complete-leave-active
   position absolute
+
 
 </style>

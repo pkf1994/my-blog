@@ -62,9 +62,7 @@
 
           }else{
             if(clientWidth <= 750) {
-              console.log(clientWidth)
               this.show = false
-              console.log()
             }else{
               this.show = true
             }

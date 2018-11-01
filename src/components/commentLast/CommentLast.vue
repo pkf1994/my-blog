@@ -2,7 +2,7 @@
     <div class="comment-last">
         <div class="comment-last-headline font-bold">最近评论</div>
         <div class="comment-last-list">
-          <div v-for="comment in commentList" class="comment-last-list-item">
+          <!--<div v-for="comment in commentList" class="comment-last-list-item">
             <span class="cursorp" @click="() => {
               goToTheArticlePage(comment.comment_hostId, comment.comment_id);
             }">{{comment.comment_author.visitor_name}}</span>&nbsp;:&nbsp;
@@ -13,7 +13,16 @@
               goToTheArticlePage(comment.comment_hostArticle.article_id, comment.comment_id);
             }">[{{comment.comment_hostArticle.article_label}}]&nbsp;{{comment.comment_hostArticle.article_title}}</div>
             </div>
-          </div>
+          </div>-->
+          <transition-group name="list-complete" tag="div">
+            <CommentLastItem v-for="comment in commentList"
+                             :comment="comment"
+                             class="list-complete-item"
+                             @goToTheArticlePage="goToTheArticlePage" v-bind:key="comment.comment_id">
+
+            </CommentLastItem>
+          </transition-group>
+
           <div class="division"></div>
           <Loading v-show="isLoading"></Loading>
           <ClickForMore v-show="!(maxPage==currentPage)&&!isLoading" @click="reload"></ClickForMore>
@@ -27,6 +36,7 @@
   import Loading from '../loading/Loading.vue'
   import Nomore from '../loading/Nomore.vue'
   import ClickForMore from '../loading/ClickForMore.vue'
+  import CommentLastItem from './CommentLastItem.vue'
   export default {
     data() {
       return {
@@ -40,7 +50,8 @@
     components: {
       Loading,
       Nomore,
-      ClickForMore
+      ClickForMore,
+      CommentLastItem
     },
     created() {
       this.loadCommentListData()
@@ -134,4 +145,15 @@
       top -14px
       margin-top -20p
 
+  .list-complete-item
+    transition all 0.5s
+    margin-right 5px
+
+  .list-complete-enter
+  .list-complete-leave-to
+    opacity 0
+    transform translateX(30px)
+
+  .list-complete-leave-active
+    position absolute
 </style>

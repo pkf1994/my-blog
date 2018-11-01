@@ -1,8 +1,8 @@
 <template>
   <div class="header common-padding flex-row-center" ref="navbar">
       <div class="logo font-llll common-padding" ref="logo">
-        <span class="cursorp" @click="refresh">远方有鱼</span>
-        <div class="font-m font-normal"> It's a Wonderful Life ...</div>
+        <span class="cursorp font-song" @click="refresh">远方有鱼</span>
+        <div class="font-m font-normal font-song"> It's a Wonderful Life ...</div>
       </div>
   </div>
 </template>

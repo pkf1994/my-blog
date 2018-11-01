@@ -18,6 +18,6 @@
 <style scoped lang="stylus">
   .nomore
     height 50px
-    background white
+
 </style>
 

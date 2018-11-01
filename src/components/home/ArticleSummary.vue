@@ -1,34 +1,38 @@
 <template>
-    <div class="article-summary" >
-        <div class="article-summary-title font-m cursorp font-bold" v-on:click="redirectToTheArticle">
-          {{article.article_title}}
-        </div>
-        <div class="article-summary-info-content-previewimg flex-row-center" >
-          <div class="article-summary-info-content" ref="articleSummaryInfoContent">
-            <div class="article-summary-info font-s flex-row-space-between font-dark">
+  <div style="width: 100%">
+    <div class="gap-mobile"></div>
+    <div class="article-summary common-padding" >
+      <div class="article-summary-title font-m cursorp font-bold" v-on:click="redirectToTheArticle">
+        {{article.article_title}}
+      </div>
+      <div class="article-summary-info-content-previewimg flex-row-center" >
+        <div class="article-summary-info-content" ref="articleSummaryInfoContent">
+          <div class="article-summary-info font-s flex-row-space-between font-dark">
             <span class="article-summary-info-left">
               <span class="article-summary-label cursorp" @click="submitArticleLabel">[{{article.article_label}}]</span>&nbsp;&nbsp;|&nbsp;
               作者: {{article.article_author}}&nbsp;&nbsp;|&nbsp;
               <span class="cursorp" @click="goToTheCommentEditor">评论</span><span class="article-summary-comment cursorp" @click="goToTheCommentList" v-if="countOfComment!=0">:&nbsp;{{countOfComment}}&nbsp;&nbsp;</span>
             </span>
             <span class="article-summary-info-right">发布于:{{article.article_releaseTime}}</span>
-            </div>
-            <div ref="imgInnerMobile" class="article-summary-previewimg-inner-mobile" v-if="article.article_previewImageUrl != undefined && isMobile" v-on:click="redirectToTheArticle">
-              <img ref="imgMobile" :id="'img_' + article.article_id" :src="article.article_previewImageUrl" alt="previewImage" class="article-summary-previewimage-mobile">
-            </div>
-            <div class="article-summary-content font-s cursorp" ref="summary" v-on:click="redirectToTheArticle">
-              {{article.article_summary}}
-              <span class="readAll">
+          </div>
+          <div ref="imgInnerMobile" class="article-summary-previewimg-inner-mobile" v-if="article.article_previewImageUrl != undefined && isMobile" v-on:click="redirectToTheArticle">
+            <img ref="imgMobile" :id="'img_' + article.article_id" :src="article.article_previewImageUrl" alt="previewImage" class="article-summary-previewimage-mobile">
+          </div>
+          <div class="article-summary-content font-s cursorp" ref="summary" v-on:click="redirectToTheArticle">
+            {{article.article_summary}}
+            <span class="readAll">
               <span class="summary-cover"></span>
               <span class="font-s cursorp" style="background: white" v-on:click="redirectToTheArticle">阅读全文</span>
               </span>
-            </div>
-          </div>
-          <div ref="imgInner" class="article-summary-previewimg-inner" v-if="article.article_previewImageUrl != undefined && !isMobile" v-on:click="redirectToTheArticle">
-            <img ref="img"  :src="article.article_previewImageUrl" alt="previewImage" class="article-summary-previewimage">
           </div>
         </div>
+        <div ref="imgInner" class="article-summary-previewimg-inner" v-if="article.article_previewImageUrl != undefined && !isMobile" v-on:click="redirectToTheArticle">
+          <img ref="img" v-on:click="redirectToTheArticle" :src="article.article_previewImageUrl" alt="previewImage" class="article-summary-previewimage cursorp">
+        </div>
+      </div>
     </div>
+  </div>
+
 </template>
 
 <script>
@@ -96,8 +100,8 @@ export default {
         let lineHeight = parseInt(getComputedStyle(this.$refs.summary).lineHeight)
         this.$refs.summary.style.height = lineHeight * 3 + 'px'
         if(this.article.article_previewImageUrl != undefined){
-          this.$refs.img.style.height = lineHeight * 4 + 'px'
-          this.$refs.imgInner.style.height = lineHeight * 4 + 'px'
+          this.$refs.img.style.height = getComputedStyle(this.$refs.articleSummaryInfoContent).height
+          this.$refs.imgInner.style.height = getComputedStyle(this.$refs.articleSummaryInfoContent).height
         }
       }
       if(offsetWidthOfBodyEl <= 750) {
@@ -131,7 +135,7 @@ export default {
 .article-summary
   width 100%
   background white
-  border-bottom 1px solid rgb(222, 226, 230)
+  border-bottom 1px solid #f0f2f7
 
 .article-summary-info-content
   width 100%
@@ -156,19 +160,21 @@ export default {
   color #A2A2A2
 
 .article-summary-title
-  margin-top 20px
   margin-bottom 5px
 
 .article-summary-content
-  line-height 2rem
-  margin-bottom 20px
+  line-height 1.6rem
   overflow hidden
 
 
 .article-summary-previewimage
   width: auto
-  height 120px
+  height 100px
   border-radius 4px
+  transition all 0.5s ease
+
+.article-summary-previewimage:hover
+  transform scale(1.1)
 
 @media (min-width: 750px){
   .article-summary-previewimage{
@@ -223,4 +229,10 @@ export default {
 .summary-cover
   width 8rem
   background linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1))
+
+.gap
+.gap-mobile
+  width 100%
+  height 7px
+  background rgb(247, 247, 247)
 </style>

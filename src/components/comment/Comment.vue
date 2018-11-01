@@ -1,13 +1,13 @@
 <template>
     <div :id="'comment_' + comment.comment_id" class="comment common-padding">
-      <div class="comment-author font-bold font-m flex-row-space-between" >
+      <div class="comment-author font-bold font-s flex-row-space-between" >
         <span v-bind:class="{redirectable: isRedirectable}" @click="redirectToTheirSite">{{comment.comment_author.visitor_name}}</span>
         <span><i class="fa fa-close font-dark cursorp" @click="deleteThisComment"></i></span>
       </div>
       <div v-if="subComment.comment_id" class="refer-comment">
         <SubComment :subComment="subComment"></SubComment>
       </div>
-      <div class="comment-content font-m common-line-height">{{comment.comment_content}}</div>
+      <div class="comment-content font-s common-line-height">{{comment.comment_content}}</div>
       <div class="comment-releasetime-refer font-dark font-s">
         <span>{{comment.comment_releaseTime}}</span>
         |&nbsp;<span class="cursorp" @click="clickRefer">引用</span>

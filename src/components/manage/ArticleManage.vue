@@ -346,7 +346,6 @@
   .list-complete-item
     width 100%
     transition all 0.5s
-    display inline-block
 
   .list-complete-enter
   .list-complete-leave-to

@@ -1,5 +1,4 @@
 <template>
-    <div>
       <div class="article-item-mobile flex-row-center">
         <div class="article-msg">
           <div class="article-title-label overRowHandle">
@@ -31,8 +30,6 @@
           @clickYesAfterError='()=>{deleteArticleModal.show=false}'
         />
       </div>
-
-    </div>
 </template>
 
 <script>

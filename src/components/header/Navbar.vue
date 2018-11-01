@@ -29,7 +29,7 @@
         isMobile: false,
         showMenuBackgroundFlag: false,
         showMenuFlag: false,
-        heightOfMenu: 0
+        heightOfMenu: 147
       }
     },
     components: {
@@ -38,9 +38,6 @@
     mounted() {
       this.bindScrollEvent()
       this.judgeIfMobile()
-      this.$nextTick(() => {
-        this.getHeightOfMenu()
-      })
       this.initDistanceToClientUpperEdge()
     },
     watch: {
@@ -84,7 +81,7 @@
             if(this.$refs.menuCover.style.background == 'rgba(0, 0, 0, 0.2)') {
               this.showMenuFlag = true
             }
-          }, 500)
+          }, 300)
         }else{
           bodyEl.style.overflow = 'auto'
           this.$refs.navbar.style.background = ''
@@ -93,7 +90,7 @@
             if(this.$refs.navbar.style.background == '') {
               this.$refs.menuCover.style.height = '0px'
             }
-          },500)
+          },300)
           this.showMenuFlag = false
           this.$refs.menuBackground.style.height = '0px'
         }
@@ -102,7 +99,7 @@
         this.triggerMenu()
         setTimeout(() => {
           this.$router.push(target)
-        },500)
+        },300)
       },
       receiveSearchWords(searchString) {
         this.$router.push({path:'/article_manage',query:{search_string:searchString}})
@@ -118,7 +115,7 @@
   width 750px
   height 50px
   padding-bottom 0
-  transition all 0.5s ease
+  transition all 0.3s ease
   .navbar-logo
     padding 5px 25px
     height 100%
@@ -162,14 +159,14 @@
   width 100%
   height 0px
   background white
-  transition background 0.5s ease
+  transition background 0.3s ease
 
 .navbar-itemlist-mobile-background
   position absolute
   top 100%
   width 100%
   background #f7f7f7
-  transition all 0.5s ease
+  transition all 0.3s ease
   height 0px
 
 .navbar-item-mobile

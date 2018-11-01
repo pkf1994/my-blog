@@ -3,7 +3,7 @@
       <div class="font-m font-bold headline">草稿</div>
       <ul>
         <transition-group name="list-complete" tag="div">
-        <DraftItem class="draft-item" ref="draftitems"
+        <DraftItem class="draft-item list-complete-item " ref="draftitems"
                    v-for="draft in drafts"
                    :draft="draft"
                    :key="draft.article_id"
@@ -116,18 +116,21 @@
 
 .draft-item
   margin-bottom 15px
-  margin-right 10px
 
-.list-complete-item {
-  transition: all 0.5s;
-  display: inline-block;
-}
-.list-complete-enter, .list-complete-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-}
-.list-complete-leave-active {
-  position: absolute;
-}
 
+@media(min-width: 750px) {
+  .draft-item{
+    margin-right 10px
+  }
+}
+.list-complete-item
+  transition all 0.5s
+
+.list-complete-enter
+.list-complete-leave-to
+  opacity 0
+  transform translateX(30px)
+
+.list-complete-leave-active
+  position absolute
 </style>

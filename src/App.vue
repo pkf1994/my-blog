@@ -6,11 +6,16 @@
       <Navbar></Navbar>
     </div>
     <div class="main-area flex-row-center" ref="mainArea">
+
       <keep-alive>
         <router-view name="Home"></router-view>
       </keep-alive>
       <router-view :key="$store.state.articlePageRouterStatus" name="ArticlePage"></router-view>
-      <router-view name="ArticleEditorPage"></router-view>
+
+      <keep-alive>
+        <router-view name="ArticleEditorPage"></router-view>
+      </keep-alive>
+
       <keep-alive>
         <router-view name="ArticleManage"></router-view>
       </keep-alive>
