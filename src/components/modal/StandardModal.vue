@@ -23,6 +23,7 @@
             <button class="button" @click="clickYesAfterError" v-if="error">关闭</button>
           </div>
         </transition>
+
       </div>
     </transition>
   </div>

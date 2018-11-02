@@ -19,5 +19,8 @@ export default {
   },
   appointNavbarSearchString(state, searchString) {
     state.navbarSearchString = searchString
+  },
+  appointScrollTopOfDocumentEl(state, scrollTop) {
+    state.scrollTopOfDocumentEl = scrollTop
   }
 }

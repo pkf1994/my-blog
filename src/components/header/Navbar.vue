@@ -2,18 +2,18 @@
     <div class="navbar"
          ref="navbar"
          :class="{'flex-row-space-between': distanceToClientUpperEdge < 10 && isMobile, 'flex-row-end': distanceToClientUpperEdge > 10 || !isMobile}">
-      <router-link v-if="!isMobile" to="/home.html" tag="span" class="navbar-item cursorp flex-row-column-center font-l font-dark"  >杂谈</router-link>
-      <span v-if="!isMobile" class="navbar-item cursorp flex-row-column-center font-l font-dark" >关于</span>
-      <router-link v-if="!isMobile" to="/article_edit/0" tag="span" class="navbar-item cursorp flex-row-column-center font-l font-dark" >创造</router-link>
-      <router-link v-if="!isMobile" to="/article_manage" tag="span" class="navbar-item cursorp flex-row-column-center font-l font-dark" >管理</router-link>
-      <span v-if="isMobile" class="navbar-logo-mobile flex-row-column-center font-l" v-show="distanceToClientUpperEdge < 10">Pengblog</span>
+      <router-link v-if="!isMobile" :to="{path:'/routine/home',query: {body_scroll_top: scrollTopOfDocumentEl}}" tag="span" class="navbar-item cursorp flex-row-column-center font-dark font-m"  >杂谈</router-link>
+      <span v-if="!isMobile" class="navbar-item cursorp flex-row-column-center font-dark font-m" >关于</span>
+      <router-link v-if="!isMobile" :to="{path:'/routine/article_edit/0',query: {body_scroll_top: scrollTopOfDocumentEl}}" tag="span" class="navbar-item cursorp flex-row-column-center font-dark font-m" >创造</router-link>
+      <router-link v-if="!isMobile" :to="{path:'/routine/article_manage',query: {body_scroll_top: scrollTopOfDocumentEl}}" tag="span" class="navbar-item cursorp flex-row-column-center font-dark font-m" >管理</router-link>
+      <span v-if="isMobile" class="navbar-logo-mobile flex-row-column-center font-l" v-show="distanceToClientUpperEdge < 10" @click="() => {goTo('/routine/home');}">Pengblog</span>
       <a v-if="isMobile" class="menu-buttom" @click="triggerMenu"></a>
       <div class="navbar-itemlist-cover" ref="menuCover" @click="triggerMenu"></div>
       <div class="navbar-itemlist-mobile-background" ref="menuBackground"></div>
       <div class="navbar-itemlist-mobile" ref="menu" v-show="showMenuFlag">
-        <div class="navbar-item-mobile cursorp flex-row-column-center font-l font-dark" @click="() => {goTo('/home.html');}">杂谈</div>
-        <div class="navbar-item-mobile cursorp flex-row-column-center font-l font-dark" @click="() => {goTo('/article_edit/0');}">创造</div>
-        <div class="navbar-item-mobile cursorp flex-row-column-center font-l font-dark" @click="() => {goTo('/article_manage');}">管理</div>
+        <div class="navbar-item-mobile cursorp flex-row-column-center font-l font-dark" @click="() => {goTo('/routine/home');}">杂谈</div>
+        <div class="navbar-item-mobile cursorp flex-row-column-center font-l font-dark" @click="() => {goTo('/routine/article_edit/0');}">创造</div>
+        <div class="navbar-item-mobile cursorp flex-row-column-center font-l font-dark" @click="() => {goTo('/routine/article_manage');}">管理</div>
       </div>
       <SearchBar ref="searchBar" :class="{ 'navbar-search-bar-onright': distanceToClientUpperEdge > 10, 'navbar-search-bar-onleft': distanceToClientUpperEdge <= 10 }" is-mobile="no" submit-slogan="Search" class="navbar-search-bar" width="240" @submitSearchWords="receiveSearchWords"></SearchBar>
     </div>
@@ -22,6 +22,7 @@
 <script>
   import CountDTDUE from '../../js/countDistanceToUpperEdge.js'
   import SearchBar from '../searchBar/SearchBar.vue'
+  import { mapState } from 'vuex'
   export default {
     data() {
       return {
@@ -29,8 +30,14 @@
         isMobile: false,
         showMenuBackgroundFlag: false,
         showMenuFlag: false,
-        heightOfMenu: 147
+        heightOfMenu: 147,
+        bodyScrollTop:0
       }
+    },
+    computed:{
+      ...mapState([
+        'scrollTopOfDocumentEl'
+      ])
     },
     components: {
       SearchBar
@@ -61,8 +68,8 @@
       },
       bindScrollEvent() {
         window.addEventListener('scroll', () => {
-          let bodyScrollTop = document.documentElement.scrollTop || document.body.scrollTop
-          this.distanceToClientUpperEdge = CountDTDUE.countDistanceToDocumentUpperEdge(this.$refs.navbar) - bodyScrollTop
+          this.bodyScrollTop = document.documentElement.scrollTop || document.body.scrollTop
+          this.distanceToClientUpperEdge = CountDTDUE.countDistanceToDocumentUpperEdge(this.$refs.navbar) - this.bodyScrollTop
         })
       },
       initDistanceToClientUpperEdge() {
@@ -96,9 +103,11 @@
         }
       },
       goTo(target) {
-        this.triggerMenu()
+        if(this.showMenuFlag == true){
+          this.triggerMenu()
+        }
         setTimeout(() => {
-          this.$router.push(target)
+          this.$router.push({path:target, query:{body_scroll_top: this.scrollTopOfDocumentEl}})
         },300)
       },
       receiveSearchWords(searchString) {
@@ -122,6 +131,7 @@
   .navbar-item
     padding 5px 25px
     height 100%
+    transition all 0.5s ease
 
 @media (min-width: 750px) {
   .navbar{
@@ -134,6 +144,7 @@
 
 .router-link-active
   color black
+  font-size 22px
 
 .navbar-logo-mobile
   height 100%

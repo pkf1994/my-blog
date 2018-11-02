@@ -22,7 +22,8 @@
                            :article="article"
                            :key="article.article_id"
                            v-if="!isMobile"
-                            @submitArticleLabel="receiveArticleLabel">
+                            @submitArticleLabel="receiveArticleLabel"
+                           @deleted="afterDeleteArticle">
               </ArticleItem>
             </transition-group>
 
@@ -30,7 +31,8 @@
               <ArticleItemMobile class="list-complete-item"
                                  v-for="article in articleList"
                                  :article="article"
-                                 :key="article.article_id" @deleted="afterDeleteArticle"
+                                 :key="article.article_id"
+                                 @deleted="afterDeleteArticle"
                                  v-if="isMobile">
               </ArticleItemMobile>
             </transition-group>
@@ -260,15 +262,15 @@
         }
       },
       afterDeleteArticle(article_id){
-        this.articleList.forEach((item, index) => {
+        /*this.articleList.forEach((item, index) => {
           if(item.article_id == article_id){
             setTimeout(() => {
               this.articleList.splice(index,1)
               this.countOfArticle --
-            },1000)
+            },100)
 
           }
-        })
+        })*/
       }
     }
   }
@@ -344,13 +346,12 @@
     border-bottom 1px solid #dee2e6
 
   .list-complete-item
-    width 100%
     transition all 0.5s
 
   .list-complete-enter
   .list-complete-leave-to
     opacity 0
-    transform translateX(30px)
+    transform translateY(-5px)
 
   .list-complete-leave-active
     position absolute

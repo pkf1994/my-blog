@@ -350,7 +350,7 @@
         }
       },
       goToArticlesPage() {
-        this.$router.push({path: '/home.html'})
+        this.$router.push({path: '/home'})
         this.triggerFlagRefreshHome()
       },
       goToDraftEditPage() {

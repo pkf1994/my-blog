@@ -37,7 +37,7 @@
 
 <script>
 import getDateDiff from '../../js/getDateDiff.js'
-import { mapActions } from 'vuex'
+import { mapActions,mapState } from 'vuex'
 import CommentApi from '../../api/comment_api.js'
 export default {
   props: {
@@ -50,14 +50,11 @@ export default {
       countOfComment: 0
     }
   },
+  inject:['isMobile'],
   computed: {
-    isMobile() {
-      if(window.innerWidth <= 750){
-        return true
-      }else{
-        return false
-      }
-    }
+    ...mapState([
+      'scrollTopOfDocumentEl'
+    ])
   },
   created() {
     this.formatTheDate()
@@ -73,7 +70,9 @@ export default {
     ]),
     redirectToTheArticle() {
       this.appointIdOfArticleBeingReading(this.article.article_id)
-      this.$router.push('/article/' + this.article.article_id)
+      console.log(this.scrollTopOfDocumentEl)
+      console.log(parseInt(this.scrollTopOfDocumentEl))
+      this.$router.push({path: '/routine/article/' + this.article.article_id, query:{body_scroll_top: parseInt(this.scrollTopOfDocumentEl)}})
     },
     formatTheDate() {
       this.article.article_releaseTime = getDateDiff.getDateDiff(new Date(this.article.article_releaseTime).getTime())
@@ -110,7 +109,7 @@ export default {
       }
     },
     submitArticleLabel(){
-      this.$router.push({path:'/article_manage', query: {article_label: this.article.article_label}})
+      this.$router.push({path:'/routine/article_manage', query: {article_label: this.article.article_label}})
     },
     getCountOfComment() {
       CommentApi.getCountOfCommentByArticleId(this.article.article_id).then((res) => {
@@ -122,10 +121,10 @@ export default {
       })
     },
     goToTheCommentEditor() {
-      this.$router.push({path:'/article/' + this.article.article_id, query: {gotoce: 1}})
+      this.$router.push({path:'/routine/article/' + this.article.article_id, query: {gotoce: 1}})
     },
     goToTheCommentList() {
-      this.$router.push({path:'/article/' + this.article.article_id, query: {gotocl: 1}})
+      this.$router.push({path:'/routine/article/' + this.article.article_id, query: {gotocl: 1}})
     }
   }
 }

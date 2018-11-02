@@ -64,6 +64,12 @@ export default {
 
     }
   },
+  inject:['isMobile'],
+  computed: {
+    ...mapState([
+      'offsetHeightOfNavbar'
+    ])
+  },
   provide() {
     return {
       article_id: parseInt(this.$route.params.article_id),
@@ -87,11 +93,6 @@ export default {
   mounted() {
     this.uploadOffsetTopOfCommentTitle()
     this.initLocationOfBackToUp()
-  },
-  computed: {
-    ...mapState([
-      'offsetHeightOfNavbar'
-    ])
   },
   methods: {
     ...mapActions([
@@ -173,6 +174,11 @@ export default {
       })
     },
     initLocationOfBackToUp(){
+
+      if(this.isMobile){
+        return
+      }
+
       let windowInnerWidth = window.innerWidth
       let leftOfBackToUp
       if(windowInnerWidth > 850) {
@@ -204,7 +210,7 @@ export default {
 .list-complete-enter
 .list-complete-leave-to
   opacity 0
-  transform translateX(30px)
+  transform translateY(10px)
 
 .list-complete-leave-active
   position absolute

@@ -8,5 +8,6 @@ export default {
   breadcrumbData: [],
   refreshDraftList: false,
   flagRefreshHome: false,
-  navbarSearchString: ''
+  navbarSearchString: '',
+  scrollTopOfDocumentEl: 0
 }

@@ -1,6 +1,6 @@
 <template>
     <div ref="searchBar" v-if="show">
-      <input class="search-bar-input" ref="searchBarInput" type="text" v-model="searchString" @keydown="checkKeyNumber" placeholder="标题、分类、作者"><button ref="button" class="search-bar-button" @click="throttleSubmitSearchWord" >{{submitSlogan}}</button>
+      <input class="search-bar-input" ref="searchBarInput" type="text" v-model="searchString" @keydown="checkKeyNumber" placeholder="标题、分类、作者"><button ref="button" class="search-bar-button" @click="throttleSubmitSearchWord" ><i class="fa fa-search"></i></button>
     </div>
 </template>
 

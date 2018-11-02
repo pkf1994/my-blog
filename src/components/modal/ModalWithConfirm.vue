@@ -83,7 +83,7 @@
 
           setTimeout(() => {
             this.showModal = true;
-          },500)
+          },200)
         })
       },
       shutdown(){
@@ -93,7 +93,7 @@
             this.bodyEl.style.marginRight = 0
             this.bodyEl.style.overflowY='auto'
             this.showCover = false
-          },500)
+          },200)
       },
 
       clickYes(){
@@ -121,7 +121,7 @@
     height 100%
     background: rgba(0,0,0,0);
     z-index 999
-    transition background 0.5s ease
+    transition background 0.2s ease
     .modal
       box-shadow 0 5px 15px rgba(0,0,0,.5)
       border 1px solid rgba(0,0,0,.2)
@@ -167,7 +167,7 @@
     }
 
     .fade-enter-active, .fade-leave-active {
-      transition: opacity .5s;
+      transition: opacity .3s;
     }
     .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
       opacity: 0;
@@ -175,17 +175,17 @@
 
 
     .slide-fade-enter-active {
-      transition: all .3s ease;
+      transition: all .2s ease;
     }
     .slide-fade-leave-active {
-      transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+      transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
     }
     .slide-fade-enter{
-      transform: translateY(-300px);
+      transform: translateY(-100px);
       opacity: 0;
     }
     .slide-fade-leave-to {
-      transform: translateY(300px);
+      transform: translateY(100px);
       opacity: 0;
     }
 

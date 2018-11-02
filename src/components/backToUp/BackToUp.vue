@@ -1,5 +1,5 @@
 <template>
-    <div class="backtoup">
+    <div class="backtoup" v-if="!isMobile">
       <div class="backtoup-inner" v-if="scropTopOfBody > 300">
         <i class="fa fa-arrow-up font-dark cursorp"  title="点击以返回顶部" @click="goToUp"></i>
       </div>
@@ -11,6 +11,14 @@
       data() {
         return{
           scropTopOfBody: 0
+        }
+      },
+      computed: {
+        isMobile() {
+          if(window.innerWidth > 750){
+            return false
+          }
+          return true
         }
       },
       mounted() {

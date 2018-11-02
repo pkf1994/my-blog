@@ -19,5 +19,9 @@ export default {
   },
   appointNavbarSearchString(context,searchString) {
     context.commit('appointNavbarSearchString', searchString)
+  },
+  appointScrollTopOfDocumentEl(context,scrollTop) {
+    context.commit('appointScrollTopOfDocumentEl', scrollTop)
   }
 }
+

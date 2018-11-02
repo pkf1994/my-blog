@@ -97,6 +97,7 @@
             setTimeout(() => {
               this.deleteArticleModal.show = false
               this.deleted = true
+              this.$emit('deleted',this.article.article_id)
             },1500)
           }
         }).catch((err) => {

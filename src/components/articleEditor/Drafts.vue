@@ -129,7 +129,7 @@
 .list-complete-enter
 .list-complete-leave-to
   opacity 0
-  transform translateX(30px)
+  transform translateY(10px)
 
 .list-complete-leave-active
   position absolute

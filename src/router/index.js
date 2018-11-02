@@ -4,52 +4,69 @@ import Home from '../components/home/Home'
 import ArticleEditorPage from '../components/articleEditor/ArticleEditorPage.vue'
 import ArticlePage from '../components/article/ArticlePage.vue'
 import ArticleManage from '../components/manage/ArticleManage.vue'
+import RoutinePage from '../components/wholePage/RoutinePage.vue'
 Vue.use(Router)
 
-export default new Router({
+
+let router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/home.html',
+      path: '/routine',
       components: {
-        Home: Home
-      }
-    },
-    {
-      path: '/article/:article_id',
-      components: {
-        ArticlePage
-      }
+        RoutinePage
+      },
+      children: [
+        {
+          path:'home',
+          components: {
+            Home
+          }
+        },
+        {
+          path: 'article/:article_id',
+          components: {
+            ArticlePage
+          }
+        },
+        {
+          path: 'article_manage',
+          components: {
+            ArticleManage: ArticleManage
+          }
+        },
+        {
+          path:'article_edit/:article_id',
+          components: {
+            ArticleEditorPage
+          }
+        }
+      ]
     },
     {
       path: '/',
-      redirect: '/home.html'
+      redirect: '/routine/home'
     },
     {
       path: '/article_edit',
       redirect: '/article_edit/0'
-    },
-    {
-      path: '/article_edit/:idOfEditingArticle',
-      components: {
-        ArticleEditorPage: ArticleEditorPage
-      },
-      props: {
-        ArticleEditorPage: true
-      }
-    },
-    {
-      path: '/article_manage',
-      components: {
-        ArticleManage: ArticleManage
-      }
     }
   ],
   scrollBehavior (to, from, savedPosition) {
+    if(to.query.body_scroll_top < 150){
+      return savedPosition
+    }
     if (savedPosition) {
       return savedPosition
     } else {
-      return { x: 0, y: 0 }
+      if(to.query.id_of_comment_scroll_to != undefined || to.query.gotocl != undefined || to.query.gotoce != undefined){
+        return { x: 0, y: 0 }
+      }
+      return { x: 0, y: 150 }
     }
   }
 })
+
+
+
+export default router

@@ -1,31 +1,33 @@
 <template>
     <div class="home flex-column-center">
 
-            <LoadingPage v-if="!articleSummaryListLoaded"></LoadingPage>
+        <LoadingPage v-if="!articleSummaryListLoaded"></LoadingPage>
 
-            <SearchBar inputLengthRatio="80%" is-mobile="yes" submit-slogan="Go!" class="search-bar common-padding" @submitSearchWords="receiveSearchWords"></SearchBar>
-
-
-            <div class="home-gap"></div>
-            <Jumbotron class="jumbotron" v-if="!isMobile&&articleSummaryListLoaded" :article_id="jumbotronArticleId"></Jumbotron>
+        <SearchBar inputLengthRatio="80%" is-mobile="yes" submit-slogan="Go!" class="search-bar common-padding" @submitSearchWords="receiveSearchWords"></SearchBar>
 
 
+        <Jumbotron class="jumbotron" v-if="!isMobile&&articleSummaryListLoaded" :article_id="jumbotronArticleId"></Jumbotron>
 
-            <transition-group name="list-complete" tag="div" class="home-article-list">
-              <ArticleSummary :article=article
-                              v-for="article in articleSummaryList"
-                              :key="article.article_id"
-                              class="list-complete-item"
-              ></ArticleSummary>
-            </transition-group>
 
-            <Loading v-show="isLoading"></Loading>
-            <Nomore v-show="currentPage==maxPage && articleSummaryListLoaded"></Nomore>
-            <div class="blank-for-reload" v-show="!isLoading&&!(currentPage==maxPage)">
-            </div>
 
-            <BackToUp class="backtoup" ref="backtoup"></BackToUp>
-    </div>
+        <transition-group name="list-complete" tag="div" class="home-article-list">
+          <ArticleSummary :article=article
+                          v-for="article in articleSummaryList"
+                          :key="article.article_id"
+                          class="list-complete-item"
+          ></ArticleSummary>
+        </transition-group>
+
+        <Loading v-show="isLoading"></Loading>
+        <Nomore v-show="currentPage==maxPage && articleSummaryListLoaded"></Nomore>
+        <div class="blank-for-reload" v-show="!isLoading&&!(currentPage==maxPage)">
+        </div>
+
+        <BackToUp class="backtoup" ref="backtoup"></BackToUp>
+      </div>
+
+
+
 </template>
 
 <script>
@@ -71,16 +73,11 @@ export default {
       this.initLocationOfBackToUp()
     })
   },
+  inject:['isMobile'],
   computed: {
     ...mapState([
       'flagRefreshHome'
-    ]),
-    isMobile() {
-      if(window.innerWidth > 750){
-        return false
-      }
-      return true
-    }
+    ])
   },
   watch: {
     flagRefreshHome() {
@@ -122,7 +119,7 @@ export default {
     initPageEndRefresh() {
       window.addEventListener('scroll', () => {
           var distanceToBottom = this.calculateDistanceToBottom()
-          if (distanceToBottom < 30 && this.$route.path == '/home.html') {
+          if (distanceToBottom < 30 && this.$route.path == '/routine/home') {
             this.throttle(this.reload, 400, 200)
           }
       })
@@ -133,6 +130,10 @@ export default {
       }
     },
     initLocationOfBackToUp(){
+
+      if(this.isMobile) {
+        return
+      }
 
         let windowInnerWidth = window.innerWidth
         let leftOfBackToUp
@@ -149,11 +150,11 @@ export default {
 .home {
   width 100%
   position relative
+  min-height 500px
+  /*display flex*/
 }
 
-.home-gap
-  height 7px
-  width 100%
+
 
 .home-article-list
 .jumbotron

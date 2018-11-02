@@ -15,7 +15,7 @@ export default {
       'triggerFlagRefreshHome'
       ]),
     refresh() {
-      this.$router.push('/home.html')
+      this.$router.push('/routine/home')
       setTimeout(() => {
         this.triggerFlagRefreshHome()
       },200)
