@@ -46,7 +46,7 @@ export default {
   data: function() {
     return {
       currentPage: 0,
-      pageScale: 3,
+      pageScale: 5,
       maxPage: 1,
       articleSummaryList: [],
       isLoading: false,

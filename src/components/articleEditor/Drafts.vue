@@ -1,6 +1,7 @@
 <template>
     <div class="draft">
       <div class="font-m font-bold headline">草稿</div>
+      <div class="draft-unauthorized-msg err" v-if="unauthorizedMsg!=''">{{unauthorizedMsg}}</div>
       <ul>
         <transition-group name="list-complete" tag="div">
         <DraftItem class="draft-item list-complete-item " ref="draftitems"
@@ -32,7 +33,8 @@
         pageScale: 7,
         maxPage: 1,
         isLoading: false,
-        isAllLoaded: false
+        isAllLoaded: false,
+        unauthorizedMsg:''
       }
     },
     components: {
@@ -51,12 +53,17 @@
         }
         this.currentPage = this.currentPage + 1
         return ArticleApi.getDraftListByCurrentPageAndPageScale(this.currentPage, this.pageScale).then((res) => {
-          if (res.status === 200) {
+          if (res.status == 200) {
             this.maxPage = res.data.maxPage
             this.drafts = this.drafts.concat(res.data.articleList)
             this.isLoading = false
           }
-        }, (err) => console.log(err))
+        }).catch((err) => {
+          if (err.response.status == 400) {
+            this.unauthorizedMsg = err.response.data.msg
+          }
+            console.log(err)
+        })
       },
       reload() {
         if (!(this.maxPage === this.currentPage)) {

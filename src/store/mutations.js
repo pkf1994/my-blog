@@ -22,5 +22,8 @@ export default {
   },
   appointScrollTopOfDocumentEl(state, scrollTop) {
     state.scrollTopOfDocumentEl = scrollTop
+  },
+  triggerLoginStatus(state) {
+    state.logined = !state.logined
   }
 }

@@ -13,4 +13,5 @@
 <style scoped lang="stylus">
   .footer
     height 4rem
+    flex-wrap wrap
 </style>

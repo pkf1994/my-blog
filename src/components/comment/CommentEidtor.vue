@@ -2,7 +2,7 @@
   <div class="comment-editor common-padding">
     <div class="comment-edit-content">
       <div class="font-m font-bold">编写您的留言<span class="format-warn font-s" v-show="commentContentIsWrong&&!textAreaIsFocus">&nbsp;&nbsp;&nbsp;{{commentContentWrongMessage}}</span></div>
-      <SubComment v-if="commentBeingRefering.comment_id" :subComment="commentBeingRefering"></SubComment>
+      <SubComment class="comment-editor-subcomment" v-if="commentBeingRefering.comment_id" :subComment="commentBeingRefering"></SubComment>
       <textarea ref="theTextArea" class="the-textarea font-m" rows="5"
                 v-model="comment_content"
                 @focus="triggerTextAreaFocus"
@@ -258,6 +258,9 @@ export default {
 .the-textarea
   width 100%
 
+.comment-edit-regiter
+  margin-top 10px
+
 @media(max-width: 750px){
   .the-input{
     width 100%
@@ -278,6 +281,7 @@ export default {
   color red
   font-weight normal
 
-
+.comment-editor-subcomment
+  margin-top 10px
 
 </style>

@@ -120,10 +120,10 @@
         this.article.article_summary = this.article.article_summary.substring(0, idx + 1)
       },
       goToTheArticle() {
-        this.$router.push('/article/' + this.article_id)
+        this.$router.push('/routine/article/' + this.article_id)
       },
       submitLabel() {
-        this.$router.push({path:'/article_manage',query:{article_label: this.article.article_label}})
+        this.$router.push({path:'/routine/article_manage',query:{article_label: this.article.article_label}})
       }
     }
   }

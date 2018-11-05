@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <router-view name="RoutinePage"/>
+    <router-view name="LoginPage"/>
   </div>
 </template>
 

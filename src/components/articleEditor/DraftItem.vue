@@ -37,7 +37,7 @@
       redirectToEditPage() {
         this.$emit('triggerEditingSlogan')
         this.isEditing = true
-        this.$router.push('/article_edit/' + this.draft.article_id)
+        this.$router.push('/routine/article_edit/' + this.draft.article_id)
       },
       deleteThisDraft() {
         ArticleApi.deleteArticle(this.draft.article_id).then((res) => {

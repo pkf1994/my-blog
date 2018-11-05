@@ -11,9 +11,10 @@
       <div class="navbar-itemlist-cover" ref="menuCover" @click="triggerMenu"></div>
       <div class="navbar-itemlist-mobile-background" ref="menuBackground"></div>
       <div class="navbar-itemlist-mobile" ref="menu" v-show="showMenuFlag">
-        <div class="navbar-item-mobile cursorp flex-row-column-center font-l font-dark" @click="() => {goTo('/routine/home');}">杂谈</div>
-        <div class="navbar-item-mobile cursorp flex-row-column-center font-l font-dark" @click="() => {goTo('/routine/article_edit/0');}">创造</div>
-        <div class="navbar-item-mobile cursorp flex-row-column-center font-l font-dark" @click="() => {goTo('/routine/article_manage');}">管理</div>
+        <div class="navbar-item-mobile cursorp flex-row-column-center font-l clickable" @click="() => {goTo('/routine/home');}">杂谈</div>
+        <div class="navbar-item-mobile cursorp flex-row-column-center font-l clickable" @click="() => {goTo('/routine/article_edit/0');}">创造</div>
+        <div class="navbar-item-mobile cursorp flex-row-column-center font-l clickable" @click="() => {goTo('/routine/article_manage');}">管理</div>
+        <div class="navbar-item-mobile cursorp flex-row-column-center font-l clickable" @click="() => {goTo('/login');}">登录</div>
       </div>
       <SearchBar ref="searchBar" :class="{ 'navbar-search-bar-onright': distanceToClientUpperEdge > 10, 'navbar-search-bar-onleft': distanceToClientUpperEdge <= 10 }" is-mobile="no" submit-slogan="Search" class="navbar-search-bar" width="240" @submitSearchWords="receiveSearchWords"></SearchBar>
     </div>
@@ -30,7 +31,7 @@
         isMobile: false,
         showMenuBackgroundFlag: false,
         showMenuFlag: false,
-        heightOfMenu: 147,
+        heightOfMenu: 196,
         bodyScrollTop:0
       }
     },
@@ -79,8 +80,11 @@
         this.showMenuBackgroundFlag = !this.showMenuBackgroundFlag
         let bodyEl = document.documentElement || document.body
         if(this.showMenuBackgroundFlag) {
-          this.$refs.navbar.style.background = '#f7f7f7'
+          if(this.scrollTopOfDocumentEl >= 150){
+            this.$refs.navbar.style.background = 'white'
+          }
           this.$refs.menuBackground.style.height = this.heightOfMenu + 'px'
+          this.$refs.menuBackground.style.background = 'white'
           bodyEl.style.overflow = 'hidden'
           this.$refs.menuCover.style.height = window.innerHeight - parseInt(getComputedStyle(this.$refs.navbar).height) + 'px'
           this.$refs.menuCover.style.background = 'rgba(0,0,0,0.2)'
@@ -100,6 +104,9 @@
           },300)
           this.showMenuFlag = false
           this.$refs.menuBackground.style.height = '0px'
+          if(this.scrollTopOfDocumentEl >= 150){
+            this.$refs.menuBackground.style.background = 'rgb(204, 204, 204)'
+          }
         }
       },
       goTo(target) {
@@ -111,7 +118,7 @@
         },300)
       },
       receiveSearchWords(searchString) {
-        this.$router.push({path:'/article_manage',query:{search_string:searchString}})
+        this.$router.push({path:'/routine/article_manage',query:{search_string:searchString,body_scroll_top: this.scrollTopOfDocumentEl}})
       }
     }
   }

@@ -7,7 +7,7 @@
             <div class="search-bar-mobile" v-if="isMobile">
               <SearchBar inputLengthRatio="80%" submit-slogan="Go!" is-mobile="yes" @submitSearchWords="receiveSearchWords" ref="searchBarMobile"></SearchBar>
             </div>
-            <div class="article-manage-headline font-l font-bold">{{headline}}</div>
+            <div class="article-manage-headline font-l font-bold flex-row-space-between"><span>{{headline}}&nbsp;</span><span class="font-m font-normal clickable cursorp" @click="() => {receiveSearchWords('');}">初始化</span></div>
             <div class="article-manage-head  font-dark" v-if="!isMobile">
               <span class="article-manage-title">文章标题</span>
               <span class="article-manage-author">作者</span>
@@ -16,7 +16,7 @@
               <span class="article-manage-operation flex-row-center">操作</span>
             </div>
 
-            <transition-group name="list-complete" tag="div">
+            <transition-group name="list-complete" tag="div" class="list-complete-item-outer">
               <ArticleItem class="list-complete-item"
                            v-for="article in articleList"
                            :article="article"
@@ -262,15 +262,15 @@
         }
       },
       afterDeleteArticle(article_id){
-        /*this.articleList.forEach((item, index) => {
+        this.articleList.forEach((item, index) => {
           if(item.article_id == article_id){
             setTimeout(() => {
               this.articleList.splice(index,1)
               this.countOfArticle --
-            },100)
+            },500)
 
           }
-        })*/
+        })
       }
     }
   }
@@ -345,15 +345,18 @@
     margin-bottom 15px
     border-bottom 1px solid #dee2e6
 
-  .list-complete-item
-    transition all 0.5s
+  .list-complete-item-outer
+    position relative
 
-  .list-complete-enter
-  .list-complete-leave-to
-    opacity 0
-    transform translateY(-5px)
-
-  .list-complete-leave-active
+  .list-complete-item {
+    transition: all 0.5s;
+  }
+  .list-complete-enter, .list-complete-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .list-complete-leave-active {
     position absolute
+  }
 
 </style>

@@ -2,7 +2,7 @@
     <div :id="'comment_' + comment.comment_id" class="comment common-padding">
       <div class="comment-author font-bold font-s flex-row-space-between" >
         <span v-bind:class="{redirectable: isRedirectable}" @click="redirectToTheirSite">{{comment.comment_author.visitor_name}}</span>
-        <span><i class="fa fa-close font-dark cursorp" @click="deleteThisComment"></i></span>
+        <span><i class="fa fa-close font-dark cursorp" @click="confirmDeleteThisComment"></i></span>
       </div>
       <div v-if="subComment.comment_id" class="refer-comment">
         <SubComment :subComment="subComment"></SubComment>
@@ -12,11 +12,26 @@
         <span>{{comment.comment_releaseTime}}</span>
         |&nbsp;<span class="cursorp" @click="clickRefer">引用</span>
       </div>
+
+      <ModalWithConfirm
+        :modalHeaderProp="deleteCommentModal.modalHeader"
+        :modalBodyProp="deleteCommentModal.modalBody"
+        :btnValueOfYesProp="deleteCommentModal.btnValueOfYes"
+        :btnValueOfNoProp="deleteCommentModal.btnValueOfNo"
+        :isLoading="deleteCommentModal.isLoading"
+        :onlyNorify="deleteCommentModal.onlyNorify"
+        :show="deleteCommentModal.show"
+        :error="deleteCommentModal.happenError"
+        @clickYesEventOfParent='deleteTheComment'
+        @clickNoEventOfParent='()=>{deleteCommentModal.show=false}'
+        @clickYesAfterError='()=>{deleteCommentModal.show=false}'
+      ></ModalWithConfirm>
     </div>
 </template>
 
 <script>
 import SubComment from '../comment/SubComment.vue'
+import ModalWithConfirm from '../modal/ModalWithConfirm.vue'
 import getDateDiff from '../../js/getDateDiff.js'
 import CommentApi from '../../api/comment_api.js'
 import { mapActions } from 'vuex'
@@ -30,7 +45,19 @@ export default {
   data() {
     return {
         subComment:{},
-        isRedirectable: this.comment.comment_author.visitor_siteAddress ? true : false
+        isRedirectable: this.comment.comment_author.visitor_siteAddress ? true : false,
+
+        /*提交删除模态框*/
+        deleteCommentModal: {
+          modalHeader:'',
+          modalBody:'',
+          btnValueOfYes:'',
+          btnValueOfNo:'',
+          happenError:false,
+          isLoading:false,
+          onlyNorify:false,
+          show:false
+        }
     }
   },
   created() {
@@ -38,7 +65,8 @@ export default {
     this.loadSubCommentData()
   },
   components: {
-    SubComment
+    SubComment,
+    ModalWithConfirm
   },
   methods: {
     ...mapActions([
@@ -67,13 +95,26 @@ export default {
         })
       }
     },
-    deleteThisComment(){
+    confirmDeleteThisComment(){
+      this.deleteCommentModal.modalHeader = '请确认'
+      this.deleteCommentModal.modalBody = '删除操作将无法撤销，是否确认删除？'
+      this.deleteCommentModal.btnValueOfYes = '确认'
+      this.deleteCommentModal.btnValueOfNo = '取消'
+      this.deleteCommentModal.show = true
+    },
+    deleteTheComment(){
       CommentApi.deleteCommentById(this.comment.comment_id).then((res) => {
         if(res.status === 200) {
           console.log('delete comment successful')
           this.$emit('deleted', this.comment.comment_id)
         }
       }).catch((err) => {
+        this.deleteCommentModal.happenError = true
+        this.deleteCommentModal.modalBody = '删除失败：' + err
+        this.deleteCommentModal.isLoading = false
+        if (err.response.status == 400) {
+          this.deleteCommentModal.modalBody = '删除失败：' + err.response.data.msg
+        }
         console.log(err)
       })
     }
@@ -96,4 +137,5 @@ export default {
 
 .fa-close:hover
   color black
+
 </style>

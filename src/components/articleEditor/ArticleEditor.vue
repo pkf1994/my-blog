@@ -2,7 +2,7 @@
     <div class="article-editor">
 
       <div class="label font-m font-bold">文章标题
-        &nbsp;&nbsp;<span class="format-warn font-s" v-show="titleIsWrong&&!titleInputIsFocus">标题不能为空</span>
+        &nbsp;&nbsp;<span class="format-warn font-s" v-show="titleIsWrong&&!titleInputIsFocus">{{titleWrongMsg}}</span>
       </div>
       <input class="_input font-m" type="text"
              v-model="editingTitle"
@@ -10,7 +10,7 @@
              @blur="triggerTitleInputFocus"><br>
 
       <div class="label font-m font-bold">作者
-        &nbsp;&nbsp;<span class="format-warn font-s" v-show="authorIsWrong&&!authorInputIsFocus">作者不能为空</span>
+        &nbsp;&nbsp;<span class="format-warn font-s" v-show="authorIsWrong&&!authorInputIsFocus">{{authorWrongMsg}}</span>
       </div>
       <input class="_input font-m" type="text"
              v-model="editingAuthor"
@@ -18,14 +18,14 @@
              @blur="triggerAuthorInputFocus"><br>
 
       <div class="label font-m font-bold" >标签
-        &nbsp;&nbsp;<span class="format-warn font-s" v-show="labelIsWrong&&!labelInputIsFocus">标签不能为空</span>
+        &nbsp;&nbsp;<span class="format-warn font-s" v-show="labelIsWrong&&!labelInputIsFocus">{{labelWrongMsg}}</span>
       </div>
       <input class="_input font-m" type="text" v-model="editingLabel"
              @focus="triggerLabelInputFocus"
              @blur="triggerLabelInputFocus"><br>
 
       <div class="label font-m font-bold">正文
-        &nbsp;&nbsp;<span class="format-warn" v-show="contentIsWrong&&!contentInputIsFocus">正文不能为空</span>
+        &nbsp;&nbsp;<span class="format-warn" v-show="contentIsWrong&&!contentInputIsFocus">{{contentWrongMsg}}</span>
       </div>
       <div class="editor">
         <quill-editor ref="myTextEditor"
@@ -106,10 +106,16 @@
         labelIsWrong: false,
         contentIsWrong: false,
 
+        titleWrongMsg: '标题有误',
+        authorWrongMsg: '作者有误',
+        labelWrongMsg: '标签',
+        contentWrongMsg: '尚未填写正文',
+
         titleInputIsFocus: false,
         authorInputIsFocus: false,
         labelInputIsFocus: false,
         contentInputIsFocus: false,
+
 
 
         idOfSubmitedArticle:0,
@@ -204,20 +210,22 @@
       this.initContent()
     },
     watch: {
-      editingTitle() {
+      titleInputIsFocus() {
         this.checkTitle()
       },
-      editingAuthor() {
+      authorInputIsFocus() {
         this.checkAuthor()
       },
-      editingLabel() {
+      labelInputIsFocus() {
         this.checkLabel()
       },
-      editingContent() {
+      contentInputIsFocus() {
         this.checkContent()
       },
       idOfEditingArticle() {
         this.loadDraftData()
+        this.labelIsWrong = false
+        this.authorIsWrong = false
       }
     },
     methods:{
@@ -268,6 +276,10 @@
           this.submitArticleModal.happenError = true;
           this.submitArticleModal.isLoading = false;
 
+          if (err.response.status == 400) {
+            this.submitArticleModal.modalBody = '文章提交失败! 发生错误: ' + err.response.data.msg;
+          }
+
         })
       },
       submitDraft() {
@@ -296,21 +308,24 @@
             this.submitDraftModal.modalHeader = '提示'
             this.submitDraftModal.modalBody = '草稿保存成功'
             this.submitDraftModal.btnValueOfYes = '确定'
-            this.submitDraftModal.happenError = false;
+            this.submitDraftModal.happenError = false
 
             setTimeout(() => {
-              this.submitDraftModal.isLoading = false;
+              this.submitDraftModal.isLoading = false
               this.$emit('refreshDrafts')
             },1500)
 
           }
         }).catch((err) => {
 
-          this.submitDraftModal.modalHeader = '警告';
-          this.submitDraftModal.modalBody = '草稿保存失败! 发生错误: ' + err.message;
-          this.submitDraftModal.happenError = true;
-          this.submitDraftModal.isLoading = false;
-
+          this.submitDraftModal.modalHeader = '警告'
+          this.submitDraftModal.modalBody = '草稿保存失败! 发生错误: ' + err.message
+          this.submitDraftModal.happenError = true
+          if (err.response.status == 400) {
+            this.submitDraftModal.modalBody = '草稿保存失败! 发生错误: ' + err.response.data.msg
+            console.log()
+          }
+          this.submitDraftModal.isLoading = false
         })
       },
       triggerTitleInputFocus() {
@@ -329,18 +344,36 @@
         this.titleIsWrong = false
         if(this.editingTitle.trim() === '') {
           this.titleIsWrong = true
+          this.titleWrongMsg = '标题不能为空'
+          return
+        }
+        if(this.editingTitle.getLength()>100){
+          this.titleIsWrong = true
+          this.titleWrongMsg = '标题长度过大'
         }
       },
       checkAuthor() {
         this.authorIsWrong = false
         if(this.editingAuthor.trim() === '') {
           this.authorIsWrong = true
+          this.authorWrongMsg = '作者不能为空'
+          return
+        }
+        if(this.editingAuthor.getLength()>26){
+          this.authorIsWrong = true
+          this.authorWrongMsg = '作者名称长度过大'
         }
       },
       checkLabel() {
         this.labelIsWrong = false
         if(this.editingLabel.trim() === '') {
           this.labelIsWrong = true
+          this.labelWrongMsg = '标签不能为空'
+          return
+        }
+        if(this.editingLabel.getLength()>12){
+          this.labelIsWrong = true
+          this.labelWrongMsg = '作者名称长度过大'
         }
       },
       checkContent() {
@@ -350,18 +383,18 @@
         }
       },
       goToArticlesPage() {
-        this.$router.push({path: '/home'})
+        this.$router.push({path: '/routine/home'})
         this.triggerFlagRefreshHome()
       },
       goToDraftEditPage() {
-        this.$router.push('/article_edit/' + this.idOfSubmitedArticle)
+        this.$router.push('/routine/article_edit/' + this.idOfSubmitedArticle)
       },
       initializeArticleEditPane() {
         location.reload(true)
       },
       redirectToInitialEditor() {
         if(this.idOfEditingArticle != 0) {
-          this.$router.push('/article_edit/0')
+          this.$router.push('/routine/article_edit/0')
         }
       },
       loadDraftData() {

@@ -66,9 +66,7 @@
     },
     watch: {
       distanceOfNavbarToClientUpperEdge(newDistanceOfNavbarToClientUpperEdge, oldDistanceOfNavbarToClientUpperEdge) {
-
         let opacity = (70 - newDistanceOfNavbarToClientUpperEdge)/70
-
         this.$refs.navbar.style.backgroundColor = 'rgba(204,204,204,' + opacity + ')'
         this.$refs.header.$el.style.backgroundColor = 'rgba(204,204,204,' + opacity + ')'
       }

@@ -9,5 +9,6 @@ export default {
   refreshDraftList: false,
   flagRefreshHome: false,
   navbarSearchString: '',
-  scrollTopOfDocumentEl: 0
+  scrollTopOfDocumentEl: 0,
+  logined: false
 }

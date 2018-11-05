@@ -22,6 +22,9 @@ export default {
   },
   appointScrollTopOfDocumentEl(context,scrollTop) {
     context.commit('appointScrollTopOfDocumentEl', scrollTop)
+  },
+  triggerLoginStatus(context) {
+    context.commit('triggerLoginStatus')
   }
 }
 

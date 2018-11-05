@@ -5,6 +5,7 @@ import ArticleEditorPage from '../components/articleEditor/ArticleEditorPage.vue
 import ArticlePage from '../components/article/ArticlePage.vue'
 import ArticleManage from '../components/manage/ArticleManage.vue'
 import RoutinePage from '../components/wholePage/RoutinePage.vue'
+import LoginPage from '../components/wholePage/LoginPage.vue'
 Vue.use(Router)
 
 
@@ -36,9 +37,12 @@ let router = new Router({
           }
         },
         {
-          path:'article_edit/:article_id',
+          path:'article_edit/:idOfEditingArticle',
           components: {
             ArticleEditorPage
+          },
+          props:{
+            ArticleEditorPage: true
           }
         }
       ]
@@ -50,6 +54,12 @@ let router = new Router({
     {
       path: '/article_edit',
       redirect: '/article_edit/0'
+    },
+    {
+      path: '/login',
+      components: {
+        LoginPage
+      }
     }
   ],
   scrollBehavior (to, from, savedPosition) {

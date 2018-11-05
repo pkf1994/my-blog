@@ -8,14 +8,19 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
+  computed:{
+    ...mapState([
+      'scrollTopOfDocumentEl'
+    ])
+  },
   methods: {
     ...mapActions([
       'triggerFlagRefreshHome'
       ]),
     refresh() {
-      this.$router.push('/routine/home')
+      this.$router.push({path:'/routine/home',query:{body_scroll_top: this.scrollTopOfDocumentEl}})
       setTimeout(() => {
         this.triggerFlagRefreshHome()
       },200)

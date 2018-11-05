@@ -53,7 +53,7 @@
           isLoading:false,
           onlyNorify:false,
           show:false
-        },
+        }
       }
     },
     components: {
@@ -72,13 +72,13 @@
         if(this.deleted){
           return
         }
-        this.$router.push('/article/' + this.article.article_id)
+        this.$router.push('/routine/article/' + this.article.article_id)
       },
       goToTheEditPage() {
         if(this.deleted){
           return
         }
-        this.$router.push('/article_edit/' + this.article.article_id)
+        this.$router.push('/routine/article_edit/' + this.article.article_id)
       },
       confirmDeleteTheArticle() {
         if(this.deleted){
@@ -104,6 +104,9 @@
           this.deleteArticleModal.happenError = true
           this.deleteArticleModal.modalBody = '删除失败：' + err
           this.deleteArticleModal.isLoading = false
+          if (err.response.status == 400) {
+            this.deleteArticleModal.modalBody = '删除失败：' + err.response.data.msg
+          }
           console.log(err)
         })
       },

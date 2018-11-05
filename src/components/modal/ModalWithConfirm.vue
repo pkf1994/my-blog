@@ -76,7 +76,7 @@
         this.showCover = true
         this.$nextTick(() => {
           this.$refs.cover.style.height = this.bodyEl.clientHeight + 'px';
-          this.$refs.cover.style.top = this.bodyEl.scrollTop + 'px';
+          /*this.$refs.cover.style.top = this.bodyEl.scrollTop + 'px';*/
           this.$refs.cover.style.background = 'rgba(0,0,0,0.2)';
           this.bodyEl.style.overflowY = 'hidden';
           this.bodyEl.style.marginRight = scrollbarWidth.scrollbarWidth() + 'px';
@@ -114,7 +114,7 @@
 
 <style scoped lang="stylus">
   .cover
-    position absolute
+    position fixed
     top 0px
     left 0px
     width 100%

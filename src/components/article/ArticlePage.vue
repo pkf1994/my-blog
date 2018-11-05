@@ -142,7 +142,7 @@ export default {
       this.article.article_releaseTime = dateFormat.dateFtt('yyyy-MM-dd', new Date(this.article.article_releaseTime))
     },
     scrollToCommentEditor() {
-      window.scrollTo(0, this.countDistanceToBody(this.$refs.commentEditor.$el) - this.offsetHeightOfNavbar)
+      window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToDocumentUpperEdge(this.$refs.commentEditor.$el) - this.offsetHeightOfNavbar)
       this.$refs.commentEditor.focusTheTextArea()
     },
     uploadOffsetTopOfCommentTitle() {
