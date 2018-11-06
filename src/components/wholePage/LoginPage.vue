@@ -95,10 +95,10 @@
         this.loginModal.isLoading = true
         LoginApi.submitLoginInfo(this.username, this.password).then((res) => {
          if(res.status == 200) {
-
            console.log(res.data)
-
            if(res.data.loginStatus == 1) {
+             var expTime = new Date().getTime() + 6000000
+             localStorage.setItem('token', JSON.stringify({token: res.data.token, expTime: expTime}))
              this.triggerLoginStatus()
              setTimeout(() => {
                this.loginModal.modalHeader = '提示'

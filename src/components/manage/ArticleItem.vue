@@ -4,12 +4,12 @@
             :class="{deleted: deleted}"
             @click="goToTheArticlePage">{{article.article_title}}</span>
       <span class="article-item-author">{{article.article_author}}</span>
-      <span class="article-item-label flex-row-center cursorp" @click="submitArticleLabel">{{article.article_label}}</span>
-      <span class="article-item-releasetime flex-row-center">{{article.article_releaseTime}}</span>
-      <span class="edit flex-row-center">
+      <span class="article-item-label flex-row-center cursorp" :class="{'article-item-label-dislogined': !logined}" @click="submitArticleLabel">{{article.article_label}}</span>
+      <span class="article-item-releasetime flex-row-center" :class="{'article-item-releasetime-dislogined': !logined}">{{article.article_releaseTime}}</span>
+      <span class="edit flex-row-center" v-if="logined">
         <i class="fa fa-edit cursorp font-dark operation-font" @click="goToTheEditPage"></i>
       </span>
-      <span class="delete flex-row-center">
+      <span class="delete flex-row-center" v-if="logined">
         <i class="fa fa-close cursorp font-dark operation-font" @click="confirmDeleteTheArticle"></i>
       </span>
         <ModalWithConfirm
@@ -32,6 +32,7 @@
   import ModalWithConfirm from '../modal/ModalWithConfirm.vue'
   import dataFormatUtil from '../../js/dateFormatUtil.js'
   import ArticleApi from '../../api/article_api.js'
+  import { mapState } from 'vuex'
   export default {
     props: {
       article: {
@@ -55,6 +56,11 @@
           show:false
         }
       }
+    },
+    computed:{
+      ...mapState([
+        'logined'
+      ])
     },
     components: {
       ModalWithConfirm
@@ -150,10 +156,16 @@
 .article-item-label:hover
   color black
 
+.article-item-label-dislogined
+  width 15%
+
 .article-item-releasetime
   width 15%
   display flex
   align-items center
+
+.article-item-releasetime-dislogined
+  width 20%
 
 .edit
   width 5%

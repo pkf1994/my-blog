@@ -4,8 +4,8 @@
          :class="{'flex-row-space-between': distanceToClientUpperEdge < 10 && isMobile, 'flex-row-end': distanceToClientUpperEdge > 10 || !isMobile}">
       <router-link v-if="!isMobile" :to="{path:'/routine/home',query: {body_scroll_top: scrollTopOfDocumentEl}}" tag="span" class="navbar-item cursorp flex-row-column-center font-dark font-m"  >杂谈</router-link>
       <span v-if="!isMobile" class="navbar-item cursorp flex-row-column-center font-dark font-m" >关于</span>
-      <router-link v-if="!isMobile" :to="{path:'/routine/article_edit/0',query: {body_scroll_top: scrollTopOfDocumentEl}}" tag="span" class="navbar-item cursorp flex-row-column-center font-dark font-m" >创造</router-link>
-      <router-link v-if="!isMobile" :to="{path:'/routine/article_manage',query: {body_scroll_top: scrollTopOfDocumentEl}}" tag="span" class="navbar-item cursorp flex-row-column-center font-dark font-m" >管理</router-link>
+      <router-link v-if="!isMobile&&logined" :to="{path:'/routine/article_edit/0',query: {body_scroll_top: scrollTopOfDocumentEl}}" tag="span" class="navbar-item cursorp flex-row-column-center font-dark font-m">创造</router-link>
+      <router-link v-if="!isMobile" :to="{path:'/routine/article_manage',query: {body_scroll_top: scrollTopOfDocumentEl}}" tag="span" class="navbar-item cursorp flex-row-column-center font-dark font-m" >{{articleIndex}}</router-link>
       <span v-if="isMobile" class="navbar-logo-mobile flex-row-column-center font-l" v-show="distanceToClientUpperEdge < 10" @click="() => {goTo('/routine/home');}">Pengblog</span>
       <a v-if="isMobile" class="menu-buttom" @click="triggerMenu"></a>
       <div class="navbar-itemlist-cover" ref="menuCover" @click="triggerMenu"></div>
@@ -37,8 +37,12 @@
     },
     computed:{
       ...mapState([
-        'scrollTopOfDocumentEl'
-      ])
+        'scrollTopOfDocumentEl',
+        'logined'
+      ]),
+      articleIndex() {
+        return this.logined ? '管理' : '索引'
+      }
     },
     components: {
       SearchBar

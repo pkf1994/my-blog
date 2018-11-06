@@ -11,9 +11,9 @@
             <div class="article-manage-head  font-dark" v-if="!isMobile">
               <span class="article-manage-title">文章标题</span>
               <span class="article-manage-author">作者</span>
-              <span class="article-manage-label flex-row-center">标签</span>
-              <span class="article-manage-releasetime flex-row-center">发布时间</span>
-              <span class="article-manage-operation flex-row-center">操作</span>
+              <span class="article-manage-label flex-row-center" :class="{'article-manage-label-dislogined': !logined}">标签</span>
+              <span class="article-manage-releasetime flex-row-center" :class="{'article-manage-releasetime-dislogined': !logined}">发布时间</span>
+              <span class="article-manage-operation flex-row-center" v-if="logined">操作</span>
             </div>
 
             <transition-group name="list-complete" tag="div" class="list-complete-item-outer">
@@ -86,7 +86,8 @@
     computed: {
       ...mapState([
         'offsetHeightOfHeader',
-        'offsetHeightOfNavbar'
+        'offsetHeightOfNavbar',
+        'logined'
       ]),
       querySearchString() {
         return this.$route.query.search_string
@@ -325,9 +326,14 @@
   .article-manage-label
     width 10%
 
+  .article-manage-label-dislogined
+    width 15%
 
   .article-manage-releasetime
     width 15%
+
+  .article-manage-releasetime-dislogined
+    width 20%
 
   .article-manage-operation
     width 10%

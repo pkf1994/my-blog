@@ -78,10 +78,10 @@
         }
         setTimeout(() => {
           this.loadCommentListData()
-        }, 2000)
+        }, 500)
       },
       goToTheArticlePage(comment_hostId, comment_id) {
-        this.$router.push({path: '/article/' + comment_hostId, query: {id_of_comment_scroll_to: comment_id}})
+        this.$router.push({path: '/routine/article/' + comment_hostId, query: {id_of_comment_scroll_to: comment_id}})
         window.addEventListener('road', () => {
           let theCommentEl = document.getElementById('comment_' + this.$route.query.idOfCommentScrollTo)
           window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(theCommentEl) - 50)

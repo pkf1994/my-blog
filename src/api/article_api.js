@@ -1,7 +1,10 @@
 import axios from 'axios'
 import apiInfo from './apiInfo.js'
 
+
+
 export default {
+
   getArticleSummaryListByCurrentPageAndPageScale: function (currentPage, pageScale) {
     var config = {
       params: {
@@ -18,10 +21,17 @@ export default {
     })
   },
   getDraftListByCurrentPageAndPageScale: function (currentPage, pageScale) {
+    if(localStorage.getItem('token') != undefined){
+      var tokenObj = JSON.parse(localStorage.getItem('token'))
+      var token = tokenObj.token
+    }
     var config = {
       params: {
         currentPage: currentPage,
         pageScale: pageScale
+      },
+      headers: {
+        Authorization: token
       }
     }
     return new Promise((resolve, reject) => {
@@ -47,6 +57,15 @@ export default {
     })
   },
   uploadArticle: function (article_id, article_title, article_author, article_label, article_content, article_type) {
+    if(localStorage.getItem('token') != undefined){
+      var tokenObj = JSON.parse(localStorage.getItem('token'))
+      var token = tokenObj.token
+    }
+
+    let headers = {
+      Authorization: token
+    }
+
     let articleData = {
       article_id: article_id,
       article_title: article_title,
@@ -55,8 +74,24 @@ export default {
       article_content: article_content,
       article_type: article_type
     }
+   /* let config = {
+      headers: {
+        Authorization: token
+      },
+      data: {
+        articleData: {
+          article_id: article_id,
+          article_title: article_title,
+          article_author: article_author,
+          article_label: article_label,
+          article_content: article_content,
+          article_type: article_type
+        }
+      }
+    }*/
+
     return new Promise((resolve, reject) => {
-      axios.post(apiInfo.server + 'article/upload_article.do', articleData).then((res) => {
+      axios.post(apiInfo.server + 'article/upload_article.do', articleData, { headers: headers}).then((res) => {
         resolve(res)
       }).catch((err) => {
         reject(err)
@@ -64,11 +99,20 @@ export default {
     })
   },
   deleteArticle: function(article_id) {
+    if(localStorage.getItem('token') != undefined){
+      var tokenObj = JSON.parse(localStorage.getItem('token'))
+      var token = tokenObj.token
+    }
+
     let config = {
       params: {
         article_id: article_id
+      },
+      headers: {
+        Authorization: token
       }
     }
+
     return new Promise((resolve, reject) => {
       axios.get(apiInfo.server + 'article/delete_article.do', config).then((res) => {
         resolve(res)

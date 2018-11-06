@@ -2,7 +2,7 @@
     <div :id="'comment_' + comment.comment_id" class="comment common-padding">
       <div class="comment-author font-bold font-s flex-row-space-between" >
         <span v-bind:class="{redirectable: isRedirectable}" @click="redirectToTheirSite">{{comment.comment_author.visitor_name}}</span>
-        <span><i class="fa fa-close font-dark cursorp" @click="confirmDeleteThisComment"></i></span>
+        <span><i class="fa fa-close font-dark cursorp" v-if="logined" @click="confirmDeleteThisComment"></i></span>
       </div>
       <div v-if="subComment.comment_id" class="refer-comment">
         <SubComment :subComment="subComment"></SubComment>
@@ -34,7 +34,7 @@ import SubComment from '../comment/SubComment.vue'
 import ModalWithConfirm from '../modal/ModalWithConfirm.vue'
 import getDateDiff from '../../js/getDateDiff.js'
 import CommentApi from '../../api/comment_api.js'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   props: {
     comment: {
@@ -59,6 +59,11 @@ export default {
           show:false
         }
     }
+  },
+  computed:{
+    ...mapState([
+      'logined'
+    ])
   },
   created() {
     this.formatTheReleaseTime()

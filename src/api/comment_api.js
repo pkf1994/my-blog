@@ -82,9 +82,18 @@ export default {
     })
   },
   deleteCommentById(comment_id){
+
+    if(localStorage.getItem('token') != undefined){
+      var tokenObj = JSON.parse(localStorage.getItem('token'))
+      var token = tokenObj.token
+    }
+
     let config = {
       params: {
         comment_id: comment_id
+      },
+      headers:{
+        Authorization: token
       }
     }
     return new Promise((resolve, reject) => {
