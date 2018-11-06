@@ -111,7 +111,11 @@ export default {
       CommentApi.deleteCommentById(this.comment.comment_id).then((res) => {
         if(res.status === 200) {
           console.log('delete comment successful')
-          this.$emit('deleted', this.comment.comment_id)
+          this.deleteCommentModal.show=false
+          setTimeout(() => {
+            this.$emit('deleted', this.comment.comment_id)
+          },500)
+
         }
       }).catch((err) => {
         this.deleteCommentModal.happenError = true

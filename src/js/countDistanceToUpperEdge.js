@@ -1,5 +1,10 @@
 export default {
   countDistanceToDocumentUpperEdge(el) {
+
+    if(el == undefined) {
+      return
+    }
+
     let distanceToBody = 0
 
     while(el != document.body) {
@@ -10,6 +15,11 @@ export default {
     return distanceToBody
   },
   countDistanceToClientUpperEdge(el) {
+
+    if(el == undefined) {
+      return
+    }
+
     let distanceToBody = 0
 
     while(el != document.body) {
