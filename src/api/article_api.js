@@ -5,10 +5,10 @@ import apiInfo from './apiInfo.js'
 
 export default {
 
-  getArticleSummaryListByCurrentPageAndPageScale: function (currentPage, pageScale) {
+  getArticleSummaryListByLimitIndex: function (startIndex, pageScale) {
     var config = {
       params: {
-        currentPage: currentPage,
+        startIndex: startIndex,
         pageScale: pageScale
       }
     }
@@ -20,14 +20,15 @@ export default {
       })
     })
   },
-  getDraftListByCurrentPageAndPageScale: function (currentPage, pageScale) {
+
+  getDraftListByLimitIndex: function (startIndex, pageScale) {
     if(localStorage.getItem('token') != undefined){
       var tokenObj = JSON.parse(localStorage.getItem('token'))
       var token = tokenObj.token
     }
     var config = {
       params: {
-        currentPage: currentPage,
+        startIndex: startIndex,
         pageScale: pageScale
       },
       headers: {
@@ -144,10 +145,10 @@ export default {
       })
     })
   },
-  getArticleItemListBySearchWords(currentPage, pageScale, searchString) {
+  getArticleItemListByLimitIndexAndSearchWords(startIndex, pageScale, searchString) {
     let config = {
       params: {
-        currentPage: currentPage,
+        startIndex: startIndex,
         pageScale: pageScale,
         searchString: searchString
       }
@@ -161,10 +162,10 @@ export default {
       })
     })
   },
-  getArticleItemListByFilingDate(currentPage, pageScale, selectedYear, selectedMonth) {
+  getArticleItemListByLimitIndexAndFilingDate(startIndex, pageScale, selectedYear, selectedMonth) {
     let config = {
       params: {
-        currentPage: currentPage,
+        startIndex: startIndex,
         pageScale: pageScale,
         selectedYear: selectedYear,
         selectedMonth: selectedMonth
@@ -178,10 +179,10 @@ export default {
       })
     })
   },
-  getArticleItemListByLabel(currentPage, pageScale, label) {
+  getArticleItemListByLimitIndexAndLabel(startIndex, pageScale, label) {
     let config = {
       params: {
-        currentPage: currentPage,
+        startIndex: startIndex,
         pageScale: pageScale,
         article_label: label
       }

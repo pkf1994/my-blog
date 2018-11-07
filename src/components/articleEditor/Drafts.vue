@@ -3,7 +3,7 @@
       <div class="font-m font-bold headline">草稿</div>
       <div class="draft-unauthorized-msg err" v-if="unauthorizedMsg!=''">{{unauthorizedMsg}}</div>
       <ul>
-        <transition-group name="list-complete" tag="div">
+        <transition-group name="list-complete" tag="div" class="list-complete-item-list">
         <DraftItem class="draft-item list-complete-item " ref="draftitems"
                    v-for="draft in drafts"
                    :draft="draft"
@@ -32,6 +32,8 @@
         currentPage: 0,
         pageScale: 7,
         maxPage: 1,
+        startIndex: 0,
+        count: 0,
         isLoading: false,
         isAllLoaded: false,
         unauthorizedMsg:''
@@ -52,9 +54,11 @@
           return
         }
         this.currentPage = this.currentPage + 1
-        return ArticleApi.getDraftListByCurrentPageAndPageScale(this.currentPage, this.pageScale).then((res) => {
+        return ArticleApi.getDraftListByLimitIndex(this.startIndex, this.pageScale).then((res) => {
           if (res.status == 200) {
             this.maxPage = res.data.maxPage
+            this.count = res.data.count
+            this.startIndex = this.currentPage * this.pageScale
             this.drafts = this.drafts.concat(res.data.articleList)
             this.isLoading = false
           }
@@ -66,12 +70,21 @@
         })
       },
       reload() {
-        if (!(this.maxPage === this.currentPage)) {
+        if (!(this.maxPage == this.currentPage)) {
           this.isLoading = true
+        }
+        if(this.maxPage == 1) {
+          this.currentPage = 0
+          this.drafts = []
+          this.startIndex = 0
+          setTimeout(() => {
+            this.loadData()
+          }, 500)
+          return
         }
         setTimeout(() => {
           this.loadData()
-        }, 2000)
+        }, 500)
       },
       initPageEndRefresh() {
       },
@@ -84,12 +97,14 @@
         this.drafts.forEach((item, index) => {
           if(item.article_id === draftItemToBeDelete) {
             this.drafts.splice(index,1)
+            this.startIndex --
           }
         })
       },
       refreshDraftListAfterSubmit(){
         this.drafts = []
         this.currentPage = 0
+        this.startIndex = 0
         this.loadData().then(() => {
           this.$refs.draftitems[0].isEditing = true
         })
@@ -125,11 +140,10 @@
   margin-bottom 15px
 
 
-@media(min-width: 750px) {
-  .draft-item{
-    margin-right 10px
-  }
-}
+.list-complete-item-list
+  position relative
+  margin-right 10px
+
 .list-complete-item
   transition all 0.5s
 

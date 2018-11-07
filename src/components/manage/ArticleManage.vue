@@ -75,6 +75,7 @@
         currentPage: 0,
         pageScale: 10,
         maxPage: 1,
+        startIndex: 0,
         isMobile: false,
         articleItemsLoaded: false,
         headline: '所有文章',
@@ -118,6 +119,7 @@
     },
     watch: {
       currentPage() {
+        this.startIndex = (this.currentPage - 1) * this.pageScale
         if(this.paginationPoint == 'search'){
           this.loadArticleItemListBySearchWords(this.searchStringFromSearchBar)
         }
@@ -134,7 +136,7 @@
     },
     methods: {
       loadData() {
-        ArticleApi.getArticleSummaryListByCurrentPageAndPageScale(this.currentPage, this.pageScale).then((res) => {
+        ArticleApi.getArticleSummaryListByLimitIndex(this.startIndex, this.pageScale).then((res) => {
           if(res.status === 200) {
             this.articleList = res.data.articleList
             this.maxPage = res.data.maxPage
@@ -180,7 +182,7 @@
         }
       },
       loadArticleItemListBySearchWords(searchString) {
-        ArticleApi.getArticleItemListBySearchWords(this.currentPage, this.pageScale, searchString).then((res) => {
+        ArticleApi.getArticleItemListByLimitIndexAndSearchWords(this.startIndex, this.pageScale, searchString).then((res) => {
           if(res.status === 200) {
             this.articleList = res.data.articleList
             this.maxPage = res.data.maxPage
@@ -201,7 +203,7 @@
         this.loadArticleItemListByFilingDate(selectedYear, selectedMonth)
       },
       loadArticleItemListByFilingDate(selectedYear, selectedMonth) {
-        ArticleApi.getArticleItemListByFilingDate(this.currentPage, this.pageScale, selectedYear, selectedMonth).then((res) => {
+        ArticleApi.getArticleItemListByLimitIndexAndFilingDate(this.startIndex, this.pageScale, selectedYear, selectedMonth).then((res) => {
           if(res.status === 200) {
             this.articleList = res.data.articleList
             this.maxPage = res.data.maxPage
@@ -222,7 +224,7 @@
         this.loadArticleItemListByLabel(label)
       },
       loadArticleItemListByLabel(label) {
-        ArticleApi.getArticleItemListByLabel(this.currentPage, this.pageScale, label).then((res) => {
+        ArticleApi.getArticleItemListByLimitIndexAndLabel(this.startIndex, this.pageScale, label).then((res) => {
           if(res.status === 200) {
             this.articleList = res.data.articleList
             this.maxPage = res.data.maxPage
@@ -268,6 +270,7 @@
             setTimeout(() => {
               this.articleList.splice(index,1)
               this.countOfArticle --
+              this.startIndex --
             },500)
 
           }

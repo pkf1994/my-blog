@@ -47,6 +47,7 @@ export default {
     return {
       currentPage: 0,
       pageScale: 5,
+      startIndex: 0,
       maxPage: 1,
       articleSummaryList: [],
       isLoading: false,
@@ -65,7 +66,7 @@ export default {
     BackToUp
   },
   created() {
-    this.loadData(ArticleApi.getArticleSummaryListByCurrentPageAndPageScale, this.articleSummaryList, 'articleList')
+    this.loadData(ArticleApi.getArticleSummaryListByLimitIndex, this.articleSummaryList, 'articleList')
     this.initPageEndRefresh()
   },
   mounted() {
@@ -83,7 +84,7 @@ export default {
     flagRefreshHome() {
       this.currentPage = 0
       this.articleSummaryList = []
-      this.loadData(ArticleApi.getArticleSummaryListByCurrentPageAndPageScale, this.articleSummaryList, 'articleList')
+      this.loadData()
     }
   },
   methods: {
@@ -92,9 +93,10 @@ export default {
         return
       }
       this.currentPage = this.currentPage + 1
-      ArticleApi.getArticleSummaryListByCurrentPageAndPageScale(this.currentPage, this.pageScale).then((res) => {
+      ArticleApi.getArticleSummaryListByLimitIndex(this.startIndex, this.pageScale).then((res) => {
         if (res.status === 200) {
           this.maxPage = res.data.maxPage
+          this.startIndex = this.currentPage * this.pageScale
           this.articleSummaryList = this.articleSummaryList.concat(res.data.articleList)
           if(this.currentPage == 1) {
             this.jumbotronArticleId = this.articleSummaryList[0].article_id
@@ -126,7 +128,7 @@ export default {
     },
     receiveSearchWords(searchString) {
       if(searchString != ''){
-        this.$router.push({path:'/article_manage',query:{search_string: searchString}})
+        this.$router.push({path:'/routine/article_manage',query:{search_string: searchString}})
       }
     },
     initLocationOfBackToUp(){

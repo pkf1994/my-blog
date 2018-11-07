@@ -130,7 +130,8 @@
         LoginApi.submitLoginInfo(this.username, this.password).then((res) => {
          if(res.status == 200) {
            if(res.data.loginStatus == 1) {
-             var expTime = new Date().getTime() + 6000000
+             var validTime = res.data.validTimeMillis
+             var expTime = new Date().getTime() + validTime
              localStorage.setItem('token', JSON.stringify({token: res.data.token, expTime: expTime}))
              this.triggerLoginStatus()
              setTimeout(() => {

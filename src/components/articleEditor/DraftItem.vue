@@ -54,6 +54,7 @@
 
 <style scoped lang="stylus">
 .draft-item
+  width 100%
   padding 10px 15px
   border 1px solid rgb(222, 226, 230)
   border-radius 4px
