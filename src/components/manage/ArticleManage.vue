@@ -282,6 +282,7 @@
 
 <style scoped lang="stylus">
   .article-manage
+    min-height 500px
     width 1000px
     background white
     display flex

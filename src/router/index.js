@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '../components/home/Home'
-import ArticleEditorPage from '../components/articleEditor/ArticleEditorPage.vue'
-import ArticlePage from '../components/article/ArticlePage.vue'
-import ArticleManage from '../components/manage/ArticleManage.vue'
-import RoutinePage from '../components/wholePage/RoutinePage.vue'
-import LoginPage from '../components/wholePage/LoginPage.vue'
+const Home = () => import('../components/home/Home.vue')
+const ArticleEditorPage = () => import('../components/articleEditor/ArticleEditorPage.vue')
+const ArticlePage = () => import('../components/article/ArticlePage.vue')
+const ArticleManage = () => import('../components/manage/ArticleManage.vue')
+const RoutinePage = () => import('../components/wholePage/RoutinePage.vue')
+const LoginPage = () => import('../components/wholePage/LoginPage.vue')
 Vue.use(Router)
 
 

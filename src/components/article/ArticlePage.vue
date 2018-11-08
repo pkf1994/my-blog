@@ -21,7 +21,7 @@
           <ClickForMore v-show="!(maxPage==currentPage)&&!isLoading" @click="reLoadCommentListData"></ClickForMore>
           <Nomore v-show="maxPage==currentPage">没有更多内容</Nomore>
         </ul>
-        <CommentEditor ref="commentEditor"></CommentEditor>
+        <CommentEditor ref="commentEditor" @justSubmitComment="scrollToCommentTitle"></CommentEditor>
       </div>
 
       <BackToUp class="backtoup" ref="backtoup"></BackToUp>
@@ -43,7 +43,7 @@ import ArticleApi from '../../api/article_api.js'
 import CommentApi from '../../api/comment_api.js'
 import dateFormat from '../../js/dateFormatUtil.js'
 import { mapActions, mapState } from 'vuex'
-import CountDistanceToDocumentUpperEdge from '../../js/countDistanceToUpperEdge.js'
+import CountDistanceToUpperEdge from '../../js/countDistanceToUpperEdge.js'
 export default {
   mixins: [
     ScrollRefreshMixin,
@@ -54,6 +54,7 @@ export default {
       article_id: 0,
       article: {},
       commentList: [],
+      startIndex: 0,
       maxPage: 1,
       pageScale: 5,
       currentPage: 0,
@@ -117,8 +118,9 @@ export default {
         return
       }
       this.currentPage++
-      CommentApi.getCommentListByArticleId(this.article_id, this.currentPage, this.pageScale).then((res) => {
+      CommentApi.getCommentListByLimitIndexAndArticleId(this.article_id, this.startIndex, this.pageScale).then((res) => {
         if (res.status === 200) {
+          this.startIndex = this.currentPage * this.pageScale
           this.commentList = this.commentList.concat(res.data.commentList)
           this.maxPage = res.data.maxPage
           this.countOfComment = res.data.countOfComment
@@ -142,7 +144,7 @@ export default {
       this.article.article_releaseTime = dateFormat.dateFtt('yyyy-MM-dd', new Date(this.article.article_releaseTime))
     },
     scrollToCommentEditor() {
-      window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToDocumentUpperEdge(this.$refs.commentEditor.$el) - this.offsetHeightOfNavbar)
+      window.scrollTo(0, CountDistanceToUpperEdge.countDistanceToDocumentUpperEdge(this.$refs.commentEditor.$el) - this.offsetHeightOfNavbar)
       this.$refs.commentEditor.focusTheTextArea()
     },
     uploadOffsetTopOfCommentTitle() {
@@ -154,18 +156,19 @@ export default {
     handleRouterQuery() {
       if(this.$route.query.id_of_comment_scroll_to != undefined) {
         let theCommentEl = document.getElementById('comment_' + this.$route.query.id_of_comment_scroll_to)
-        window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(theCommentEl) - this.offsetHeightOfNavbar)
+        window.scrollTo(0, CountDistanceToUpperEdge.countDistanceToClientUpperEdge(theCommentEl) - this.offsetHeightOfNavbar)
       }
       if(this.$route.query.gotocl == 1) {
         let messageTitleEl = document.getElementById('massage-title')
-        window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(messageTitleEl) - this.offsetHeightOfNavbar)
+        window.scrollTo(0, CountDistanceToUpperEdge.countDistanceToClientUpperEdge(messageTitleEl) - this.offsetHeightOfNavbar)
       }
       if(this.$route.query.gotoce == 1) {
         let commentEditorEl = this.$refs.commentEditor.$el
-        window.scrollTo(0, CountDistanceToDocumentUpperEdge.countDistanceToClientUpperEdge(commentEditorEl) - this.offsetHeightOfNavbar)
+        window.scrollTo(0, CountDistanceToUpperEdge.countDistanceToClientUpperEdge(commentEditorEl) - this.offsetHeightOfNavbar)
       }
     },
     afterDeleteComment(comment_id) {
+      this.startIndex --
       this.commentList.forEach((item, index) => {
         if(item.comment_id == comment_id){
           this.commentList.splice(index,1)
@@ -185,6 +188,9 @@ export default {
         leftOfBackToUp = (windowInnerWidth - 750) * 0.5 - 50
       }
       this.$refs.backtoup.$el.style.left = leftOfBackToUp + 'px'
+    },
+    scrollToCommentTitle() {
+      window.scrollTo(0,CountDistanceToUpperEdge.countDistanceToDocumentUpperEdge(this.$refs.commentTitle) - this.offsetHeightOfNavbar)
     }
   }
 }
@@ -192,7 +198,9 @@ export default {
 
 <style scoped lang="stylus">
 .article-page
+  position relative
   background white
+  min-height 500px
   width 750px
 @media(max-width: 750px){
   .article-page {

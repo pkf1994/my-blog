@@ -70,8 +70,6 @@ export default {
     ]),
     redirectToTheArticle() {
       this.appointIdOfArticleBeingReading(this.article.article_id)
-      console.log(this.scrollTopOfDocumentEl)
-      console.log(parseInt(this.scrollTopOfDocumentEl))
       this.$router.push({path: '/routine/article/' + this.article.article_id, query:{body_scroll_top: parseInt(this.scrollTopOfDocumentEl)}})
     },
     formatTheDate() {

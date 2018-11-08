@@ -2,11 +2,11 @@ import apiInfo from './apiInfo.js'
 import axios from 'axios'
 
 export default {
-  getCommentListByArticleId(article_id, currentPage, pageScale) {
+  getCommentListByLimitIndexAndArticleId(article_id, startIndex, pageScale) {
     var config = {
       params: {
         article_id: article_id,
-        currentPage: currentPage,
+        startIndex: startIndex,
         pageScale: pageScale
       }
     }

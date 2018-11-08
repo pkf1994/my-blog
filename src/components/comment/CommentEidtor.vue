@@ -218,9 +218,9 @@ export default {
             this.submitFinish = true
             setTimeout(() => {
               this.changeArticlePageRouterStatus()
-              window.scrollTo(0,this.offsetTopOfCommentTitle - this.offsetHeightOfNavbar)
+              this.$emit('justSubmitComment')
             },500)
-          }, 2000)
+          }, 1000)
         }
       }).catch((err) => {
         console.log(err)
@@ -257,6 +257,7 @@ export default {
 
 .the-textarea
   width 100%
+  padding-top 5px
 
 .comment-edit-regiter
   margin-top 10px
