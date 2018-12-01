@@ -32,7 +32,7 @@
         </div>
 
         <div class="login-page-button-outer">
-          <button class="login-page-button font-m" @click="loginOut">Log out</button>
+          <button class="login-page-button font-m" @click="logOut">Log out</button>
         </div>
       </div>
 
@@ -133,13 +133,13 @@
              var validTime = res.data.validTimeMillis
              var expTime = new Date().getTime() + validTime
              localStorage.setItem('token', JSON.stringify({token: res.data.token, expTime: expTime}))
-             this.triggerLoginStatus()
              setTimeout(() => {
                this.loginModal.happenError = false
                this.loginModal.modalHeader = '提示'
                this.loginModal.modalBody = '登陆成功'
                this.loginModal.btnValueOfYes = '好'
                this.loginModal.isLoading = false
+               this.triggerLoginStatus()
              },1000)
            }
            if(res.data.loginStatus != 1){
@@ -157,6 +157,7 @@
         }).catch((err) => {
          console.log(err)
           setTimeout(() => {
+            this.loginModal.happenError = true
             this.loginModal.modalHeader = '提示'
             this.loginModal.modalBody = '登陆失败：' + err
             this.loginModal.btnValueOfYes = '关闭'
@@ -169,7 +170,7 @@
           this.$router.push('/routine/home')
         },500)
       },
-      loginOut() {
+      logOut() {
         this.logoutModal.modalHeader = '提示'
         this.logoutModal.modalBody = '登出成功'
         this.logoutModal.btnValueOfYes = '好'

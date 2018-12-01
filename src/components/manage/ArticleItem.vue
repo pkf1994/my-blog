@@ -100,11 +100,11 @@
         this.deleteArticleModal.isLoading = true
         ArticleApi.deleteArticle(this.article.article_id).then((res) => {
           if(res.status === 200) {
-            setTimeout(() => {
+
               this.deleteArticleModal.show = false
               this.deleted = true
               this.$emit('deleted',this.article.article_id)
-            },1500)
+
           }
         }).catch((err) => {
           this.deleteArticleModal.happenError = true

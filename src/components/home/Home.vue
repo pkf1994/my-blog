@@ -81,10 +81,14 @@ export default {
     ])
   },
   watch: {
-    flagRefreshHome() {
-      this.currentPage = 0
-      this.articleSummaryList = []
-      this.loadData()
+    flagRefreshHome: {
+      deep: true,
+      handler: function() {
+        this.currentPage = 0
+        this.startIndex = 0
+        this.articleSummaryList = []
+        this.loadData()
+      }
     }
   },
   methods: {

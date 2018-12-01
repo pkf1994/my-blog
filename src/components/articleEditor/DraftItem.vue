@@ -16,6 +16,7 @@
 <script>
   import getDateDiff from '../../js/getDateDiff.js'
   import ArticleApi from '../../api/article_api.js'
+  import { mapState } from 'vuex'
   export default {
     props: {
       draft: {
@@ -27,6 +28,11 @@
         isEditing: false
       }
     },
+    computed: {
+      ...mapState([
+        'scrollTopOfDocumentEl'
+      ])
+    },
     created() {
       this.formatTheDate()
     },
@@ -37,7 +43,7 @@
       redirectToEditPage() {
         this.$emit('triggerEditingSlogan')
         this.isEditing = true
-        this.$router.push('/routine/article_edit/' + this.draft.article_id)
+        this.$router.push({path:'/routine/article_edit/' + this.draft.article_id, query:{body_scroll_top: this.scrollTopOfDocumentEl}})
       },
       deleteThisDraft() {
         ArticleApi.deleteArticle(this.draft.article_id).then((res) => {

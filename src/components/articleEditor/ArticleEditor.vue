@@ -116,7 +116,7 @@
         labelInputIsFocus: false,
         contentInputIsFocus: false,
 
-
+        token:'',
 
         idOfSubmitedArticle:0,
         isLoading: true,
@@ -163,7 +163,9 @@
                 console.log(res)
                 return res.imgUrl
               },
-              headers: (xhr) => {},  // 可选参数 设置请求头部
+              headers: (xhr) => {
+                xhr.setRequestHeader('Authorization', this.token);
+              },  // 可选参数 设置请求头部
               start: () => {},  // 可选参数 自定义开始上传触发事件
               end: () => {},  // 可选参数 自定义上传结束触发的事件，无论成功或者失败
               error: (res) => {alert(res)},  // 可选参数 自定义网络错误触发的事件
@@ -208,6 +210,7 @@
     },
     mounted(){
       this.initContent()
+      this.initToken()
     },
     watch: {
       titleInputIsFocus() {
@@ -295,7 +298,7 @@
         this.submitDraftModal.isOpening = true;
         this.submitDraftModal.isLoading = true;
 
-        ArticleApi.uploadArticle(this.idOfSubmitedArticle == 0 ? this.idOfEditingArticle : this.idOfSubmitedArticle,
+        ArticleApi.uploadArticle(this.idOfEditingArticle == 0 ? this.idOfSubmitedArticle : this.idOfEditingArticle,
                                   this.editingTitle,
                                   this.editingAuthor,
                                   this.editingLabel,
@@ -398,6 +401,10 @@
         }
       },
       loadDraftData() {
+        this.initToken()
+        if(this.token == '') {
+          this.$router.push('/routine/article_edit/0')
+        }
         if(this.idOfEditingArticle != 0){
           ArticleApi.getArticleById(this.idOfEditingArticle).then((res) => {
             if(res.status === 200){
@@ -409,6 +416,12 @@
           }).catch((err) => {
             console.log(err)
           })
+        }
+      },
+      initToken() {
+        if(localStorage.getItem('token') != undefined){
+          var tokenObj = JSON.parse(localStorage.getItem('token'))
+          this.token = tokenObj.token
         }
       }
     }
