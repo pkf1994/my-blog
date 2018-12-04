@@ -49,9 +49,11 @@ export default {
     ScrollRefreshMixin,
     CountDistanceToBody
   ],
+  props: {
+    article_id: 0,
+  },
   data: function() {
     return {
-      article_id: 0,
       article: {},
       commentList: [],
       startIndex: 0,
@@ -68,7 +70,8 @@ export default {
   inject:['isMobile'],
   computed: {
     ...mapState([
-      'offsetHeightOfNavbar'
+      'offsetHeightOfNavbar',
+      'scrollTopOfDocumentEl'
     ])
   },
   provide() {
@@ -87,7 +90,6 @@ export default {
     BackToUp
   },
   created() {
-    this.initArticleId()
     this.loadArticleData()
     this.loadCommentListData()
   },
@@ -95,13 +97,14 @@ export default {
     this.uploadOffsetTopOfCommentTitle()
     this.initLocationOfBackToUp()
   },
+  watch: {
+    article_id(){
+    }
+  },
   methods: {
     ...mapActions([
       'appointOffsetTopOfCommentTitle'
     ]),
-    initArticleId() {
-      this.article_id = parseInt(this.$route.params.article_id)
-    },
     loadArticleData() {
       ArticleApi.getArticleById(this.article_id).then((res) => {
         if (res.status === 200) {
@@ -166,6 +169,16 @@ export default {
         let commentEditorEl = this.$refs.commentEditor.$el
         window.scrollTo(0, CountDistanceToUpperEdge.countDistanceToClientUpperEdge(commentEditorEl) - this.offsetHeightOfNavbar)
       }
+
+      if(this.$route.query.gotoce != 1 && this.$route.query.gotocl != 1 && this.$route.query.id_of_comment_scroll_to == undefined && this.$route.query.spy != undefined) {
+        if(this.$route.query.spy < 150) {
+          window.scrollTo(0, this.$route.query.spy)
+        }else {
+          window.scrollTo(0, 150)
+        }
+
+      }
+
     },
     afterDeleteComment(comment_id) {
       this.startIndex --

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import State from '../store/state.js'
 const Home = () => import('../components/home/Home.vue')
 const ArticleEditorPage = () => import('../components/articleEditor/ArticleEditorPage.vue')
 const ArticlePage = () => import('../components/article/ArticlePage.vue')
@@ -28,7 +29,8 @@ let router = new Router({
           path: 'article/:article_id',
           components: {
             ArticlePage
-          }
+          },
+          props: { ArticlePage: true }
         },
         {
           path: 'article_manage',
@@ -63,7 +65,14 @@ let router = new Router({
     }
   ],
   scrollBehavior (to, from, savedPosition) {
-    if(to.query.body_scroll_top < 150){
+
+    if(to.path.match(/^\/routine\/article\//) != null) {
+      if(State.scrollTopOfDocumentEl > 150){
+        return { x: 0, y: 150 }
+      }
+    }
+
+    if(State.scrollTopOfDocumentEl < 150){
       return savedPosition
     }
     if (savedPosition) {

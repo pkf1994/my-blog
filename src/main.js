@@ -9,6 +9,7 @@ import './assets/stylus/index.styl'
 import 'font-awesome/css/font-awesome.css'
 import 'animate.css'
 
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

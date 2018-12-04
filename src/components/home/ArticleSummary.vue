@@ -70,7 +70,7 @@ export default {
     ]),
     redirectToTheArticle() {
       this.appointIdOfArticleBeingReading(this.article.article_id)
-      this.$router.push({path: '/routine/article/' + this.article.article_id, query:{body_scroll_top: parseInt(this.scrollTopOfDocumentEl)}})
+      this.$router.push({path: '/routine/article/' + this.article.article_id, query: {spy: parseInt(this.scrollTopOfDocumentEl)}})
     },
     formatTheDate() {
       this.article.article_releaseTime = getDateDiff.getDateDiff(new Date(this.article.article_releaseTime).getTime())

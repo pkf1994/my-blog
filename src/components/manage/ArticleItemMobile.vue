@@ -36,6 +36,7 @@
   import ModalWithConfirm from '../modal/ModalWithConfirm.vue'
   import dataFormatUtil from '../../js/dateFormatUtil.js'
   import ArticleApi from '../../api/article_api.js'
+  import { mapState } from 'vuex'
   export default {
     props: {
       article: {
@@ -60,6 +61,9 @@
         },
       }
     },
+    computed: {
+      ...mapState(['scrollTopOfDocumentEl'])
+    },
     components: {
       ModalWithConfirm
     },
@@ -76,13 +80,13 @@
         if(this.deleted){
           return
         }
-        this.$router.push('/article/' + this.article.article_id)
+        this.$router.push({path:'/routine/article/' + this.article.article_id, query: {spy: this.scrollTopOfDocumentEl}})
       },
       goToTheEditPage() {
         if(this.deleted){
           return
         }
-        this.$router.push('/article_edit/' + this.article.article_id)
+        this.$router.push({path:'/routine/article/' + this.article.article_id, query: {spy: this.scrollTopOfDocumentEl}})
       },
       confirmDeleteTheArticle() {
         if(this.deleted){

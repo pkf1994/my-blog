@@ -10,5 +10,5 @@ export default {
   flagRefreshHome: false,
   navbarSearchString: '',
   scrollTopOfDocumentEl: 0,
-  logined: false
+  logined: false,
 }
