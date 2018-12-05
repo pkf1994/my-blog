@@ -86,6 +86,18 @@ let router = new Router({
   }
 })
 
+router.afterEach((to, from) => {
+  if(to.path.match(/^\/routine\/home/) != null) {
+    document.title = '彭凯帆的博客'
+  }else if(to.path.match(/^\/routine\/article_manage/) != null) {
+    document.title = '彭凯帆的博客-索引'
+  }else if(to.path.match(/^\/login/) != null) {
+    document.title = '彭凯帆的博客-登录'
+  }else if(to.path.match(/^\/routine\/article_edit/) != null) {
+    document.title = '彭凯帆的博客-编辑'
+  }
+})
+
 
 
 export default router

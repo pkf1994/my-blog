@@ -1,8 +1,8 @@
 <template>
   <div class="header common-padding flex-row-center" ref="navbar">
       <div class="logo font-llll common-padding" ref="logo">
-        <span class="cursorp font-song" @click="refresh">远方有鱼</span>
-        <div class="font-m font-normal font-song"> It's a Wonderful Life ...</div>
+        <div class="cursorp logo-img" @click="refresh"></div>
+        <!--<div class="font-m font-normal font-song"> It's a Wonderful Life ...</div>-->
       </div>
   </div>
 </template>
@@ -36,11 +36,17 @@ export default {
   height 150px
   width 100vw
   position relative
+  padding-bottom 0
   .logo{
-    height 100px
+    height 100%
     width 750px
   }
 
 }
 
+.logo-img
+  height 100%
+  width 220px
+  background-image url("../../assets/imaga/logo/logo.png")
+  background-size 100% 100%
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="article-manage common-padding">
+    <div class="article-manage common-padding common-border">
         <LoadingPage v-if="!articleItemsLoaded"></LoadingPage>
 
         <div class="article-manage-list" ref="articleManageList" v-show="articleItemsLoaded">

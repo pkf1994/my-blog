@@ -21,10 +21,14 @@ export default {
       required: true
     }
   },
+  mounted() {
+
+  },
   watch: {
     article() {
       this.loadArticleContent()
       this.adjustImg()
+      this.initTitle()
     }
   },
   methods: {
@@ -51,6 +55,9 @@ export default {
     },
     submitArticleLabel() {
       this.$router.push({path:'/article_manage', query: {article_label: this.article.article_label}})
+    },
+    initTitle() {
+      document.title = this.article.article_title
     }
   },
   components: {

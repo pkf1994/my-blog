@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%">
     <div class="gap-mobile"></div>
-    <div class="article-summary common-padding" >
+    <div class="article-summary common-padding common-border" >
       <div class="article-summary-title font-m cursorp font-bold" v-on:click="redirectToTheArticle">
         {{article.article_title}}
       </div>

@@ -19,6 +19,8 @@ new Vue({
 })
 
 
+
+
 String.prototype.getLength = function() {
   var len = 0;
   for (var i=0; i<this.length; i++) {

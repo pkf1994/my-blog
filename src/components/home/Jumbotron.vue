@@ -1,5 +1,5 @@
 <template>
-    <div class="jumbotron" ref="jumbotron">
+    <div class="jumbotron common-border" ref="jumbotron">
 
       <div class="jumbotron-imgs">
         <div class="jumbotron-img cursorp" @click="goToTheArticle" ref="jumbImgA">

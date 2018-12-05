@@ -25,5 +25,14 @@ export default {
   },
   triggerLoginStatus(state) {
     state.logined = !state.logined
+  },
+  appointNoticeMsg(state, noticeMsg) {
+    state.noticeMsg = noticeMsg
+  },
+  triggerNotice(state) {
+    state.noticeFlag = !state.noticeFlag
+  },
+  appointWidthOfWindow(state, widthOfWindow) {
+    state.widthOfWindow = widthOfWindow
   }
 }

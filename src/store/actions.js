@@ -25,6 +25,15 @@ export default {
   },
   triggerLoginStatus(context) {
     context.commit('triggerLoginStatus')
+  },
+  appointNoticeMsg(context, noticeMsg) {
+    context.commit('appointNoticeMsg', noticeMsg)
+  },
+  triggerNotice(context) {
+    context.commit('triggerNotice')
+  },
+  appointWidthOfWindow(context, widthOfWindow) {
+    context.commit('appointWidthOfWindow', widthOfWindow)
   }
 }
 

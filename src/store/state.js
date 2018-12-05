@@ -11,4 +11,7 @@ export default {
   navbarSearchString: '',
   scrollTopOfDocumentEl: 0,
   logined: false,
+  noticeMsg: '',
+  noticeFlag: false,
+  widthOfWindow: 0
 }

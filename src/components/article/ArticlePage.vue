@@ -1,5 +1,5 @@
 <template>
-    <div class="article-page">
+    <div class="article-page common-border">
       <LoadingPage v-if="!articleLoaded || !commentListLoaded"></LoadingPage>
       <div v-show="articleLoaded && commentListLoaded" >
         <Article :article="article"></Article>

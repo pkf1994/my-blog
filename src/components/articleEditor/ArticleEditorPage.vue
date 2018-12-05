@@ -1,5 +1,5 @@
 <template>
-    <div class="article-editor-page common-padding">
+    <div class="article-editor-page common-border common-padding">
       <ArticleEditor ref="articleEditor" :idOfEditingArticle="idOfEditingArticle" @refreshDrafts="refreshDrafts" class="article-editor"></ArticleEditor>
       <Drafts ref="drafts" class="drafts"></Drafts>
     </div>
