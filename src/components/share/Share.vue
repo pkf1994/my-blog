@@ -1,12 +1,12 @@
 <template>
-    <i class="fa fa-send share"><span class="cursorp" @click="triggerShowShareMenuFlag">&nbsp;分享</span>
+    <i class="fa fa-send share"><span class="cursorp" @click="triggerShowShareMenuFlag" ref="shareBtn">&nbsp;分享</span>
       <transition name="fade">
-        <div class="share-dropdown" v-show="showShareMenuFlag">
-          <span class="share-dropdown-arrow"></span>
+        <div class="share-dropdown" v-show="showShareMenuFlag" v-arrow-left="15">
+          <span class="share-dropdown-arrow" v-if="!isMobile"></span>
+          <span class="share-dropdown-arrow-mobile" v-if="isMobile"></span>
           <div class="share-dropdown-menu font-ss">
             <div class="share-dropdown-item hoverable cursorp" @click="initLinkClipBoard"><i class="fa fa-link share-dropdown-icon"></i>复制链接</div>
-            <div class="share-dropdown-item hoverable cursorp"><i class="fa fa-weibo share-dropdown-icon"></i>新浪微博</div>
-            <div class="share-dropdown-item hoverable cursorp"><i class="fa fa-renren share-dropdown-icon"></i>人人网&nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <div class="share-dropdown-item hoverable cursorp" @click="shareToXinLangWeibo"><i class="fa fa-weibo share-dropdown-icon"></i>新浪微博</div>
             <div class="share-dropdown-item"><i class="fa fa-weixin share-dropdown-icon"></i>微信扫一扫</div>
             <div class="share-dropdown-qrcode flex-row-center"><div id="qrcode" ref="qrcode"></div></div>
           </div>
@@ -20,13 +20,15 @@
   import { mapActions } from 'vuex'
   export default {
       props: {
-
+        picUrl:'',
+        shareTitle: ''
       },
       data() {
         return {
           showShareMenuFlag: false
         }
       },
+      inject:['isMobile'],
       mounted() {
         this.initQRcode()
       },
@@ -36,15 +38,21 @@
           'appointNoticeMsg'
         ]),
         triggerShowShareMenuFlag() {
+          if(this.showShareMenuFlag == true) {
+            this.showShareMenuFlag = false
+            return
+          }
           this.showShareMenuFlag = !this.showShareMenuFlag
           setTimeout(() => {
-            window.addEventListener('click', this.handleShareClickEvent)
+            //this.$refs.shareBtn.removeEventListener('click', this.triggerShowShareMenuFlag)
+            window.addEventListener('click', this.handleShareClickEvent, {once: true})
           },1)
         },
         handleShareClickEvent() {
           if(this.showShareMenuFlag == true) {
             this.showShareMenuFlag = false
-            window.removeEventListener('click', this.handleShareClickEvent)
+            //window.removeEventListener('click', this.handleShareClickEvent)
+            //this.$refs.shareBtn.addEventListener('click', this.triggerShowShareMenuFlag)
           }
         },
         initLinkClipBoard() {
@@ -71,6 +79,17 @@
           })
           qrcode.clear() //清除二维码
           qrcode.makeCode(window.location.href) //生成另一个新的二维码
+        },
+        shareToXinLangWeibo() {
+
+          let shareToXinLangWeiboUrl = 'http://v.t.sina.com.cn/share/share.php?'
+              shareToXinLangWeiboUrl = shareToXinLangWeiboUrl + 'title='+this.shareTitle
+              shareToXinLangWeiboUrl = shareToXinLangWeiboUrl + '&url='+window.location.href
+              shareToXinLangWeiboUrl = shareToXinLangWeiboUrl + '&content=utf-8&sourceUrl='+window.location.href
+              if(this.picUrl != undefined)
+              shareToXinLangWeiboUrl = shareToXinLangWeiboUrl + '&pic='+this.picUrl
+
+          window.open(shareToXinLangWeiboUrl,'newwindow','height=400,width=400,top=100,left=100');
         }
       }
   }
@@ -84,16 +103,21 @@
   width 150px
   position absolute
   top -25px
-  left 70px
+  right -200px
   background white
   border 1px solid #ebebeb
   border-radius 4px
   box-shadow 0 5px 20px rgba(26,26,26,.1)
 
+@media (max-width: 750px) {
+  .share-dropdown{
+    right 65px
+  }
+}
+
 .share-dropdown-arrow
   position: absolute
   overflow: hidden
-  pointer-events: none
   height 32px
   width 16px
   left -16px
@@ -104,6 +128,30 @@
   position: absolute
   top: 50%
   right: -8px
+  box-sizing: border-box
+  width: 24px
+  height: 24px
+  margin: -12px
+  border: 1px solid #ebebeb
+  background: #fff
+  -webkit-transform: rotate(45deg)
+  transform: rotate(45deg)
+  pointer-events: auto
+
+.share-dropdown-arrow-mobile
+  position: absolute
+  overflow: hidden
+  pointer-events: none
+  height 32px
+  width 16px
+  right  -16px
+  top 15px
+
+.share-dropdown-arrow-mobile:after
+  content: ''
+  position: absolute
+  top: 50%
+  left: -8px
   box-sizing: border-box
   width: 24px
   height: 24px

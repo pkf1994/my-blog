@@ -57,6 +57,7 @@
     },
     watch:{
       article_id(newArticleId) {
+        this.imgUrls = []
         if(newArticleId != 0) {
           this.getArticleData().then(() => {
             this.extractImageUrl()

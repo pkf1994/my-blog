@@ -433,7 +433,8 @@
   width 100%
   margin-top 5px
   margin-bottom 15px
-  padding 0 5px
+
+
 
 .editor
   margin-top 5px

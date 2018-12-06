@@ -5,7 +5,9 @@
         <div>
           <span class="article-label clickable cursorp" @click="submitArticleLabel">{{article.article_label}}</span>&nbsp;|&nbsp;作者：<span class="article-author">{{article.article_author}}</span>
         </div>
-        <Share></Share>
+        <Share :pic-url="article.article_previewImageUrl"
+               :shareTitle="shareTitle"
+        ></Share>
       </div>
       <div class="article-content font-s common-line-height" ref="content"></div>
       <div class="article-releasetime font-s font-dark">发布于&nbsp;{{article.article_releaseTime}}</div>
@@ -19,6 +21,11 @@ export default {
     article: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    shareTitle() {
+      return "我正在阅读文章“" + this.article.article_title + "”，出自“彭凯帆的博客”。  -- "
     }
   },
   mounted() {

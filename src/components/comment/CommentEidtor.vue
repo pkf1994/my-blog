@@ -29,7 +29,7 @@
 
 
     </div>
-    <button class="font-m submit-button" @click="throttleSubmitComment"><span v-show="!isSubmittingComment"><i class="fa fa-send"></i></span><i v-show="isSubmittingComment" class="fa fa-spinner fa-pulse"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;<span v-show="submitFinish" ><i class="fa fa-check"></i>留言提交成功</span>
+    <button class="font-m submit-button" @click="throttleSubmitComment"><span v-show="!isSubmittingComment">发布留言</span><i v-show="isSubmittingComment" class="fa fa-spinner fa-pulse"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;<span v-show="submitFinish" ><i class="fa fa-check"></i>留言提交成功</span>
   </div>
 </template>
 
@@ -251,7 +251,6 @@ export default {
 .the-input
 .the-textarea
   width 300px
-  padding 2px 5px
   margin-top 10px
   margin-bottom 10px
 
