@@ -91,7 +91,7 @@ export default {
   },
   created() {
     this.loadArticleData()
-    this.loadCommentListData()
+    this.loadCommentListData(true)
   },
   mounted() {
     this.uploadOffsetTopOfCommentTitle()
@@ -116,7 +116,7 @@ export default {
         console.log(err)
       })
     },
-    loadCommentListData() {
+    loadCommentListData(handleRouterBoolean) {
       if (this.currentPage === this.maxPage) {
         return
       }
@@ -128,9 +128,11 @@ export default {
           this.maxPage = res.data.maxPage
           this.countOfComment = res.data.countOfComment
           this.commentListLoaded = true
-          this.$nextTick(() => {
-            this.handleRouterQuery()
-          })
+          if(handleRouterBoolean) {
+            this.$nextTick(() => {
+              this.handleRouterQuery()
+            })
+          }
         }
       }).catch((err) => {
         console.log(err)
@@ -139,7 +141,7 @@ export default {
     reLoadCommentListData() {
       this.isLoading = true
       setTimeout(() => {
-        this.loadCommentListData()
+        this.loadCommentListData(false)
         this.isLoading = false
       }, 1000)
     },
@@ -159,15 +161,23 @@ export default {
     handleRouterQuery() {
       if(this.$route.query.id_of_comment_scroll_to != undefined) {
         let theCommentEl = document.getElementById('comment_' + this.$route.query.id_of_comment_scroll_to)
-        window.scrollTo(0, CountDistanceToUpperEdge.countDistanceToClientUpperEdge(theCommentEl) - this.offsetHeightOfNavbar)
+        if(theCommentEl == null) {
+          console.log(this.$refs.commentTitle)
+          window.scrollTo(0, CountDistanceToUpperEdge.countDistanceToDocumentUpperEdge(this.$refs.commentTitle) - this.offsetHeightOfNavbar)
+          return
+        }
+        window.scrollTo(0, CountDistanceToUpperEdge.countDistanceToDocumentUpperEdge(theCommentEl) - this.offsetHeightOfNavbar)
+        return
       }
       if(this.$route.query.gotocl == 1) {
         let messageTitleEl = document.getElementById('massage-title')
         window.scrollTo(0, CountDistanceToUpperEdge.countDistanceToClientUpperEdge(messageTitleEl) - this.offsetHeightOfNavbar)
+        return
       }
       if(this.$route.query.gotoce == 1) {
         let commentEditorEl = this.$refs.commentEditor.$el
         window.scrollTo(0, CountDistanceToUpperEdge.countDistanceToClientUpperEdge(commentEditorEl) - this.offsetHeightOfNavbar)
+        return
       }
 
       if(this.$route.query.gotoce != 1 && this.$route.query.gotocl != 1 && this.$route.query.id_of_comment_scroll_to == undefined && this.$route.query.spy != undefined) {
@@ -203,6 +213,13 @@ export default {
       this.$refs.backtoup.$el.style.left = leftOfBackToUp + 'px'
     },
     scrollToCommentTitle() {
+
+      this.commentList = []
+      this.startIndex = 0
+      this.maxPage = 1
+      this.currentPage = 0
+      this.countOfComment  = 0
+      this.loadCommentListData(false)
       window.scrollTo(0,CountDistanceToUpperEdge.countDistanceToDocumentUpperEdge(this.$refs.commentTitle) - this.offsetHeightOfNavbar)
     }
   }

@@ -208,7 +208,7 @@ export default {
       CommentApi.submitComment(this.visitor_name,
                                 this.commentBeingRefering.comment_id,
                                 this.comment_content,
-                                this.hostId,
+                                this.article_id,
                                 this.visitor_email,
                                 this.visitor_siteAddress
       ).then((res) => {
@@ -217,7 +217,7 @@ export default {
             this.isSubmittingComment = false
             this.submitFinish = true
             setTimeout(() => {
-              this.changeArticlePageRouterStatus()
+              this.resetCommentEditor()
               this.$emit('justSubmitComment')
             },500)
           }, 1000)
@@ -242,6 +242,13 @@ export default {
       if(cookieMap.visitor_siteAddress){
         this.visitor_siteAddress = cookieMap.visitor_siteAddress
       }
+    },
+    resetCommentEditor() {
+      Object.assign(this.$data, this.$options.data())
+      this.readCookie()
+      setTimeout(() => {
+        this.commentContentIsWrong = false
+      },100)
     }
   }
 }
