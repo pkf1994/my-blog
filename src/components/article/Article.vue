@@ -51,7 +51,6 @@ export default {
         if(imgs[i].attributes['width'] == undefined){
           imgs[i].style.width = '100%'
         }
-
       }
 
       if(bodyEl.clientWidth < 750) {

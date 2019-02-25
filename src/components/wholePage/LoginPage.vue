@@ -9,13 +9,13 @@
 
         <div class="login-page-input-outer">
           <span class="login-page-input-title">用户名</span>
-          <input class="login-page-input" type="text" v-model="username">
+          <input class="login-page-input font-m" type="text" v-model="username">
           <span class="login-page-input-msg"></span>
         </div>
 
         <div class="login-page-input-outer">
           <span class="login-page-input-title">密码</span>
-          <input class="login-page-input" type="password"  @keydown="checkKeyNumber" v-model="password">
+          <input class="login-page-input font-m" type="password"  @keydown="checkKeyNumber" v-model="password">
           <span class="login-page-input-msg"></span>
         </div>
 
@@ -221,8 +221,9 @@
   .login-page-button-outer
     margin-top 20px
 
-  @media (max-width: 750px) {
-    .login-page-form{
+  @media(max-width: 750px) {
+    .login-page-form
+    .login-page-logout{
       width 100%
     }
     .login-page-input-outer{
@@ -231,7 +232,6 @@
     }
     .login-page-input{
       width 100%
-      height 2rem
       margin-left 0px
       margin-top 5px
     }

@@ -70,7 +70,10 @@
 </template>
 
 <script>
-  import hljs from 'highlight.js'
+  import
+
+
+    hljs from 'highlight.js'
   import 'highlight.js/styles/rainbow.css'
   import ApiInfo from '../../api/apiInfo.js'
   import ArticleApi from '../../api/article_api.js'

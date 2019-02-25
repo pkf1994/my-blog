@@ -125,7 +125,7 @@ export default {
     initPageEndRefresh() {
       window.addEventListener('scroll', () => {
           var distanceToBottom = this.calculateDistanceToBottom()
-          if (distanceToBottom < 30 && this.$route.path == '/routine/home') {
+          if (distanceToBottom < 30 && this.$route.path.match(/^\/routine\/home/) !== null ) {
             this.throttle(this.reload, 400, 200)
           }
       })

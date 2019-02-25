@@ -1,4 +1,4 @@
-<template>
+ <template>
     <div class="article-filing">
       <div class="article-filing-headline flex-row-space-between font-bold">文章归档
       </div>

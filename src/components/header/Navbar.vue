@@ -12,9 +12,9 @@
       <div class="navbar-itemlist-mobile-background" ref="menuBackground"></div>
       <div class="navbar-itemlist-mobile" ref="menu" v-show="showMenuFlag">
         <div class="navbar-item-mobile cursorp flex-row-column-center font-l clickable" @click="() => {goTo('/routine/home');}">杂谈</div>
-        <div class="navbar-item-mobile cursorp flex-row-column-center font-l clickable" @click="() => {goTo('/routine/article_edit/0');}">创造</div>
+        <div class="navbar-item-mobile cursorp flex-row-column-center font-l clickable" v-if="logined" @click="() => {goTo('/routine/article_edit/0');}">创造</div>
         <div class="navbar-item-mobile cursorp flex-row-column-center font-l clickable" @click="() => {goTo('/routine/article_manage');}">管理</div>
-        <div class="navbar-item-mobile cursorp flex-row-column-center font-l clickable" @click="() => {goTo('/login');}">登录</div>
+        <div class="navbar-item-mobile cursorp flex-row-column-center font-l clickable" @click="() => {goTo('/login');}">{{logined ? '登出' : '登录'}}</div>
       </div>
       <SearchBar ref="searchBar" :class="{ 'navbar-search-bar-onright': distanceToClientUpperEdge > 10, 'navbar-search-bar-onleft': distanceToClientUpperEdge <= 10 }" is-mobile="no" submit-slogan="Search" class="navbar-search-bar" width="240" @submitSearchWords="receiveSearchWords"></SearchBar>
     </div>
@@ -31,8 +31,9 @@
         isMobile: false,
         showMenuBackgroundFlag: false,
         showMenuFlag: false,
-        heightOfMenu: 196,
-        bodyScrollTop:0
+        heightOfMenu: this.logined ? 196 : 150,
+        bodyScrollTop:0,
+        loginout: '登录'
       }
     },
     computed:{
@@ -51,11 +52,14 @@
       this.bindScrollEvent()
       this.judgeIfMobile()
       this.initDistanceToClientUpperEdge()
+      this.initHeightOfMenu()
     },
     watch: {
-      navbarSearchString() {
-
-      }
+     /* logined(newLogined,oldLogined) {
+        console.log(newLogined)
+        console.log(oldLogined)
+        this.heightOfMenu = this.logined ? 196 : 150
+      }*/
     },
     methods: {
       getHeightOfMenu() {
@@ -123,6 +127,9 @@
       },
       receiveSearchWords(searchString) {
         this.$router.push({path:'/routine/article_manage',query:{search_string:searchString}})
+      },
+      initHeightOfMenu() {
+        this.heightOfMenu = this.logined ? 196 : 150
       }
     }
   }
